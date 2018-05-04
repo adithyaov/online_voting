@@ -16,7 +16,7 @@ type Role struct {
 
 type Candidate struct {
 	User *User
-	PosterUrl string
+	Details string
 	Ballot *Ballot
 }
 
@@ -26,6 +26,7 @@ type Ballot struct {
 	N big.Int
 	D big.Int
 	E int
+	Flag bool
 }
 
 
