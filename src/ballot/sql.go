@@ -1,28 +1,31 @@
 package ballot
 
-import (
-	"database/sql"
-	"fmt"
-	_ "github.com/mattn/go-sqlite3"
-	"log"
-)
+var MakeBallot = `
+INSERT INTO Ballot (name, n, d, e, flag) VALUES (?, ?, ?, ?, 1)
+`
 
-func CreateTable() {
-	db, err := sql.Open("sqlite3", "data/foo.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
+var DeactivateBallot = `
+UPDATE Ballot SET flag=0 WHERE id=?
+`
 
-	sqlStmt := `
-	create table foo (id integer not null primary key, name text);
-	delete from foo;
-	`
-	_, err = db.Exec(sqlStmt)
-	if err != nil {
-		log.Printf("%q: %s\n", err, sqlStmt)
-		return
-	}
-	fmt.Println("Hi")
+var BallotName = `
+UPDATE Ballot SET name=? WHERE id=?
+`
 
-}
+var DeleteBallot = `
+DELETE Ballot WHERE id=?
+`
+
+var BallotTable = `
+
+DROP TABLE IF EXISTS Ballot;
+CREATE TABLE Ballot(
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name CHAR(40) NOT NULL,
+	n BIGINT NOT NULL,
+	d BIGINT NOT NULL,
+	e INT NOT NULL,
+	flag BOOL DEFAULT 1
+);
+
+`
