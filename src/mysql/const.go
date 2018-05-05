@@ -1,3 +1,3 @@
-package sql
+package mysql
 
 var SqliteStore = "data/foo.db"
