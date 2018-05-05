@@ -3,43 +3,44 @@ package mysql
 import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
-	"log"
 )
 
-func RunRawString(rawString string) {
+func RunRawString(rawString string) error {
 	db, err := sql.Open("sqlite3", SqliteStore)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer db.Close()
 
 	_, err = db.Exec(rawString)
 	if err != nil {
-		log.Printf("%q: %s\n", err, rawString)
-		return
+		return err
 	}
+
+	return nil
 }
 
 
-func RunTransaction(state State) {
+func RunTransaction(state State) error {
 	db, err := sql.Open("sqlite3", SqliteStore)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer db.Close()
 
 	tx, err := db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	prepareStmt, err := tx.Prepare(state.Stmt)
 	defer prepareStmt.Close()
 
 	_, err = prepareStmt.Exec(state.Params...)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	tx.Commit()
+	return nil
 }
 
 

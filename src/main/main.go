@@ -8,10 +8,12 @@ import (
 
 func main() {
 	fmt.Println("Hi testing! :-)")
-	mysql.RunRawString(ballot.BallotTable)
-	//mysql.RunTransaction(mysql.State{ballot.MakeBallot, []interface{}{"t1", "test", 5, 20, 22}})
-	b := ballot.CreateBallot("elec2019", "S body")
-	fmt.Println(b.N.String())
-	fmt.Println(b.D.String())
-	fmt.Println(b.E)
+	_ = mysql.RunRawString(ballot.BallotTable)
+	b, _ := ballot.CreateBallot("elec2019", "S body")
+	v := ballot.Vote{"a", "b", "c"}
+	blinded, unblinder, _ := b.BlindVote(v)
+	sig, _ := b.SignBlindHash(blinded)
+	us := b.UnblindSignedHash(sig, unblinder)
+	hashed, _ := v.Hash()
+	fmt.Println(b.VerifySign(hashed, us))
 }

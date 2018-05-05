@@ -6,7 +6,7 @@ import (
 
 
 type Ballot struct {
-	Id string
+	Code string
 	Name string
 	N big.Int
 	D big.Int
@@ -15,7 +15,11 @@ type Ballot struct {
 }
 
 
-
+type Vote struct {
+	BallotCode string `json:"ballot_code"`
+	CandidateEmail string `json:"candidate_email"`
+	Bias string `json:"bias"`
+}
 
 
 
