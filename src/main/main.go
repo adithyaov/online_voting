@@ -8,6 +8,6 @@ import (
 
 func main() {
 	fmt.Println("Hi testing! :-)")
-	sql.CreateTable(ballot.SqliteStore, ballot.BallotTable)
-	sql.RunTransaction(ballot.SqliteStore, ballot.MakeBallot, []interface{}{"test", 5, 20, 22})
+	sql.CreateTables()
+	sql.RunTransaction(sql.State{ballot.MakeBallot, []interface{}{"test", 5, 20, 22}})
 }

@@ -1,3 +1,3 @@
-package ballot
+package sql
 
 var SqliteStore = "data/foo.db"

@@ -6,24 +6,28 @@ import (
 	"log"
 )
 
-func CreateTable(storePath string, schema string) {
-	db, err := sql.Open("sqlite3", storePath)
+type State struct {
+	Stmt string
+	Params []interface{}
+}
+
+func RunRawString(rawString string) {
+	db, err := sql.Open("sqlite3", SqliteStore)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	_, err = db.Exec(schema)
+	_, err = db.Exec(rawString)
 	if err != nil {
-		log.Printf("%q: %s\n", err, schema)
+		log.Printf("%q: %s\n", err, rawString)
 		return
 	}
-	log.Printf("Table created %s", schema)
+	log.Printf("Executed %s", rawString)
 }
 
-
-func RunTransaction(storePath string, stmt string, stmtParams []interface{}) {
-	db, err := sql.Open("sqlite3", storePath)
+func RunTransaction(state State) {
+	db, err := sql.Open("sqlite3", SqliteStore)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,14 +37,40 @@ func RunTransaction(storePath string, stmt string, stmtParams []interface{}) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	prepareStmt, err := tx.Prepare(stmt)
+	prepareStmt, err := tx.Prepare(state.Stmt)
 	defer prepareStmt.Close()
 
-	_, err = prepareStmt.Exec(stmtParams...)
+	_, err = prepareStmt.Exec(state.Params...)
 	if err != nil {
 		log.Fatal(err)
 	}
 	tx.Commit()
+	log.Printf("%s: %v\n", state.Stmt, state.Params)
+}
+
+
+func RunTransactions(states []State) {
+	db, err := sql.Open("sqlite3", SqliteStore)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	for _, state := range states {
+		tx, err := db.Begin()
+		if err != nil {
+			log.Fatal(err)
+		}
+		prepareStmt, err := tx.Prepare(state.Stmt)
+		defer prepareStmt.Close()
+
+		_, err = prepareStmt.Exec(state.Params...)
+		if err != nil {
+			log.Fatal(err)
+		}
+		tx.Commit()
+		log.Printf("%s: %v\n", state.Stmt, state.Params)
+	}
 }
 
 
