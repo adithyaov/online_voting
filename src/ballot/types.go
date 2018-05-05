@@ -6,19 +6,19 @@ import (
 
 
 type Ballot struct {
-	Code string
-	Name string
-	N big.Int
-	D big.Int
-	E int
-	Flag bool
+	Code string `json:"code"`
+	Name string `json:"name"`
+	N big.Int 	`json:"n"`
+	D big.Int 	`json:"-"`
+	E int 		`json:"e"`
+	Flag bool 	`json:"flag"`
 }
 
 
 type Vote struct {
-	BallotCode string `json:"ballot_code"`
+	BallotCode string     `json:"ballot_code"`
 	CandidateEmail string `json:"candidate_email"`
-	Bias string `json:"bias"`
+	Bias string  		  `json:"bias"`
 }
 
 

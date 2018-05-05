@@ -43,6 +43,18 @@ func RunTransaction(state State) error {
 	return nil
 }
 
+func RunQuery(state State) (*sql.Rows, error) {
+	db, err := sql.Open("sqlite3", SqliteStore)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+
+	return db.Query(state.Stmt, state.Params...)
+
+}
+
 
 // func RunTransactionsCS(states []State) {
 // 	db, err := sql.Open("sqlite3", SqliteStore)

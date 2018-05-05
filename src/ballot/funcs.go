@@ -19,7 +19,7 @@ func CreateBallot(code string, name string) (Ballot, error) {
 
 	err = mysql.RunTransaction(mysql.State{
 			MakeBallot,
-			[]interface{}{code, name, (*(key.N)).String(), (*(key.D)).String(), key.E}})
+			[]interface{}{code, name, (*(key.PublicKey.N)).String(), (*(key.D)).String(), key.PublicKey.E}})
 	if err != nil {
 		return Ballot{}, err
 	}
@@ -64,9 +64,6 @@ func (ballot *Ballot) VerifySign(hashed []byte, unblindedSign []byte) error {
 	publicKey := rsa.PublicKey{&(ballot.N), ballot.E}
 	return rsablind.VerifyBlindSignature(&publicKey, hashed, unblindedSign)
 }
-
-
-
 
 
 
