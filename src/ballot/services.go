@@ -16,11 +16,6 @@ func CreateAPI(w http.ResponseWriter, r *http.Request) {
 		Name string
 	}
 
-	if r.Body == nil {
-		http.Error(w, "Please send a request body", 400)
-		return
-	}
-
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
@@ -41,11 +36,6 @@ func FindAPI(w http.ResponseWriter, r *http.Request) {
 
 	var data struct {
 		Code string
-	}
-
-	if r.Body == nil {
-		http.Error(w, "Please send a request body", 400)
-		return
 	}
 
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -81,11 +71,6 @@ func DeleteAPI(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 
-	if r.Body == nil {
-		http.Error(w, "Please send a request body", 400)
-		return
-	}
-
 	err = json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
@@ -113,13 +98,7 @@ func BlindVoteAPI(openBallots []*Ballot) http.HandlerFunc {
 			CandidateEmail string `json:"candidate_email"`
 		}
 
-
 		var err error
-
-		if r.Body == nil {
-			http.Error(w, "Please send a request body", 400)
-			return
-		}
 
 		err = json.NewDecoder(r.Body).Decode(&data)
 		if err != nil {
