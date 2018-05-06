@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"mysql"
 	"strconv"
+	c "common"
 )
 
 
@@ -106,7 +107,7 @@ func BlindVoteAPI(openBallots []*Ballot) http.HandlerFunc {
 			return
 		}
 
-
+		// Find ballot
 		var ballot *Ballot
 		ballot = nil
 		for _, b := range openBallots {
@@ -120,11 +121,14 @@ func BlindVoteAPI(openBallots []*Ballot) http.HandlerFunc {
 			return
 		}
 
-
-
-		bias := strconv.FormatFloat((rand.Float64() * 10000) + rand.Float64(), 'f', 6, 64)
+		bias := strconv.FormatFloat((rand.Float64() * 100000) + rand.Float64(), 'f', 6, 64)
 		vote := Vote{data.BallotCode, data.CandidateEmail, bias}
-		
+		hashed, err := vote.Hash()
+
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
 
 		blinded, unblinder, err := ballot.BlindVote(vote)
 
@@ -133,25 +137,77 @@ func BlindVoteAPI(openBallots []*Ballot) http.HandlerFunc {
 			return
 		}
 
-		var intBlinded []int
-		var intUnblinder []int
 
-		for _, b := range blinded {
-			intBlinded = append(intBlinded, int(b))
-		}
-
-		for _, b := range unblinder {
-			intUnblinder = append(intUnblinder, int(b))
-		}
 
 		response := struct {
 			Blinded []int  	`json:"blinded"`
 			Unblinder []int `json:"unblinder"`
+			VoteHash []int  `json:"vote_hash"`
 			Bias string 	`json:"bias"`
-		}{intBlinded, intUnblinder, bias}
+		}{c.ConvertBSToIS(blinded), c.ConvertBSToIS(unblinder), c.ConvertBSToIS(hashed), bias}
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(response)
 	}
 
 }
+
+
+func SignBytesAPI(openBallots []*Ballot) http.HandlerFunc {
+
+
+	return func (w http.ResponseWriter, r *http.Request) {
+
+		var data struct {
+			BallotCode string `json:"ballot_code"`
+			Blinded []int     `json:"blinded"`
+		}
+
+		var err error
+
+		err = json.NewDecoder(r.Body).Decode(&data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+
+		// Find ballot
+		var ballot *Ballot
+		ballot = nil
+		for _, b := range openBallots {
+			if b.Code == data.BallotCode {
+				ballot = b
+				break
+			}
+		}
+		if ballot == nil {
+			http.Error(w, "Ballot not found", 400)
+			return
+		}
+
+		signed, err := ballot.SignBlindHash(c.ConvertISToBS(data.Blinded))
+
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+
+
+		response := struct {
+			Signed []int `json:"signed"`
+		}{c.ConvertBSToIS(signed)}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+	}
+
+}
+
+
+
+
+
+
+
+
+

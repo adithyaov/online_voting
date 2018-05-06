@@ -15,6 +15,7 @@ func main() {
 	http.HandleFunc("/ballot/find", c.BodyCheckWrapper(ballot.FindAPI))
 	http.HandleFunc("/ballot/delete", c.BodyCheckWrapper(ballot.DeleteAPI))
 	http.HandleFunc("/ballot/blind", c.BodyCheckWrapper(ballot.BlindVoteAPI(openBallots)))
+	http.HandleFunc("/ballot/sign", c.BodyCheckWrapper(ballot.SignBytesAPI(openBallots)))
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		panic(err)
 	}
