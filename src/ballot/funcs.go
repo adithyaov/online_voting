@@ -11,21 +11,39 @@ import (
 	"encoding/json"
 )
 
-func CreateBallot(code string, name string) (Ballot, error) {
+func CreateBallot(code string, name string) (*Ballot, error) {
 	key, err := rsa.GenerateKey(rand.Reader, KeySize)
 	if err != nil {
-		return Ballot{}, err
+		return nil, err
 	}
 
 	err = mysql.RunTransaction(mysql.State{
 			MakeBallot,
 			[]interface{}{code, name, (*(key.PublicKey.N)).String(), (*(key.D)).String(), key.PublicKey.E}})
 	if err != nil {
-		return Ballot{}, err
+		return nil, err
 	}
 	
-	return Ballot{code, name, *(key.N), *(key.D), key.E, true}, nil
+	ballot := Ballot{code, name, *(key.N), *(key.D), key.E, true}
+	return &ballot, nil
 }
+
+func OpenBallot(code string) (*Ballot, error) {
+	rows, err := mysql.RunQuery(mysql.State{GetBallot, []interface{}{code}})
+	if err != nil {
+		return nil, err
+	}
+	
+	rows.Next()
+
+	var ballot Ballot
+	var n, d string
+	rows.Scan(&ballot.Code, &ballot.Name, &ballot, &n, &d, &ballot.E, &ballot.Flag)
+	ballot.N.SetString(n, 10)
+	ballot.D.SetString(d, 10)
+	return &ballot, nil
+}
+
 
 
 func (vote *Vote) Hash() ([]byte, error) {
