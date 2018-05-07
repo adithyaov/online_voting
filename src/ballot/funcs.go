@@ -9,6 +9,7 @@ import (
 	"github.com/cryptoballot/fdh"
 	"mysql"
 	"encoding/json"
+	"net/http"
 )
 
 func CreateBallot(code string, name string) (*Ballot, error) {
@@ -85,10 +86,38 @@ func (ballot *Ballot) VerifySign(hashed []byte, unblindedSign []byte) error {
 
 
 
+func SearchBallotRT(openBallots *([]*Ballot), ballotCode string) *Ballot {
+	for _, b := range *openBallots {
+		if b.Code == ballotCode {
+			return b
+		}
+	}
+	return nil
+}
+
+
+func CloseBallotRT(openBallots *([]*Ballot), ballotCode string) {
+	for i, b := range *openBallots {
+		if b.Code == ballotCode {
+			*openBallots = append((*openBallots)[:i], (*openBallots)[i+1:]...)
+		}
+	}
+}
+
+func OpenBallotRT(openBallots *([]*Ballot), ballotCode string) error {
+	ballot, err := OpenBallot(ballotCode)
+	if err != nil {
+		return err
+	}
+	*openBallots = append(*openBallots, ballot)
+	return nil
+}
 
 
 
-
-
-
+func BallotWrapper(fn func(http.ResponseWriter, *http.Request, *([]*Ballot)), openBallots *([]*Ballot)) http.HandlerFunc {
+	return func (w http.ResponseWriter, r *http.Request) {
+		fn(w, r, openBallots)
+	}
+}
 
