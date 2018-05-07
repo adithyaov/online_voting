@@ -2,16 +2,28 @@ package common
 
 import (
 	"net/http"
+	"io/ioutil"
 )
 
 
-func BodyCheckWrapper(fn http.HandlerFunc) http.HandlerFunc {
+func BodyCheckWrapper(fn BodyExtracted) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Body == nil {
 			http.Error(w, "Please send a request body", 400)
 			return
 		}
-		fn(w, r)
+		body, err := ioutil.ReadAll(r.Body)
+		r.Body.Close()
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+
+		if len(body) > MaxReqBody {
+			http.Error(w, "Body too long :-(", 400)
+			return
+		}
+		fn(w, r, &body)
 	}
 }
 

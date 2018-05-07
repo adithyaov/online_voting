@@ -10,14 +10,14 @@ import (
 )
 
 
-func CreateAPI(w http.ResponseWriter, r *http.Request) {
+func CreateAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 
 	var data struct {
 		Code string
 		Name string
 	}
 
-	err := json.NewDecoder(r.Body).Decode(&data)
+	err := json.Unmarshal(*body, &data)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
@@ -33,13 +33,13 @@ func CreateAPI(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func FindAPI(w http.ResponseWriter, r *http.Request) {
+func FindAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 
 	var data struct {
 		Code string
 	}
 
-	err := json.NewDecoder(r.Body).Decode(&data)
+	err := json.Unmarshal(*body, &data)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
@@ -64,15 +64,13 @@ func FindAPI(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func DeleteAPI(w http.ResponseWriter, r *http.Request) {
+func DeleteAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 
 	var data struct {
 		Code string
 	}
 
-	var err error
-
-	err = json.NewDecoder(r.Body).Decode(&data)
+	err := json.Unmarshal(*body, &data)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
