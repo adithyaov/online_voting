@@ -7,3 +7,6 @@ var URLBlind = "/ballot/blind/"
 var URLUnblind = "/ballot/unblind/"
 var URLVerify = "/ballot/verify/"
 var URLSign = "/ballot/sign/"
+
+var MaxReqBody = 1000
+

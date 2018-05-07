@@ -10,6 +10,7 @@ import (
 	"mysql"
 	"encoding/json"
 	"net/http"
+	"io/ioutil"
 )
 
 func CreateBallot(code string, name string) (*Ballot, error) {
@@ -115,9 +116,34 @@ func OpenBallotRT(openBallots *([]*Ballot), ballotCode string) error {
 
 
 
-func BallotWrapper(fn func(http.ResponseWriter, *http.Request, *([]*Ballot)), openBallots *([]*Ballot)) http.HandlerFunc {
+func BallotWrapper(fn func(http.ResponseWriter, *http.Request, *Ballot, *[]byte), openBallots *([]*Ballot)) http.HandlerFunc {
 	return func (w http.ResponseWriter, r *http.Request) {
-		fn(w, r, openBallots)
+		var data struct {
+			BallotCode string `json:"ballot_code"`
+		}
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+
+		err = json.Unmarshal(body, &data)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+
+		if len(body) > MaxReqBody {
+			http.Error(w, "Body too long :-(", 400)
+			return
+		}
+
+		ballot := SearchBallotRT(openBallots, data.BallotCode)
+		if ballot == nil {
+			http.Error(w, "Ballot not found", 400)
+			return
+		}
+		fn(w, r, ballot, &body)
 	}
 }
 

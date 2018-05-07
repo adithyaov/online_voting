@@ -90,10 +90,9 @@ func DeleteAPI(w http.ResponseWriter, r *http.Request) {
 
 
 
-func BlindVoteAPI(w http.ResponseWriter, r *http.Request, openBallots *([]*Ballot)) {
+func BlindVoteAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *[]byte) {
 
 	type Req struct {
-		BallotCode string     `json:"ballot_code"`
 		CandidateEmail string `json:"candidate_email"`
 	}
 
@@ -106,23 +105,14 @@ func BlindVoteAPI(w http.ResponseWriter, r *http.Request, openBallots *([]*Ballo
 
 	var data Req
 
-	var err error
-
-	err = json.NewDecoder(r.Body).Decode(&data)
+	err := json.Unmarshal(*body, &data)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
 	}
 
-	// Find ballot
-	ballot := SearchBallotRT(openBallots, data.BallotCode)
-	if ballot == nil {
-		http.Error(w, "Ballot not found", 400)
-		return
-	}
-
 	bias := strconv.FormatFloat((rand.Float64() * 100000) + rand.Float64(), 'f', 6, 64)
-	vote := Vote{data.BallotCode, data.CandidateEmail, bias}
+	vote := Vote{ballot.Code, data.CandidateEmail, bias}
 	hashed, err := vote.Hash()
 
 	if err != nil {
@@ -147,11 +137,10 @@ func BlindVoteAPI(w http.ResponseWriter, r *http.Request, openBallots *([]*Ballo
 
 
 
-func SignBytesAPI(w http.ResponseWriter, r *http.Request, openBallots *([]*Ballot)) {
+func SignBytesAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *[]byte) {
 
 	type Req struct {
-		BallotCode string `json:"ballot_code"`
-		Blinded []int     `json:"blinded"`
+		Blinded []int `json:"blinded"`
 	}
 
 	type Res struct {
@@ -160,18 +149,9 @@ func SignBytesAPI(w http.ResponseWriter, r *http.Request, openBallots *([]*Ballo
 
 	var data Req
 
-	var err error
-
-	err = json.NewDecoder(r.Body).Decode(&data)
+	err := json.Unmarshal(*body, &data)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
-		return
-	}
-
-	// Find ballot
-	ballot := SearchBallotRT(openBallots, data.BallotCode)
-	if ballot == nil {
-		http.Error(w, "Ballot not found", 400)
 		return
 	}
 
@@ -193,12 +173,11 @@ func SignBytesAPI(w http.ResponseWriter, r *http.Request, openBallots *([]*Ballo
 
 
 
-func UnblindSignAPI(w http.ResponseWriter, r *http.Request, openBallots *([]*Ballot)) {
+func UnblindSignAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot,  body *[]byte) {
 
 	type Req struct {
-		BallotCode string `json:"ballot_code"`
-		Signed []int      `json:"signed"`
-		Unblinder []int   `json:"unblinder"`
+		Signed []int    `json:"signed"`
+		Unblinder []int `json:"unblinder"`
 	}
 
 	type Res struct {
@@ -207,18 +186,9 @@ func UnblindSignAPI(w http.ResponseWriter, r *http.Request, openBallots *([]*Bal
 
 	var data Req
 
-	var err error
-
-	err = json.NewDecoder(r.Body).Decode(&data)
+	err := json.Unmarshal(*body, &data)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
-		return
-	}
-
-	// Find ballot
-	ballot := SearchBallotRT(openBallots, data.BallotCode)
-	if ballot == nil {
-		http.Error(w, "Ballot not found", 400)
 		return
 	}
 
@@ -232,10 +202,9 @@ func UnblindSignAPI(w http.ResponseWriter, r *http.Request, openBallots *([]*Bal
 
 
 
-func VerifySignAPI(w http.ResponseWriter, r *http.Request, openBallots *([]*Ballot)) {
+func VerifySignAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *[]byte) {
 
 	type Req struct {
-		BallotCode string `json:"ballot_code"`
 		Hashed []int      `json:"vote_hash"`
 		Unblinded []int   `json:"unblinded"`
 	}
@@ -246,18 +215,9 @@ func VerifySignAPI(w http.ResponseWriter, r *http.Request, openBallots *([]*Ball
 
 	var data Req
 
-	var err error
-
-	err = json.NewDecoder(r.Body).Decode(&data)
+	err := json.Unmarshal(*body, &data)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
-		return
-	}
-
-	// Find ballot
-	ballot := SearchBallotRT(openBallots, data.BallotCode)
-	if ballot == nil {
-		http.Error(w, "Ballot not found", 400)
 		return
 	}
 
