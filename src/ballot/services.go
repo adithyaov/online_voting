@@ -13,8 +13,8 @@ import (
 func CreateAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 
 	var data struct {
-		Code string
-		Name string
+		Code string `json:"code"`
+		Name string `json:"name"`
 	}
 
 	err := json.Unmarshal(*body, &data)
@@ -22,7 +22,7 @@ func CreateAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-
+	
 	ballot, err := CreateBallot(data.Code, data.Name)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
@@ -36,7 +36,7 @@ func CreateAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 func FindAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 
 	var data struct {
-		Code string
+		Code string `json:"code"`
 	}
 
 	err := json.Unmarshal(*body, &data)
@@ -67,7 +67,7 @@ func FindAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 func DeleteAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 
 	var data struct {
-		Code string
+		Code string `json:"code"`
 	}
 
 	err := json.Unmarshal(*body, &data)
@@ -82,7 +82,7 @@ func DeleteAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(BasicResponse{"Successfully deleted the ballot", 200})
+	json.NewEncoder(w).Encode(c.BasicResponse{"Successfully deleted the ballot", 200})
 
 }
 

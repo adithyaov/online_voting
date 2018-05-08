@@ -22,7 +22,4 @@ type Vote struct {
 }
 
 
-type BasicResponse struct {
-	Message string `json:"message"`
-	StatusCode int `json:"status_code"`
-}
+
