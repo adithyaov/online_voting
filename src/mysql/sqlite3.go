@@ -56,55 +56,37 @@ func RunQuery(state State) (*sql.Rows, error) {
 }
 
 
-// func RunTransactionsCS(states []State) {
-// 	db, err := sql.Open("sqlite3", SqliteStore)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	defer db.Close()
+func OpenDB() (*sql.DB, error) {
+	return sql.Open("sqlite3", SqliteStore)
+}
 
-// 	for _, state := range states {
-// 		tx, err := db.Begin()
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		prepareStmt, err := tx.Prepare(state.Stmt)
-// 		defer prepareStmt.Close()
+func Exec(query string, args []interface{}) (*(sql.Result), error) {
+	db, err := sql.Open("sqlite3", SqliteStore)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+	res, err := stmt.Exec(args...)
+	if err != nil {
+		return nil, err
+	}
+	return &res, err
+}
 
-// 		_, err = prepareStmt.Exec(state.Params...)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		tx.Commit()
-// 		log.Printf("%s: %v\n", state.Stmt, state.Params)
-// 	}
-// }
-
-// func RunTransactionsCA(states []State) {
-// 	db, err := sql.Open("sqlite3", SqliteStore)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	defer db.Close()
-	
-// 	tx, err := db.Begin()
-// 	for _, state := range states {
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		prepareStmt, err := tx.Prepare(state.Stmt)
-// 		defer prepareStmt.Close()
-
-// 		_, err = prepareStmt.Exec(state.Params...)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		log.Printf("%s: %v\n", state.Stmt, state.Params)
-// 	}
-// 	tx.Commit()
-// }
-
-
+func QueryOne(query string, args []interface{}, scanTo []interface{}) error {
+	db, err := sql.Open("sqlite3", SqliteStore)
+	if err != nil {
+		return err
+	}
+	err = db.QueryRow(query, args...).Scan(scanTo...)
+	db.Close()
+	return err
+}
 
 
 

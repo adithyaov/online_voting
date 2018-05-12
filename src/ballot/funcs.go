@@ -40,7 +40,10 @@ func OpenBallot(code string) (*Ballot, error) {
 
 	var ballot Ballot
 	var n, d string
-	rows.Scan(&ballot.Code, &ballot.Name, &ballot, &n, &d, &ballot.E, &ballot.Flag)
+	err = rows.Scan(&ballot.Code, &ballot.Name, &ballot, &n, &d, &ballot.E, &ballot.Flag)
+	if err != nil {
+		return nil, err
+	}
 	ballot.N.SetString(n, 10)
 	ballot.D.SetString(d, 10)
 	return &ballot, nil
