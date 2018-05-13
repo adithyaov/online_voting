@@ -20,13 +20,13 @@ func main() {
 
 	d := candidate.Candidate{}
 	u := user.User{Email:"aa@aa.com", Name: "nanana"}
-	_, err = u.Create()
+	err = u.Create()
 	fmt.Println("usr crt", err)
 	b, err := ballot.CreateBallot("nibbie", "chubbie")
 	fmt.Println("blt crt", err)
 	d.User = &u
 	d.Ballot = b
-	_, err = d.Create()
+	err = d.Create()
 	fmt.Println("can crt", err)
 	c, err := candidate.GetCandidate("nibbie", "aa@aa.com")
 	fmt.Println(c, err)

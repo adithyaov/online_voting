@@ -12,7 +12,7 @@ var BallotName = `
 UPDATE Ballot SET name=? WHERE code=?;
 `
 
-var DeleteBallot = `
+var DeleteBallotSQL = `
 DELETE Ballot WHERE code=?;
 `
 

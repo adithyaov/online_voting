@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"net/http"
 	c "common"
+	sq "github.com/Masterminds/squirrel"
 )
 
 func CreateBallot(code string, name string) (*Ballot, error) {
@@ -19,36 +20,66 @@ func CreateBallot(code string, name string) (*Ballot, error) {
 		return nil, err
 	}
 
-	err = mysql.RunTransaction(mysql.State{
-			MakeBallot,
-			[]interface{}{code, name, (*(key.PublicKey.N)).String(), (*(key.D)).String(), key.PublicKey.E}})
+	query, args, err := sq.Insert("Ballot").Columns("code", "name", "n", "d", "e").
+					       Values(code, name, (*(key.PublicKey.N)).String(), 
+					  	          (*(key.D)).String(), key.PublicKey.E).ToSql()
+
 	if err != nil {
 		return nil, err
 	}
 	
+	_, err = mysql.Exec(query, args)
+
+	if err != nil {
+		return nil, err
+	}
+
 	ballot := Ballot{code, name, *(key.N), *(key.D), key.E, true}
 	return &ballot, nil
 }
 
 func OpenBallot(code string) (*Ballot, error) {
-	rows, err := mysql.RunQuery(mysql.State{GetBallot, []interface{}{code}})
+
+	query, args, err := sq.Select("*").From("Ballot").
+					       Where(sq.Eq{"ballot_code": code}).ToSql()
+
 	if err != nil {
 		return nil, err
 	}
-	
-	rows.Next()
 
 	var ballot Ballot
 	var n, d string
-	err = rows.Scan(&ballot.Code, &ballot.Name, &ballot, &n, &d, &ballot.E, &ballot.Flag)
+	err = mysql.QueryOne(query, args, []interface{}{&ballot.Code, &ballot.Name, &ballot, 
+											        &n, &d, &ballot.E, &ballot.Flag})
+
 	if err != nil {
 		return nil, err
 	}
-	ballot.N.SetString(n, 10)
-	ballot.D.SetString(d, 10)
+
+	if _, chk := ballot.N.SetString(n, 10); chk != true {
+		return nil, err
+	}
+	if _, chk := ballot.D.SetString(d, 10); chk != true {
+		return nil, err
+	}
+	
 	return &ballot, nil
 }
 
+func DeleteBallot(code string) error {
+
+	query, args, err := sq.Delete("Ballot").
+					       Where(sq.Eq{"ballot_code": code}).ToSql()
+
+	if err != nil {
+		return err
+	}
+
+	_, err = mysql.Exec(query, args)
+
+	return err
+
+}
 
 
 func (vote *Vote) Hash() ([]byte, error) {

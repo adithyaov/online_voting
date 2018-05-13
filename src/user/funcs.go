@@ -2,33 +2,41 @@ package user
 
 import (
 	"mysql"
-	"database/sql"
 	sq "github.com/Masterminds/squirrel"
 	"fmt"
 )
 
-func (user *User) Create() (*sql.Result, error) {
-	sql, args, err := sq.Insert("User").Columns("name", "email").
+func (user *User) Create() error {
+	query, args, err := sq.Insert("User").Columns("name", "email").
 						 Values(user.Name, user.Email).ToSql()
 	if err != nil {
-		return nil, err
+		return err
 	} 
-	fmt.Println(sql)
+	fmt.Println(query)
 	fmt.Println(args)
-	return mysql.Exec(sql, args)
+	_, err = mysql.Exec(query, args)
+	return err
 }
 
 func DeleteUser(email string) error {
-	return mysql.RunTransaction(mysql.State{DeleteUserSQL, []interface{}{email}})
+	query, args, err := sq.Delete("User").
+						 Where(sq.Eq{"email": email}).ToSql()
+	if err != nil {
+		return err
+	} 
+	_, err = mysql.Exec(query, args)
+	return err
 }
 
 func (user *User) SetWith(email string) error {
-	rows, err := mysql.RunQuery(mysql.State{SelectUserSQL, []interface{}{user.Email}})
+	query, args, err := sq.Select("*").From("User").
+						 Where(sq.Eq{"email": email}).ToSql()
+
 	if err != nil {
 		return err
-	}
-	rows.Next()
-	err = rows.Scan(user.Email, user.Name, user.RoleCode)
+	} 
+
+	err = mysql.QueryOne(query, args, []interface{}{user.Email, user.Name, user.RoleCode})
 	if err != nil {
 		return err
 	}
@@ -36,7 +44,17 @@ func (user *User) SetWith(email string) error {
 }
 
 func UpdateRoleCode(email string, code string) error {
-	return mysql.RunTransaction(mysql.State{ChangeRoleCodeSQL, []interface{}{email, code}})
+	query, args, err := sq.Update("User").Set("role_code", code).
+						   Where(sq.Eq{"email": email}).ToSql()
+	if err != nil {
+		return err
+	} 
+
+	_, err = mysql.Exec(query, args)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 

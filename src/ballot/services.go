@@ -76,7 +76,7 @@ func DeleteAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 		return
 	}
 
-	err = mysql.RunTransaction(mysql.State{DeleteBallot, []interface{}{data.Code}})
+	err = mysql.RunTransaction(mysql.State{DeleteBallotSQL, []interface{}{data.Code}})
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
