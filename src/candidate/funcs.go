@@ -50,7 +50,9 @@ func GetCandidate(code string, email string) (*Candidate, error) {
 	c.User = &u
 	c.Ballot = &b
 	temp_n := ""
-	b.N.SetString(temp_n, 10)
+	if _, chk := b.N.SetString(temp_n, 10); chk != true {
+		return nil, err
+	}
 	err = mysql.QueryOne(query, args, []interface{}{&(u.Name), &(u.Email), &(b.Code), 
 													&(b.Name), &(b.E), &(temp_n), &(c.Details)})	
 	if err != nil {
