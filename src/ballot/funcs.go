@@ -103,6 +103,11 @@ func (ballot *Ballot) BlindVote(vote Vote) ([]byte, []byte, error) {
 
 
 func (ballot *Ballot) AddVoter(email string) error {
+
+	/*
+	Check if valid voter, regexp
+	*/
+
 	query, args, err := sq.Insert("BallotUser").Columns("ballot_code", "user_email").
 					       Values(ballot.Code, email).ToSql()
 

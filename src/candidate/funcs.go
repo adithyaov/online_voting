@@ -9,6 +9,9 @@ import (
 )
 
 func (candidate *Candidate) Create() error {
+	/*
+	Check if valid candidate
+	*/
 	query, args, err := sq.Insert("Candidate").Columns("user_email", "ballot_code").
 					       Values(candidate.User.Email, candidate.Ballot.Code).ToSql()
 	if err != nil {
