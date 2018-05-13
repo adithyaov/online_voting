@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"encoding/json"
 	"math/rand"
-	"mysql"
 	"strconv"
 	c "common"
 )
@@ -45,21 +44,13 @@ func FindAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 		return
 	}
 
-	rows, err := mysql.RunQuery(mysql.State{GetBallot, []interface{}{data.Code}})
+	b, err := OpenBallot(data.Code)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
 	}
 
-	var ballot Ballot
-
-	rows.Next()
-	var n, d string
-	rows.Scan(&ballot.Code, &ballot.Name, &n, &d, &ballot.E, &ballot.Flag)
-	ballot.N.SetString(n, 10)
-	ballot.D.SetString(d, 10)
-
-	json.NewEncoder(w).Encode(ballot)
+	json.NewEncoder(w).Encode(*b)
 
 }
 
@@ -76,7 +67,7 @@ func DeleteAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 		return
 	}
 
-	err = mysql.RunTransaction(mysql.State{DeleteBallotSQL, []interface{}{data.Code}})
+	err = DeleteBallot(data.Code)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
