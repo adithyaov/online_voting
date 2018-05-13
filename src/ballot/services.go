@@ -151,6 +151,10 @@ func SignBytesAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *
 		return
 	}
 
+	/*
+		Before responding Note the token, save the token. Auth Field required.
+	*/
+
 
 	response := Res{c.ConvertBSToIS(signed)}
 

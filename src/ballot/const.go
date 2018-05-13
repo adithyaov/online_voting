@@ -10,3 +10,5 @@ var URLSign = "/ballot/sign/"
 
 var MaxReqBody = 4000
 
+var Phases = []string{"C", "R", "N", "V", "C"}
+

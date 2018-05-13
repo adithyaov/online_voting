@@ -6,12 +6,14 @@ import (
 
 
 type Ballot struct {
-	Code string `json:"code"`
-	Name string `json:"name"`
-	N big.Int 	`json:"n"`
-	D big.Int 	`json:"-"`
-	E int 		`json:"e"`
-	Flag bool 	`json:"flag"`
+	Code string 		  `json:"code"`
+	Name string 		  `json:"name"`
+	N big.Int 			  `json:"n"`
+	D big.Int 			  `json:"-"`
+	E int 				  `json:"e"`
+	RegexVoter string 	  `json:"regex_voter"`
+	RegexCandidate string `json:"regex_candidate"`
+	Phase string 	      `json:"phase"`
 }
 
 

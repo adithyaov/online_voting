@@ -11,3 +11,4 @@ type BasicResponse struct {
 
 type BodyExtracted func (http.ResponseWriter, *http.Request, *[]byte)
 
+type AdditionalParams map[string]interface{}

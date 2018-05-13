@@ -34,7 +34,7 @@ func CreateBallot(code string, name string) (*Ballot, error) {
 		return nil, err
 	}
 
-	ballot := Ballot{code, name, *(key.N), *(key.D), key.E, true}
+	ballot := Ballot{code, name, *(key.N), *(key.D), key.E, "^(.*)$", "^(.*)$", "C"}
 	return &ballot, nil
 }
 
@@ -50,7 +50,8 @@ func OpenBallot(code string) (*Ballot, error) {
 	var ballot Ballot
 	var n, d string
 	err = mysql.QueryOne(query, args, []interface{}{&ballot.Code, &ballot.Name, &ballot, 
-											        &n, &d, &ballot.E, &ballot.Flag})
+											        &n, &d, &ballot.E, &ballot.RegexVoter,
+											        &ballot.RegexCandidate, &ballot.Phase})
 
 	if err != nil {
 		return nil, err
@@ -98,6 +99,33 @@ func (ballot *Ballot) BlindVote(vote Vote) ([]byte, []byte, error) {
 	}
 
 	return rsablind.Blind(&publicKey, hashed)
+}
+
+
+func (ballot *Ballot) AddVoter(email string) error {
+	query, args, err := sq.Insert("BallotUser").Columns("ballot_code", "user_email").
+					       Values(ballot.Code, email).ToSql()
+
+	if err != nil {
+		return err
+	}
+
+	_, err = mysql.Exec(query, args)
+
+	return err
+}
+
+func (ballot *Ballot) UpdateRegexVoter(email string) error {
+	query, args, err := sq.Insert("BallotUser").Columns("ballot_code", "user_email").
+					       Values(ballot.Code, email).ToSql()
+
+	if err != nil {
+		return err
+	}
+
+	_, err = mysql.Exec(query, args)
+
+	return err
 }
 
 
