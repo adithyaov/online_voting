@@ -20,42 +20,6 @@ func RunRawString(rawString string) error {
 	return nil
 }
 
-
-func RunTransaction(state State) error {
-	db, err := sql.Open("sqlite3", SqliteStore)
-	if err != nil {
-		return err
-	}
-	defer db.Close()
-
-	tx, err := db.Begin()
-	if err != nil {
-		return err
-	}
-	prepareStmt, err := tx.Prepare(state.Stmt)
-	defer prepareStmt.Close()
-
-	_, err = prepareStmt.Exec(state.Params...)
-	if err != nil {
-		return err
-	}
-	tx.Commit()
-	return nil
-}
-
-func RunQuery(state State) (*sql.Rows, error) {
-	db, err := sql.Open("sqlite3", SqliteStore)
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-
-	return db.Query(state.Stmt, state.Params...)
-
-}
-
-
 func OpenDB() (*sql.DB, error) {
 	return sql.Open("sqlite3", SqliteStore)
 }
