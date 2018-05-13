@@ -154,11 +154,22 @@ func SignBytesAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *
 	/*
 		Before responding Note the token, save the token. Auth Field required.
 	*/
-
+	token := r.Header["token"][0]
+	claims, err := c.ParseToken(token)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
 
 	response := Res{c.ConvertBSToIS(signed)}
 
 	w.Header().Set("Content-Type", "application/json")
+
+	if err := ballot.AddVoter(claims["email"].(string)); err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
 	json.NewEncoder(w).Encode(response)
 }
 

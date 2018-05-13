@@ -13,6 +13,7 @@ CREATE TABLE Ballot(
 	regexp_candidate TEXT DEFAULT "^(.*)$",
 	phase CHAR(1) DEFAULT "C"
 );
+DROP TABLE IF EXISTS BallotUser;
 CREATE TABLE BallotUser(
 	user_email CHAR(30) NOT NULL,
 	ballot_code CHAR(20) NOT NULL,

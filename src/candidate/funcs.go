@@ -18,8 +18,8 @@ func (candidate *Candidate) Create() error {
 		return err
 	}
 
-	query, args, err := sq.Insert("Candidate").Columns("user_email", "ballot_code").
-					       Values(candidate.User.Email, candidate.Ballot.Code).ToSql()
+	query, args, err := sq.Insert("Candidate").Columns("user_email", "ballot_code", "details").
+					       Values(candidate.User.Email, candidate.Ballot.Code, candidate.Details).ToSql()
 	if err != nil {
 		return err
 	} 
