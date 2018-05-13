@@ -15,20 +15,4 @@ CREATE TABLE Candidate(
 `
 
 
-var AddCandidateSQL = `
-INSERT INTO Candidate (ballot_code, user_email, details) VALUES (?, ?, "");
-`
-
-var UpdateDetailsSQL = `
-UPDATE Candidate SET details=? WHERE ballot_code=? AND user_email=?;
-`
-
-var RemoveCandidateSQL = `
-DELETE FROM Candidate WHERE user_email=?;
-`
-
-var GetCandidiateSQL = `
-SELECT * FROM Candidate WHERE ballot_code=? AND user_email=?
-`
-
 
