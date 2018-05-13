@@ -50,8 +50,8 @@ func OpenBallot(code string) (*Ballot, error) {
 	var ballot Ballot
 	var n, d string
 	err = mysql.QueryOne(query, args, []interface{}{&ballot.Code, &ballot.Name, &ballot, 
-											        &n, &d, &ballot.E, &ballot.RegexVoter,
-											        &ballot.RegexCandidate, &ballot.Phase})
+											        &n, &d, &ballot.E, &ballot.RegexpVoter,
+											        &ballot.RegexpCandidate, &ballot.Phase})
 
 	if err != nil {
 		return nil, err
@@ -107,6 +107,9 @@ func (ballot *Ballot) AddVoter(email string) error {
 	/*
 	Check if valid voter, regexp
 	*/
+	if err := c.RegexpStr(ballot.RegexpVoter, email); err != nil {
+		return err
+	}
 
 	query, args, err := sq.Insert("BallotUser").Columns("ballot_code", "user_email").
 					       Values(ballot.Code, email).ToSql()
@@ -120,9 +123,22 @@ func (ballot *Ballot) AddVoter(email string) error {
 	return err
 }
 
-func (ballot *Ballot) UpdateRegexVoter(email string) error {
-	query, args, err := sq.Insert("BallotUser").Columns("ballot_code", "user_email").
-					       Values(ballot.Code, email).ToSql()
+func (ballot *Ballot) UpdateRegexpVoter(regexp string) error {
+	query, args, err := sq.Update("Ballot").Set("regexp_voter", regexp).
+					       Where(sq.Eq{"ballot_code": ballot.Code}).ToSql()
+
+	if err != nil {
+		return err
+	}
+
+	_, err = mysql.Exec(query, args)
+
+	return err
+}
+
+func (ballot *Ballot) UpdateRegexpCandidate(regexp string) error {
+	query, args, err := sq.Update("Ballot").Set("regexp_candidate", regexp).
+					       Where(sq.Eq{"ballot_code": ballot.Code}).ToSql()
 
 	if err != nil {
 		return err
@@ -173,6 +189,10 @@ func CloseBallotRT(openBallots *([]*Ballot), ballotCode string) {
 }
 
 func OpenBallotRT(openBallots *([]*Ballot), ballotCode string) error {
+	ballot := SearchBallotRT(openBallots, ballotCode)
+	if ballot != nil {
+		return nil
+	}
 	ballot, err := OpenBallot(ballotCode)
 	if err != nil {
 		return err

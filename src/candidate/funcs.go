@@ -6,12 +6,18 @@ import (
 	"fmt"
 	"user"
 	"ballot"
+	c "common"
+	"errors"
 )
 
 func (candidate *Candidate) Create() error {
 	/*
 	Check if valid candidate
 	*/
+	if err := c.RegexpStr(candidate.Ballot.RegexpCandidate, candidate.User.Email); err != nil {
+		return err
+	}
+
 	query, args, err := sq.Insert("Candidate").Columns("user_email", "ballot_code").
 					       Values(candidate.User.Email, candidate.Ballot.Code).ToSql()
 	if err != nil {
@@ -25,6 +31,38 @@ func (candidate *Candidate) Create() error {
 
 func (candidate *Candidate) UpdateDetails() error {
 	query, args, err := sq.Update("Candidate").Set("details", candidate.Details).
+						   Where(sq.And{
+							   sq.Eq{"ballot_code": candidate.Ballot.Code},
+							   sq.Eq{"candidate_email": candidate.User.Email}}).ToSql()
+	if err != nil {
+		return err
+	} 
+	fmt.Println(query)
+	_, err = mysql.Exec(query, args)
+	return err
+}
+
+func (candidate *Candidate) AddNominee(nominee_email string) error {
+
+	if nominee_email == candidate.User.Email {
+		return errors.New("Cannot nominate yourself :-|")
+	}
+
+	if err := c.RegexpStr(candidate.Ballot.RegexpVoter, nominee_email); err != nil {
+		return err
+	}
+
+	var setField string
+
+	if !candidate.Nominee1.Valid {
+		setField = "nominee1_email"
+	} else if !candidate.Nominee1.Valid {
+		setField = "nominee2_email"
+	} else {
+		return nil
+	}
+
+	query, args, err := sq.Update("Candidate").Set(setField, nominee_email).
 						   Where(sq.And{
 							   sq.Eq{"ballot_code": candidate.Ballot.Code},
 							   sq.Eq{"candidate_email": candidate.User.Email}}).ToSql()

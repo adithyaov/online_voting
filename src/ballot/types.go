@@ -11,8 +11,8 @@ type Ballot struct {
 	N big.Int 			  `json:"n"`
 	D big.Int 			  `json:"-"`
 	E int 				  `json:"e"`
-	RegexVoter string 	  `json:"regex_voter"`
-	RegexCandidate string `json:"regex_candidate"`
+	RegexpVoter string 	  `json:"regex_voter"`
+	RegexpCandidate string `json:"regex_candidate"`
 	Phase string 	      `json:"phase"`
 }
 

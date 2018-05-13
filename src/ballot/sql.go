@@ -9,8 +9,8 @@ CREATE TABLE Ballot(
 	n TEXT NOT NULL,
 	d TEXT NOT NULL,
 	e INT NOT NULL,
-	regex_voter TEXT DEFAULT "^(.*)$"
-	regex_candidate TEXT DEFAULT "^(.*)$",
+	regexp_voter TEXT DEFAULT "^(.*)$"
+	regexp_candidate TEXT DEFAULT "^(.*)$",
 	phase CHAR(1) DEFAULT "C"
 );
 CREATE TABLE BallotUser(

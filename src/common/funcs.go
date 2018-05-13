@@ -3,6 +3,8 @@ package common
 import (
 	"net/http"
 	"io/ioutil"
+	"errors"
+	"regexp"
 )
 
 
@@ -44,7 +46,20 @@ func ConvertISToBS(iSlice []int) []byte {
 	return bSlice
 }
 
+func RegexpStr(expr string, str string) error {
+	matched, err := regexp.MatchString(expr, str)
 
+	if err != nil {
+		return err
+	}
+
+	if matched != true {
+		return errors.New("Invalid Voter")
+	}
+
+	return nil
+
+}
 
 
 
