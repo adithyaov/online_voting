@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"strconv"
 	c "common"
+	"auth"
 )
 
 
@@ -155,7 +156,7 @@ func SignBytesAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *
 		Before responding Note the token, save the token. Auth Field required.
 	*/
 	token := r.Header["token"][0]
-	claims, err := c.ParseToken(token)
+	googleToken, err := auth.ParseToken(token)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
@@ -165,7 +166,7 @@ func SignBytesAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *
 
 	w.Header().Set("Content-Type", "application/json")
 
-	if err := ballot.AddVoter(claims["email"].(string)); err != nil {
+	if err := ballot.AddVoter(googleToken.Email); err != nil {
 		http.Error(w, err.Error(), 400)
 		return
 	}

@@ -29,7 +29,7 @@ func DeleteUser(email string) error {
 }
 
 func (user *User) SetWith(email string) error {
-	query, args, err := sq.Select("*").From("User").
+	query, args, err := sq.Select("email, name, role_code").From("User").
 						 Where(sq.Eq{"email": email}).ToSql()
 
 	if err != nil {
