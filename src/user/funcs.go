@@ -29,14 +29,14 @@ func DeleteUser(email string) error {
 }
 
 func (user *User) SetWith(email string) error {
-	query, args, err := sq.Select("email, name, role_code").From("User").
+	query, args, err := sq.Select("email, name, role_code, picture").From("User").
 						 Where(sq.Eq{"email": email}).ToSql()
 
 	if err != nil {
 		return err
 	} 
 
-	err = mysql.QueryOne(query, args, []interface{}{user.Email, user.Name, user.RoleCode})
+	err = mysql.QueryOne(query, args, []interface{}{user.Email, user.Name, user.RoleCode, user.Picture})
 	if err != nil {
 		return err
 	}
