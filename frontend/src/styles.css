@@ -3,13 +3,13 @@
 
 .wrapper {
   display: grid;
-  grid-template-columns: 200px auto;
+  grid-template-columns: 200px auto 300px;
   grid-template-rows: auto auto auto;
   grid-column-gap: 20px;
   grid-template-areas: 
-    "n n"
-    "s c"
-    "f f";
+    "n n n"
+    "s c lh"
+    "f f f";
 }
 
 .navbar {
@@ -27,5 +27,15 @@
 
 .footer {
 	grid-area: f;
+}
+
+.live-help {
+	grid-area: lh;
+	height: 400px;
+}
+
+.content .tile {
+	border: 1px solid #f0f0f0;
+	padding: 10px;
 }
 
