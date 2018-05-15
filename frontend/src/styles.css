@@ -1,1 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
+
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 200px auto;
+  grid-template-rows: auto auto auto;
+  grid-column-gap: 20px;
+  grid-template-areas: 
+    "n n"
+    "s c"
+    "f f";
+}
+
+.navbar {
+	padding: 10px;
+	grid-area: n;
+}
+
+.sidebar {
+	grid-area: s;
+}
+
+.content {
+	grid-area: c;
+}
+
+.footer {
+	grid-area: f;
+}
+

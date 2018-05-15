@@ -48,6 +48,11 @@ func (candidate *Candidate) AddNominee(nominee_email string) error {
 		return errors.New("Cannot nominate yourself :-|")
 	}
 
+	if nominee_email == candidate.Nominee1.String || 
+	   nominee_email == candidate.Nominee2.String {
+		return errors.New("Already nominated candidate :-|")
+	}
+
 	if err := c.RegexpStr(candidate.Ballot.RegexpVoter, nominee_email); err != nil {
 		return err
 	}
