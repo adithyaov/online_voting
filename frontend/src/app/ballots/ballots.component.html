@@ -1,0 +1,29 @@
+
+<div class="content-wrapper" *ngIf="token">
+  <div class="card" *ngFor="let ballot of ballots">
+    <div class="card-header">
+      <div class="card-title h5">{{ballot.name}}</div>
+      <div class="card-subtitle chip text-error">{{ballot.code}}</div>
+    </div>
+    <div class="card-body">
+      Public Key: <span class="text-bold">{{ballot.e}}</span><br/>
+      Ballot Phase: <span class="text-bold">{{ballot.phase}}</span>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary">Open Ballot</button>
+      <button class="float-right btn">Report</button>
+    </div>
+  </div>
+</div>
+
+<div class="empty" *ngIf="!token">
+  <div class="empty-icon">
+    <i class="icon icon-people"></i>
+  </div>
+  <p class="empty-title h5">You need to be logged in to see the ballots</p>
+  <p class="empty-subtitle">Click the button below to Login.</p>
+  <div class="empty-action">
+    <button class="btn btn-primary">Login</button>
+  </div>
+</div>
+

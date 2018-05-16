@@ -10,53 +10,39 @@
 	  	<b>PEN</b>BALLOT
 	  </section>
 	  <section class="navbar-section">
-	    <a class="btn btn-primary" href="">Login</a>
+	    <a *ngIf="!token" class="btn btn-primary" href="">Login</a>
+	    <a *ngIf="token" class="btn btn-primary" href="">Logout</a>
 	  </section>
 	</div>
 
 
 	<div class="sidebar">
 		<ul class="menu">
-			<div class="tile tile-centered">
+			<div class="tile tile-centered" *ngIf="token">
 		    <div class="tile-icon">
-		      <img src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/cat-icon.png" class="avatar" alt="Avatar">
+		      <img src="{{token.picture}}" class="avatar" alt="Avatar">
 		    </div>
 		    <div class="tile-content">
-		      Adithya kumar
+		      {{token.name}}
 		    </div>
 		  </div>
 
-		  <li class="divider">
-		  <li class="menu-item"><a href="#"><i class="icon icon-emoji"></i> My Info</a></li>
-		  <li class="menu-item"><a href="#"><i class="icon icon-apps"></i> My Ballots</a></li>
-		  <li class="menu-item"><a href="#"><i class="icon icon-bookmark"></i> My Nominations</a></li>
+		  <li class="divider" *ngIf="token">
+		  <li class="menu-item" *ngIf="token"><a href="#"><i class="icon icon-emoji"></i> My Info</a></li>
+		  <li class="menu-item" *ngIf="token"><a href="#"><i class="icon icon-apps"></i> My Ballots</a></li>
+		  <li class="menu-item" *ngIf="token"><a href="#"><i class="icon icon-bookmark"></i> My Nominations</a></li>
 
 		  <li class="divider" data-content="OTHER"></li>
 		  <li class="menu-item"><a href="#"><i class="icon icon-message"></i> Announcements</a></li>
 		  <li class="menu-item"><a href="#"><i class="icon icon-check"></i> Online Help</a></li>
-		  <li class="menu-item"><a href="#"><i class="icon icon-shutdown"></i> Admin (Gear 4)</a></li> 
-		  <li class="menu-item"><a href="#"><i class="icon icon-edit"></i> Candidate</a></li>
+		  <li class="menu-item" *ngIf="token"><a href="#"><i class="icon icon-shutdown"></i> Admin (Gear 4)</a></li> 
+		  <li class="menu-item" *ngIf="token"><a href="#"><i class="icon icon-edit"></i> Candidate</a></li>
 		</ul>
 	</div>
 
 
 	<div class="content">
-		<div class="tile">
-		  <div class="tile-content">
-		  	<h5>GS2017PKD</h5>
-		    <p class="tile-title">General Secratry Elections</p>
-		    <p class="tile-subtitle text-gray">
-					Public Key : 67115
-					<br />
-					Modulus : 2098301930917201648650...0198635011113515151
-				</p>
-				<p>
-          <button class="btn btn-primary btn-sm">Open</button>
-          <button class="btn btn-sm float-right">Report</button>
-        </p>
-		  </div>
-		</div>
-
+		<app-ballots></app-ballots>
 	</div>
 
 	<div class="panel live-help">
@@ -96,7 +82,7 @@
 	      </div>
 	    </div>
 	  </div>
-	  <div class="panel-footer">
+	  <div class="panel-footer" *ngIf="token">
 	    <div class="input-group">
 	      <input class="form-input" placeholder="Hello" type="text">
 	      <button class="btn btn-primary input-group-btn">Send</button>

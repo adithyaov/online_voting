@@ -1,0 +1,13 @@
+.content-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.content-wrapper .card {
+	margin-bottom: 10px;
+	width: 400px;
+	overflow: auto;
+}
