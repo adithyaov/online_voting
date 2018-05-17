@@ -1,11 +1,10 @@
-.ballots {
+.candidates {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 }
 
-.ballots .card {
+.candidates .panel {
 	margin-bottom: 10px;
 	width: 400px;
 	overflow: auto;
 }
-

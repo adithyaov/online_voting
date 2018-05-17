@@ -12,7 +12,8 @@ export class TokenService {
 		this.token = {
 			jwt_token: "ahdvajsvd.asdasa.dasda",
 			name: "Adithya Kumar",
-			picture: "http://icons.iconarchive.com/icons/paomedia/small-n-flat/256/cat-icon.png"
+			picture: "http://icons.iconarchive.com/icons/paomedia/small-n-flat/256/cat-icon.png",
+			email: "adithya.creed@gmail.com"
 		}
 		return this.token;
 	}

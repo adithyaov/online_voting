@@ -10,8 +10,10 @@ import { Ballot, Token } from '../types';
 })
 export class BallotsComponent implements OnInit {
 
-  constructor(private ballotService: BallotService,
-              private tokenService: TokenService) { }
+  constructor(
+    private ballotService: BallotService,
+    private tokenService: TokenService
+  ) { }
 
 
   token: Token
@@ -26,7 +28,8 @@ export class BallotsComponent implements OnInit {
   ballots: Ballot[];
 
   getBallots(): void {
-  	this.ballots = this.ballotService.getBallots();
+  	this.ballotService.getBallots()
+      .subscribe(ballots => this.ballots = ballots);      
   }
 
 

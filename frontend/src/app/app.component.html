@@ -1,4 +1,3 @@
-
 <div class="wrapper">
 
 	<div class="navbar">
@@ -29,7 +28,9 @@
 
 		  <li class="divider" *ngIf="token">
 		  <li class="menu-item" *ngIf="token"><a href="#"><i class="icon icon-emoji"></i> My Info</a></li>
-		  <li class="menu-item" *ngIf="token"><a href="#"><i class="icon icon-apps"></i> My Ballots</a></li>
+		  <li class="menu-item" *ngIf="token">
+		  	<a routerLink="/ballots"><i class="icon icon-apps"></i> My Ballots</a>
+		  </li>
 		  <li class="menu-item" *ngIf="token"><a href="#"><i class="icon icon-bookmark"></i> My Nominations</a></li>
 
 		  <li class="divider" data-content="OTHER"></li>
@@ -42,7 +43,17 @@
 
 
 	<div class="content">
-		<app-ballots></app-ballots>
+		<router-outlet *ngIf="token"></router-outlet>
+		<div class="empty" *ngIf="!token">
+		  <div class="empty-icon">
+		    <i class="icon icon-people"></i>
+		  </div>
+		  <p class="empty-title h5">You need to be logged in to see the ballots</p>
+		  <p class="empty-subtitle">Click the button below to Login.</p>
+		  <div class="empty-action">
+		    <button class="btn btn-primary">Login</button>
+		  </div>
+		</div>
 	</div>
 
 	<div class="panel live-help">

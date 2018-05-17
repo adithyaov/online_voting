@@ -1,4 +1,4 @@
-export class Ballot {
+class Ballot {
   code: string;
   name: string;
   e: number;
@@ -8,9 +8,23 @@ export class Ballot {
   phase: string;
 }
 
-export class Token {
+class Token {
 	jwt_token: string;
 	name: string;
 	picture: string;
+	email: string;
 }
+
+
+class Candidate {
+	name: string;
+	email: string;
+	document: string;
+	picture: string;
+	nominee1: string;
+	nominee2: string;
+}
+
+
+export { Ballot, Token, Candidate }
 
