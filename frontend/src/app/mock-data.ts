@@ -4,7 +4,8 @@ import { Ballot, Candidate, Token, User } from './types';
 const USER: User = {
   name: "Adithya Kumar",
   picture: "http://icons.iconarchive.com/icons/paomedia/small-n-flat/256/cat-icon.png",
-  email: "adithya.creed@gmail.com"
+  email: "adithya.creed@gmail.com",
+  role_code: "A"
 }
 
 const TOKEN: Token = {
@@ -26,7 +27,7 @@ const BALLOTS: Ballot[] = [
 ];
 
 const CANDIDATES: Candidate[] = [
-	{user: {name: "Test", email: "lala@gmail.com", picture: undefined}, ballot_code: "lala", nominee1: undefined, nominee2: undefined, document: "oogle.ciom"},
+	{user: {role_code: "A", name: "Test", email: "lala@gmail.com", picture: undefined}, ballot: BALLOTS[5], nominee1: undefined, nominee2: undefined, document: "oogle.ciom"},
 ]
 
 export {

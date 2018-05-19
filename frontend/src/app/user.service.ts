@@ -1,9 +1,17 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { Candidate } from './types';
+import { CANDIDATES } from './mock-data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor() { }
+  getNominations(): Observable<Candidate[]> {
+    return of(CANDIDATES);
+  }
+
+	constructor() { }
+
 }

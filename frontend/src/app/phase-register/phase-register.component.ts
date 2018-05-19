@@ -13,6 +13,7 @@ export class PhaseRegisterComponent implements OnInit {
 
 	@Input() ballot: Ballot;
 	token: Token;
+	documentUrl: string = "undefined";
 
   constructor(
     private ballotService: BallotService,

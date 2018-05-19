@@ -10,14 +10,14 @@ import { Token } from './types';
 export class AppComponent {
   constructor(private tokenService: TokenService) { }
 
-  info_model: boolean = false;
-  activate_info_model(): void {
-  	this.info_model = true;
-  	console.log(this.info_model)
+  infoModel: boolean = false;
+  activateInfoModel(): void {
+  	this.infoModel = true;
+  	console.log(this.infoModel)
   }
-  deactivate_info_model(): void {
-  	this.info_model = false;
-  	console.log(this.info_model)
+  deactivateInfoModel(): void {
+  	this.infoModel = false;
+  	console.log(this.infoModel)
   }
 
   token: Token = this.tokenService.setToken();

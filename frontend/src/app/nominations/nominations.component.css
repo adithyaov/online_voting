@@ -1,0 +1,10 @@
+.candidates {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+}
+
+.candidates .panel {
+	margin-bottom: 10px;
+	width: 400px;
+	overflow: auto;
+}

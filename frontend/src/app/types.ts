@@ -12,6 +12,7 @@ class User {
 	name: string;
 	picture: string;
 	email: string;
+	role_code: string;
 }
 
 class Token {
@@ -22,7 +23,7 @@ class Token {
 
 class Candidate {
 	user: User;
-	ballot_code: string;
+	ballot: Ballot;
 	document: string;
 	nominee1: string;
 	nominee2: string;
