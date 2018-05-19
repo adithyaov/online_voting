@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Token } from './types';
+import { TOKEN } from './mock-data';
 
 @Injectable({
   providedIn: 'root'
@@ -9,12 +10,7 @@ export class TokenService {
 	token: Token = undefined;
 
 	setToken(): Token {
-		this.token = {
-			jwt_token: "ahdvajsvd.asdasa.dasda",
-			name: "Adithya Kumar",
-			picture: "http://icons.iconarchive.com/icons/paomedia/small-n-flat/256/cat-icon.png",
-			email: "adithya.creed@gmail.com"
-		}
+		this.token = TOKEN
 		return this.token;
 	}
 

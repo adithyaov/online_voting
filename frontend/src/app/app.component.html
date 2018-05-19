@@ -19,10 +19,10 @@
 		<ul class="menu">
 			<div class="tile tile-centered" *ngIf="token">
 		    <div class="tile-icon">
-		      <img src="{{token.picture}}" class="avatar" alt="Avatar">
+		      <img src="{{token.user.picture}}" class="avatar" alt="Avatar">
 		    </div>
 		    <div class="tile-content">
-		      {{token.name}}
+		      {{token.user.name}}
 		    </div>
 		  </div>
 
@@ -119,11 +119,11 @@
       <div class="content">
         <div class="text-center">
         	<figure class="avatar avatar-lg">
-            <img src="{{token.picture}}" alt="Avatar">
+            <img src="{{token.user.picture}}" alt="Avatar">
           </figure>
-          <span style="margin-left: 10px">{{token.name}}</span>
+          <span style="margin-left: 10px">{{token.user.name}}</span>
           <div class="divider"></div>
-          Email <span class="chip">{{token.email}}</span><br />
+          Email <span class="chip">{{token.user.email}}</span><br />
           Token <span class="chip">{{token.jwt_token}}</span>
         </div>
       </div>

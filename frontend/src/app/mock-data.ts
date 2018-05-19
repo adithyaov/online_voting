@@ -1,5 +1,17 @@
 
-import { Ballot, Candidate } from './types';
+import { Ballot, Candidate, Token, User } from './types';
+
+const USER: User = {
+  name: "Adithya Kumar",
+  picture: "http://icons.iconarchive.com/icons/paomedia/small-n-flat/256/cat-icon.png",
+  email: "adithya.creed@gmail.com"
+}
+
+const TOKEN: Token = {
+  jwt_token: "ahdvajsvd.asdasa.dasda",
+  user: USER
+}
+
 
 const BALLOTS: Ballot[] = [
   { phase: "C", code: "c1", name: 'Mr. Nice 1', e: 22, n: "skjsba", regex_voter: "rv", regex_candidate: "rc" },
@@ -14,13 +26,13 @@ const BALLOTS: Ballot[] = [
 ];
 
 const CANDIDATES: Candidate[] = [
-	{name: "Test", nominee1: undefined, nominee2: undefined, email: "lala@gmail.com", document: "oogle.ciom", picture:""},
-	{name: "Test", nominee1: "n1", nominee2: "n2", email: "lala@gmail.com", document: "oogle.ciom", picture:""},
-	{name: "Test", nominee1: "adithya.creed@gmail.com", nominee2: undefined, email: "lala@gmail.com", document: "oogle.ciom", picture:""}
+	{user: {name: "Test", email: "lala@gmail.com", picture: undefined}, ballot_code: "lala", nominee1: undefined, nominee2: undefined, document: "oogle.ciom"},
 ]
 
 export {
 	BALLOTS,
-	CANDIDATES
+	CANDIDATES,
+  USER,
+  TOKEN
 }
 

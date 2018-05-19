@@ -42,102 +42,15 @@
 	</div>
 
 	<div *ngSwitchCase="'R'">
-		<div class="tile">
-			<div class="tile-content">
-		    <h6>Register as Candidate for {{ballot.name}}</h6>
-		    <ul>
-		    	<li>You need atleast 2 nominations in the Nomination phase.</li>
-		    	<li>You cannot nominate yourself.</li>
-		    	<li>You will be removed as a Candidate if the requirement is not met.</li>
-		    	<li>Additionally, the admins have the right to remove you with valid reasons.</li>
-		    </ul>
-				<div class="form-group">
-				  <label class="form-label text-error" for="doc-url">Link to your document*</label>
-				  <input class="form-input" type="text" id="doc-url" placeholder="Preferabally google docs.">
-				</div>
-		    <button class="btn">I am aware of the above, Register me!</button>
-	  	</div>
-		</div>
+		<app-phase-register [ballot]="ballot"></app-phase-register>
 	</div>
 
 	<div *ngSwitchCase="'V'">
-		<div *ngIf="voted" class="toast toast-success">
-		  Already voted in this ballot :-)
-		</div>
-		<br *ngIf="voted" />
-		<div class="candidates">
-			<div *ngFor="let c of candidates" class="panel">
-			  <div class="panel-header text-center">
-			    <figure class="avatar avatar-lg">
-			      <img src="{{c.picture}}" alt="Avatar">
-			    </figure>
-			    <div class="panel-title h5 mt-10">{{c.name}}</div>
-			    <div class="panel-subtitle">{{c.email}}</div>
-			  </div>
-			  <div class="divider text-center" data-content="PROFILE"></div>
-			  <div class="panel-body">
-			    <div class="tile tile-centered" style="border: none;">
-			      <div class="tile-content">
-			        <div class="tile-title text-gray">Document URL</div>
-			        <div class="tile-subtitle">{{c.document}}</div>
-			      </div>
-			    </div>
-			    <div class="tile tile-centered" style="border: none;">
-			      <div class="tile-content">
-			        <div class="tile-title text-gray">Nominee 1 email id</div>
-			        <div class="tile-subtitle">{{c.nominee1}}</div>
-			      </div>
-			    </div>
-			    <div class="tile tile-centered" style="border: none;">
-			      <div class="tile-content">
-			        <div class="tile-title text-gray">Nominee 2 email id</div>
-			        <div class="tile-subtitle">{{c.nominee2}}</div>
-			      </div>
-			    </div>
-			  </div>
-			  <div class="panel-footer">
-			    <button *ngIf="!voted" class="btn btn-primary btn-block">Vote for {{c.name}}</button>
-			  </div>
-			</div>
-		</div>
+		<app-phase-voting [ballot]="ballot"></app-phase-voting>
 	</div>
 
 	<div *ngSwitchCase="'N'">
-		<div class="candidates">
-			<div *ngFor="let c of candidates" class="panel">
-			  <div class="panel-header text-center">
-			    <figure class="avatar avatar-lg">
-			      <img src="{{c.picture}}" alt="Avatar">
-			    </figure>
-			    <div class="panel-title h5 mt-10">{{c.name}}</div>
-			    <div class="panel-subtitle">{{c.email}}</div>
-			  </div>
-			  <div class="divider text-center" data-content="PROFILE"></div>
-			  <div class="panel-body">
-			    <div class="tile tile-centered" style="border: none;">
-			      <div class="tile-content">
-			        <div class="tile-title text-gray">Document URL</div>
-			        <div class="tile-subtitle">{{c.document}}</div>
-			      </div>
-			    </div>
-			    <div class="tile tile-centered" style="border: none;">
-			      <div class="tile-content">
-			        <div class="tile-title text-gray">Nominee 1 email id</div>
-			        <div class="tile-subtitle">{{c.nominee1}}</div>
-			      </div>
-			    </div>
-			    <div class="tile tile-centered" style="border: none;">
-			      <div class="tile-content">
-			        <div class="tile-title text-gray">Nominee 2 email id</div>
-			        <div class="tile-subtitle">{{c.nominee2}}</div>
-			      </div>
-			    </div>
-			  </div>
-			  <div class="panel-footer">
-			    <button *ngIf="(c.nominee1 != token.email && c.nominee2 != token.email && token.email != c.email) && (c.nominee1 == undefined || c.nominee2 == undefined)" class="btn btn-primary btn-block">Nominate {{c.name}}</button>
-			  </div>
-			</div>
-		</div>
+		<app-phase-nomination [ballot]="ballot"></app-phase-nomination>
 	</div>
 
 

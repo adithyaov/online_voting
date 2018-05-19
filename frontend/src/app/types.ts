@@ -8,23 +8,26 @@ class Ballot {
   phase: string;
 }
 
-class Token {
-	jwt_token: string;
+class User {
 	name: string;
 	picture: string;
 	email: string;
 }
 
+class Token {
+	jwt_token: string;
+	user: User;
+}
+
 
 class Candidate {
-	name: string;
-	email: string;
+	user: User;
+	ballot_code: string;
 	document: string;
-	picture: string;
 	nominee1: string;
 	nominee2: string;
 }
 
 
-export { Ballot, Token, Candidate }
+export { Ballot, Token, Candidate, User }
 

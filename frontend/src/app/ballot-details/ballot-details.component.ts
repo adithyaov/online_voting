@@ -14,8 +14,6 @@ import { TokenService } from '../token.service';
 export class BallotDetailsComponent implements OnInit {
 
 	ballot: Ballot;
-	candidates: Candidate[];
-	voted: boolean = true;
 	token: Token;
 
   constructor(
@@ -29,13 +27,7 @@ export class BallotDetailsComponent implements OnInit {
   	this.token = this.tokenService.getToken();
     const code = this.route.snapshot.paramMap.get('code');
 		this.ballotService.getBallot(code)
-		  .subscribe(ballot => {
-		  	this.ballot = ballot
-		  	if (ballot.phase == "V" || ballot.phase == "N") {
-		  		this.ballotService.getCandidates(code)
-		  			.subscribe(candidates => this.candidates = candidates)
-		  	}
-		  });
+		  .subscribe(ballot => this.ballot = ballot);
   }
 
 
