@@ -21,7 +21,6 @@ export class BallotsComponent implements OnInit {
   ngOnInit() {
     this.token = this.tokenService.getToken();
     // GoOn depending on the token
-    console.log(this.token == null)
   	this.getBallots();
   }
 

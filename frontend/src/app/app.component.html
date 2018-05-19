@@ -27,7 +27,9 @@
 		  </div>
 
 		  <li class="divider" *ngIf="token">
-		  <li class="menu-item" *ngIf="token"><a href="#"><i class="icon icon-emoji"></i> My Info</a></li>
+		  <li class="menu-item" *ngIf="token">
+		  	<a class="c-hand" (click)="activate_info_model()"><i class="icon icon-emoji"></i> My Info</a>
+		  </li>
 		  <li class="menu-item" *ngIf="token">
 		  	<a routerLink="/ballots"><i class="icon icon-apps"></i> My Ballots</a>
 		  </li>
@@ -106,4 +108,31 @@
 	</div>
 
 </div>
+
+
+
+<!-- Info model -->
+<div *ngIf="info_model" class="modal-sm modal active">
+  <a (click)="deactivate_info_model()" class="modal-overlay" aria-label="Close"></a>
+  <div class="modal-container">
+    <div class="modal-body">
+      <div class="content">
+        <div class="text-center">
+        	<figure class="avatar avatar-lg">
+            <img src="{{token.picture}}" alt="Avatar">
+          </figure>
+          <span style="margin-left: 10px">{{token.name}}</span>
+          <div class="divider"></div>
+          Email <span class="chip">{{token.email}}</span><br />
+          Token <span class="chip">{{token.jwt_token}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a (click)="deactivate_info_model()" class="btn btn-link">Close</a>
+    </div>
+  </div>
+</div>
+
+
 

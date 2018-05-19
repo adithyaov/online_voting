@@ -10,6 +10,16 @@ import { Token } from './types';
 export class AppComponent {
   constructor(private tokenService: TokenService) { }
 
+  info_model: boolean = false;
+  activate_info_model(): void {
+  	this.info_model = true;
+  	console.log(this.info_model)
+  }
+  deactivate_info_model(): void {
+  	this.info_model = false;
+  	console.log(this.info_model)
+  }
+
   token: Token = this.tokenService.setToken();
 
   title = 'application';
