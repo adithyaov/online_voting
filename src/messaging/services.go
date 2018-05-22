@@ -4,6 +4,7 @@ import (
 	"user"
 	"net/http"
 	"github.com/gorilla/websocket"
+	"auth"
 )
 
 func HandleConnection(w http.ResponseWriter, r *http.Request,
@@ -22,9 +23,15 @@ func HandleConnection(w http.ResponseWriter, r *http.Request,
 	user := user.User{}
 	clients[&user] = ws
 
+	token := r.Header["token"][0]
+	googleToken, err := auth.ParseToken(token)
 	// handel token and dependigly execute one of these
-	handelUser(clients, info, &user, ch)
-	handelModerator(clients, info, &user, ch)
+	if googleToken.RoleCode == "M" {
+		handelModerator(clients, info, &user, ch)
+	} else {
+		handelUser(clients, info, &user, ch)
+	}
+	
 
 }
 

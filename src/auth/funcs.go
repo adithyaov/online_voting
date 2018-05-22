@@ -16,6 +16,7 @@ func (gt GoogleToken) ToClaims() jwt.MapClaims {
 		"name": gt.Name,
 		"aud": gt.Aud,
 		"role_code": gt.RoleCode,
+		"picture": gt.Picture,
 	}
 }
 
@@ -40,6 +41,7 @@ func GenerateToken(googleToken string) (string, error) {
 		"iat": "1433978353",
 		"exp": "1433981953",
 		"name": "Adithya O V",
+		"picture": "ssdsds",
 		"aud": "1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com",
 	})
 	tokenString, err := token.SignedString(SessionSecret)
@@ -74,8 +76,8 @@ func ParseToken(tokenString string) (GoogleToken, error) {
 	        return GoogleToken{}, err
 	    }
 	    return GoogleToken{claims["aud"].(string), time.Unix(iat, 0), time.Unix(exp, 0),
-	    				   claims["email"].(string), claims["email"].(string),
-	    				   email_ver, claims["name"].(string)}, nil
+	    				   claims["email"].(string), claims["email"].(string), email_ver,
+	    				   claims["name"].(string), claims["picture"].(string)}, nil
 	}
 	return GoogleToken{}, fmt.Errorf("Invalid Token")
 }

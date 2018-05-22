@@ -37,6 +37,7 @@ type GoogleToken struct {
 	RoleCode string	   `json:"role_code"`
 	EmailVerified bool `json:"email_verified"`
 	Name string		   `json:"name"`
+	Picture string	   `json:"picture"`
 }
 
 
