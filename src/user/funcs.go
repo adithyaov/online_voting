@@ -4,7 +4,15 @@ import (
 	"mysql"
 	sq "github.com/Masterminds/squirrel"
 	"fmt"
+	"auth"
 )
+
+func (user *User) FromToken(gt auth.GoogleToken) {
+	user.Email = gt.Email
+	user.Name = gt.Name
+	user.RoleCode = gt.RoleCode
+	user.Picture = gt.Picture	
+}
 
 func (user *User) Create() error {
 	query, args, err := sq.Insert("User").Columns("name", "email").

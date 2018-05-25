@@ -29,6 +29,7 @@ func (gt GoogleToken) ToToken() (string, error) {
 	return tokenString, nil
 }
 
+
 func GenerateToken(googleToken string) (string, error) {
 	// Verify google token
 
