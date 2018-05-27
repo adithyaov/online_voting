@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"regexp"
 	"fmt"
+	"strings"
 )
 
 
@@ -59,6 +60,17 @@ func RegexpStr(expr string, str string) error {
 
 	return nil
 
+}
+
+
+func MethodWrapper(requestType string, fn http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if strings.ToUpper(r.Method) != strings.ToUpper(requestType) {
+			http.Error(w, "Method not allowed :-(", 400)
+			return
+		}
+		fn(w, r)
+	}
 }
 
 
