@@ -50,6 +50,11 @@ func HandleConnectionModerator(w http.ResponseWriter, r *http.Request,
 	token := r.Header["token"][0]
 	googleToken, err := auth.ParseToken(token)
 
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
 	user := user.User{}
 	user.FromToken(googleToken)
 
