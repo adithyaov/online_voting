@@ -178,11 +178,9 @@ func (ballot *Ballot) VerifySign(hashed []byte, unblindedSign []byte) error {
 }
 
 // Need to edit this function
-func SearchBallotRT(openBallots *([]*Ballot), ballotCode string) *Ballot {
-	for _, b := range *openBallots {
-		if b.Code == ballotCode {
-			return b
-		}
+func SearchBallotRT(openBallots map[string]*Ballot, ballotCode string) *Ballot {
+	if ballot, ok := openBallots[ballotCode]; ok {
+		return ballot
 	}
 	return nil
 }
@@ -212,7 +210,7 @@ func SearchBallotRT(openBallots *([]*Ballot), ballotCode string) *Ballot {
 
 // Wrapper wraps the functions which require ballot, searches the ballot and
 // runs the corresponding function
-func Wrapper(fn func(http.ResponseWriter, *http.Request, *Ballot, *[]byte), openBallots *([]*Ballot)) c.BodyExtracted {
+func Wrapper(fn func(http.ResponseWriter, *http.Request, *Ballot, *[]byte), openBallots map[string]*Ballot) c.BodyExtracted {
 	return func(w http.ResponseWriter, r *http.Request, body *[]byte) {
 		var data struct {
 			BallotCode string `json:"ballot_code"`
