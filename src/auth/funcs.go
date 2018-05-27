@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -91,11 +92,24 @@ func ParseToken(tokenString string) (GoogleToken, error) {
 
 // Wrapper wraps the corresponding function after checking
 // the jwt token in the header
-func Wrapper(fn http.HandlerFunc) http.HandlerFunc {
+func Wrapper(validRoleCodes []string, fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		token := r.Header["token"][0]
-		_, err := ParseToken(token)
+		gt, err := ParseToken(token)
+
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+
+		err = errors.New("Permission denied")
+		for _, code := range validRoleCodes {
+			if code == gt.RoleCode {
+				err = nil
+				break
+			}
+		}
 
 		if err != nil {
 			http.Error(w, err.Error(), 400)

@@ -28,16 +28,14 @@ import (
 
 */
 
-
+// GoogleToken is the basic token decoded from jwt token
 type GoogleToken struct {
-	Aud string		   `json:"-"`
-	Iat time.Time	   `json:"iat"`
-	Exp time.Time	   `json:"exp"`
-	Email string	   `json:"email"`
-	RoleCode string	   `json:"role_code"`
-	EmailVerified bool `json:"email_verified"`
-	Name string		   `json:"name"`
-	Picture string	   `json:"picture"`
+	Aud           string    `json:"-"`
+	Iat           time.Time `json:"iat"`
+	Exp           time.Time `json:"exp"`
+	Email         string    `json:"email"`
+	RoleCode      string    `json:"role_code"`
+	EmailVerified bool      `json:"email_verified"`
+	Name          string    `json:"name"`
+	Picture       string    `json:"picture"`
 }
-
-

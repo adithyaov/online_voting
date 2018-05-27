@@ -1,7 +1,7 @@
 package common
 
 import (
-	"fmt"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -58,7 +58,7 @@ func RegexpStr(expr string, str string) error {
 	}
 
 	if matched != true {
-		return fmt.Errorf("invalid voter")
+		return errors.New("Invalid voter")
 	}
 
 	return nil
