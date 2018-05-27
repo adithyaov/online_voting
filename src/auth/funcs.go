@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+	"http"
 )
 
 func (gt GoogleToken) ToClaims() jwt.MapClaims {
@@ -84,3 +85,19 @@ func ParseToken(tokenString string) (GoogleToken, error) {
 }
 
 
+
+
+func AuthWrapper(fn http.HandlerFunc) http.HandlerFunc {
+	return func (w http.ResponseWriter, r *http.Request) {
+
+		token := r.Header["token"][0]
+		googleToken, err := auth.ParseToken(token)
+
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+
+		fn(w, r)
+	}
+}
