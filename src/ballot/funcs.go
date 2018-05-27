@@ -1,19 +1,22 @@
 package ballot
 
 import (
+	c "common"
 	"crypto"
 	"crypto/rand"
-	"crypto/rsa"
-	_ "crypto/sha256"
-	"github.com/cryptoballot/rsablind"
-	"github.com/cryptoballot/fdh"
-	"mysql"
+	rsa "crypto/rsa"
+	_ "crypto/sha256" // Required for the init(), registering the hash.
 	"encoding/json"
+	"mysql"
 	"net/http"
-	c "common"
+
 	sq "github.com/Masterminds/squirrel"
+	"github.com/cryptoballot/fdh"
+	"github.com/cryptoballot/rsablind"
 )
 
+// CreateBallot generates a priv, pub keys and returns
+// a *Ballot depending on input params.
 func CreateBallot(code string, name string) (*Ballot, error) {
 	key, err := rsa.GenerateKey(rand.Reader, KeySize)
 	if err != nil {
@@ -21,13 +24,13 @@ func CreateBallot(code string, name string) (*Ballot, error) {
 	}
 
 	query, args, err := sq.Insert("Ballot").Columns("code", "name", "n", "d", "e").
-					       Values(code, name, (*(key.PublicKey.N)).String(), 
-					  	          (*(key.D)).String(), key.PublicKey.E).ToSql()
+		Values(code, name, (*(key.PublicKey.N)).String(),
+			(*(key.D)).String(), key.PublicKey.E).ToSql()
 
 	if err != nil {
 		return nil, err
 	}
-	
+
 	_, err = mysql.Exec(query, args)
 
 	if err != nil {
@@ -38,10 +41,11 @@ func CreateBallot(code string, name string) (*Ballot, error) {
 	return &ballot, nil
 }
 
+// OpenBallot searches the database and returns *Ballot
 func OpenBallot(code string) (*Ballot, error) {
 
 	query, args, err := sq.Select("*").From("Ballot").
-					       Where(sq.Eq{"ballot_code": code}).ToSql()
+		Where(sq.Eq{"ballot_code": code}).ToSql()
 
 	if err != nil {
 		return nil, err
@@ -49,9 +53,9 @@ func OpenBallot(code string) (*Ballot, error) {
 
 	var ballot Ballot
 	var n, d string
-	err = mysql.QueryOne(query, args, []interface{}{&ballot.Code, &ballot.Name, &ballot, 
-											        &n, &d, &ballot.E, &ballot.RegexpVoter,
-											        &ballot.RegexpCandidate, &ballot.Phase})
+	err = mysql.QueryOne(query, args, []interface{}{&ballot.Code, &ballot.Name, &ballot,
+		&n, &d, &ballot.E, &ballot.RegexpVoter,
+		&ballot.RegexpCandidate, &ballot.Phase})
 
 	if err != nil {
 		return nil, err
@@ -63,14 +67,15 @@ func OpenBallot(code string) (*Ballot, error) {
 	if _, chk := ballot.D.SetString(d, 10); chk != true {
 		return nil, err
 	}
-	
+
 	return &ballot, nil
 }
 
+// DeleteBallot deletes the Ballot from the database
 func DeleteBallot(code string) error {
 
 	query, args, err := sq.Delete("Ballot").
-					       Where(sq.Eq{"ballot_code": code}).ToSql()
+		Where(sq.Eq{"ballot_code": code}).ToSql()
 
 	if err != nil {
 		return err
@@ -82,7 +87,7 @@ func DeleteBallot(code string) error {
 
 }
 
-
+// Hash hashes the Vote type
 func (vote *Vote) Hash() ([]byte, error) {
 	message, err := json.Marshal(vote)
 	if err != nil {
@@ -91,8 +96,9 @@ func (vote *Vote) Hash() ([]byte, error) {
 	return fdh.Sum(crypto.SHA256, HashSize, message), nil
 }
 
+// BlindVote take a Vote and returns blinded vote hash and corresponding unblinder
 func (ballot *Ballot) BlindVote(vote Vote) ([]byte, []byte, error) {
-	publicKey := rsa.PublicKey{&(ballot.N), ballot.E}
+	publicKey := rsa.PublicKey{N: &(ballot.N), E: ballot.E}
 	hashed, err := vote.Hash()
 	if err != nil {
 		return nil, nil, err
@@ -101,18 +107,17 @@ func (ballot *Ballot) BlindVote(vote Vote) ([]byte, []byte, error) {
 	return rsablind.Blind(&publicKey, hashed)
 }
 
-
+// AddVoter inserts voter into DB corresponding to the given ballot
+// to avoid spam.
 func (ballot *Ballot) AddVoter(email string) error {
 
-	/*
-	Check if valid voter, regexp
-	*/
+	//Check if valid voter, regexp
 	if err := c.RegexpStr(ballot.RegexpVoter, email); err != nil {
 		return err
 	}
 
 	query, args, err := sq.Insert("BallotUser").Columns("ballot_code", "user_email").
-					       Values(ballot.Code, email).ToSql()
+		Values(ballot.Code, email).ToSql()
 
 	if err != nil {
 		return err
@@ -123,9 +128,10 @@ func (ballot *Ballot) AddVoter(email string) error {
 	return err
 }
 
+// UpdateRegexpVoter updates voter regex of corresponding ballot
 func (ballot *Ballot) UpdateRegexpVoter(regexp string) error {
 	query, args, err := sq.Update("Ballot").Set("regexp_voter", regexp).
-					       Where(sq.Eq{"ballot_code": ballot.Code}).ToSql()
+		Where(sq.Eq{"ballot_code": ballot.Code}).ToSql()
 
 	if err != nil {
 		return err
@@ -136,9 +142,10 @@ func (ballot *Ballot) UpdateRegexpVoter(regexp string) error {
 	return err
 }
 
+// UpdateRegexpCandidate updates candidate regex of corresponding ballot
 func (ballot *Ballot) UpdateRegexpCandidate(regexp string) error {
 	query, args, err := sq.Update("Ballot").Set("regexp_candidate", regexp).
-					       Where(sq.Eq{"ballot_code": ballot.Code}).ToSql()
+		Where(sq.Eq{"ballot_code": ballot.Code}).ToSql()
 
 	if err != nil {
 		return err
@@ -149,27 +156,28 @@ func (ballot *Ballot) UpdateRegexpCandidate(regexp string) error {
 	return err
 }
 
-
+// SignBlindHash signs the blinded vote hash and returns the signed hash
 func (ballot *Ballot) SignBlindHash(blinded []byte) ([]byte, error) {
-	publicKey := rsa.PublicKey{&(ballot.N), ballot.E}
+	publicKey := rsa.PublicKey{N: &(ballot.N), E: ballot.E}
 	privateKey := rsa.PrivateKey{PublicKey: publicKey, D: &(ballot.D)}
-	
+
 	return rsablind.BlindSign(&privateKey, blinded)
 }
 
-
+// UnblindSignedHash takes the signed blind hash and unblinder and returns the
+// signed hash.
 func (ballot *Ballot) UnblindSignedHash(sign []byte, unblinder []byte) []byte {
-	publicKey := rsa.PublicKey{&(ballot.N), ballot.E}
+	publicKey := rsa.PublicKey{N: &(ballot.N), E: ballot.E}
 	return rsablind.Unblind(&publicKey, sign, unblinder)
 }
 
+// VerifySign takes the hash and signed hash verifies for the corresponding ballot.
 func (ballot *Ballot) VerifySign(hashed []byte, unblindedSign []byte) error {
-	publicKey := rsa.PublicKey{&(ballot.N), ballot.E}
+	publicKey := rsa.PublicKey{N: &(ballot.N), E: ballot.E}
 	return rsablind.VerifyBlindSignature(&publicKey, hashed, unblindedSign)
 }
 
-
-
+// Need to edit this function
 func SearchBallotRT(openBallots *([]*Ballot), ballotCode string) *Ballot {
 	for _, b := range *openBallots {
 		if b.Code == ballotCode {
@@ -179,32 +187,33 @@ func SearchBallotRT(openBallots *([]*Ballot), ballotCode string) *Ballot {
 	return nil
 }
 
+// // Need to edit this function
+// func CloseBallotRT(openBallots *([]*Ballot), ballotCode string) {
+// 	for i, b := range *openBallots {
+// 		if b.Code == ballotCode {
+// 			*openBallots = append((*openBallots)[:i], (*openBallots)[i+1:]...)
+// 		}
+// 	}
+// }
 
-func CloseBallotRT(openBallots *([]*Ballot), ballotCode string) {
-	for i, b := range *openBallots {
-		if b.Code == ballotCode {
-			*openBallots = append((*openBallots)[:i], (*openBallots)[i+1:]...)
-		}
-	}
-}
+// // Need to edit this function
+// func OpenBallotRT(openBallots *([]*Ballot), ballotCode string) error {
+// 	ballot := SearchBallotRT(openBallots, ballotCode)
+// 	if ballot != nil {
+// 		return nil
+// 	}
+// 	ballot, err := OpenBallot(ballotCode)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	*openBallots = append(*openBallots, ballot)
+// 	return nil
+// }
 
-func OpenBallotRT(openBallots *([]*Ballot), ballotCode string) error {
-	ballot := SearchBallotRT(openBallots, ballotCode)
-	if ballot != nil {
-		return nil
-	}
-	ballot, err := OpenBallot(ballotCode)
-	if err != nil {
-		return err
-	}
-	*openBallots = append(*openBallots, ballot)
-	return nil
-}
-
-
-
-func BallotWrapper(fn func(http.ResponseWriter, *http.Request, *Ballot, *[]byte), openBallots *([]*Ballot)) c.BodyExtracted {
-	return func (w http.ResponseWriter, r *http.Request, body *[]byte) {
+// Wrapper wraps the functions which require ballot, searches the ballot and
+// runs the corresponding function
+func Wrapper(fn func(http.ResponseWriter, *http.Request, *Ballot, *[]byte), openBallots *([]*Ballot)) c.BodyExtracted {
+	return func(w http.ResponseWriter, r *http.Request, body *[]byte) {
 		var data struct {
 			BallotCode string `json:"ballot_code"`
 		}
@@ -223,4 +232,3 @@ func BallotWrapper(fn func(http.ResponseWriter, *http.Request, *Ballot, *[]byte)
 		fn(w, r, ballot, body)
 	}
 }
-

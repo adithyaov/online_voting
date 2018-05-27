@@ -1,11 +1,13 @@
 package messaging
 
 import (
-	"github.com/gorilla/websocket"
 	"math/rand"
 	"user"
+
+	"github.com/gorilla/websocket"
 )
-	
+
+// DeployFromChannel listens from a channel and deployes the message to every client
 func DeployFromChannel(clients map[*websocket.Conn]bool, ch chan Message) {
 	for {
 		msg := <-ch
@@ -21,23 +23,22 @@ func DeployFromChannel(clients map[*websocket.Conn]bool, ch chan Message) {
 }
 
 func findModerator(clients map[*user.User]*websocket.Conn,
-				   info map[string]int) *user.User {
+	info map[string]int) *user.User {
 	skip := rand.Intn(info["num_moderators"])
 
-	for k, _ := range clients {
-		if k.RoleCode == "M" {
+	for client := range clients {
+		if client.RoleCode == "M" {
 			if skip == 0 {
-				return k
+				return client
 			}
-			skip -= 1
+			skip--
 		}
 	}
 	return nil
 }
 
-
 func handelUser(clients map[*user.User]*websocket.Conn,
-				info map[string]int, user *user.User, ch chan Message) {
+	info map[string]int, user *user.User, ch chan Message) {
 
 	// read the token and populate the user
 
@@ -63,12 +64,11 @@ func handelUser(clients map[*user.User]*websocket.Conn,
 			ch <- msg
 		}
 
-		
 	}
 }
 
 func handelModerator(clients map[*user.User]*websocket.Conn,
-				     info map[string]int, user *user.User, ch chan Message) {
+	info map[string]int, user *user.User, ch chan Message) {
 
 	// read the token and populate the moderator
 
@@ -87,13 +87,5 @@ func handelModerator(clients map[*user.User]*websocket.Conn,
 
 		ch <- msg
 
-		
 	}
 }
-
-
-
-
-
-
-

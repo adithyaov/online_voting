@@ -1,15 +1,17 @@
 package messaging
 
 import (
-	"user"
-	"net/http"
-	"github.com/gorilla/websocket"
 	"auth"
+	"net/http"
+	"user"
+
+	"github.com/gorilla/websocket"
 )
 
+// HandleConnectionUser is a service to handel User connections
 func HandleConnectionUser(w http.ResponseWriter, r *http.Request,
-					      clients map[*user.User]*websocket.Conn,
-					      info map[string]int, ch chan Message) {
+	clients map[*user.User]*websocket.Conn,
+	info map[string]int, ch chan Message) {
 
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -29,14 +31,13 @@ func HandleConnectionUser(w http.ResponseWriter, r *http.Request,
 	clients[&user] = ws
 
 	handelUser(clients, info, &user, ch)
-	
 
 }
 
-
+// HandleConnectionModerator is a service to handel Moderator connections
 func HandleConnectionModerator(w http.ResponseWriter, r *http.Request,
-					           clients map[*user.User]*websocket.Conn,
-					           info map[string]int, ch chan Message) {
+	clients map[*user.User]*websocket.Conn,
+	info map[string]int, ch chan Message) {
 
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -66,11 +67,5 @@ func HandleConnectionModerator(w http.ResponseWriter, r *http.Request,
 	} else {
 		http.Error(w, "You are not a moderator.", 400)
 	}
-	
 
 }
-
-
-
-
-

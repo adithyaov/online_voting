@@ -1,5 +1,6 @@
 package candidate
 
+// CandidateTableSQL consists of basic SQL statements for init in DB
 var CandidateTableSQL = `
 
 DROP TABLE IF EXISTS Candidate;
@@ -15,6 +16,3 @@ CREATE TABLE Candidate(
 );
 
 `
-
-
-

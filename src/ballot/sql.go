@@ -1,5 +1,6 @@
 package ballot
 
+// BallotTable consists of basic SQL statements for init in DB
 var BallotTable = `
 
 DROP TABLE IF EXISTS Ballot;

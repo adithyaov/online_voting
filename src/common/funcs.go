@@ -1,14 +1,15 @@
 package common
 
 import (
-	"net/http"
-	"io/ioutil"
-	"regexp"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"regexp"
 	"strings"
 )
 
-
+// BodyCheckWrapper wraps the function with the BodyExtracted signature,
+// checks for an empty and the limit of the body.
 func BodyCheckWrapper(fn BodyExtracted) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Body == nil {
@@ -30,7 +31,7 @@ func BodyCheckWrapper(fn BodyExtracted) http.HandlerFunc {
 	}
 }
 
-
+// ConvertBSToIS is a helper function to convert Byte Slice to Int Slice
 func ConvertBSToIS(bSlice []byte) []int {
 	var iSlice []int
 	for _, b := range bSlice {
@@ -39,6 +40,7 @@ func ConvertBSToIS(bSlice []byte) []int {
 	return iSlice
 }
 
+// ConvertISToBS is a helper function to convert Int Slice to Byte Slice
 func ConvertISToBS(iSlice []int) []byte {
 	var bSlice []byte
 	for _, b := range iSlice {
@@ -47,6 +49,7 @@ func ConvertISToBS(iSlice []int) []byte {
 	return bSlice
 }
 
+// RegexpStr matches the str with expr
 func RegexpStr(expr string, str string) error {
 	matched, err := regexp.MatchString(expr, str)
 
@@ -55,14 +58,14 @@ func RegexpStr(expr string, str string) error {
 	}
 
 	if matched != true {
-		return fmt.Errorf("Invalid Voter.")
+		return fmt.Errorf("invalid voter")
 	}
 
 	return nil
 
 }
 
-
+// MethodWrapper wraps a handler func to respond only to the given method
 func MethodWrapper(requestType string, fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if strings.ToUpper(r.Method) != strings.ToUpper(requestType) {
@@ -72,7 +75,3 @@ func MethodWrapper(requestType string, fn http.HandlerFunc) http.HandlerFunc {
 		fn(w, r)
 	}
 }
-
-
-
-

@@ -1,14 +1,10 @@
 package ballot
 
+// KeySize is the number of bits of the Key in RSA
 var KeySize = 2048
+
+// HashSize is the number of bits after hashing
 var HashSize = 1536
 
-var URLBlind = "/ballot/blind/"
-var URLUnblind = "/ballot/unblind/"
-var URLVerify = "/ballot/verify/"
-var URLSign = "/ballot/sign/"
-
-var MaxReqBody = 4000
-
+// Phases are the phases of the Ballot goes through
 var Phases = []string{"C", "R", "N", "V", "C"}
-

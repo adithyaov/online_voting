@@ -1,15 +1,15 @@
 package ballot
 
 import (
-	"net/http"
+	"auth"
+	c "common"
 	"encoding/json"
 	"math/rand"
+	"net/http"
 	"strconv"
-	c "common"
-	"auth"
 )
 
-
+// CreateAPI is an endpoint to create a ballot.
 func CreateAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 
 	var data struct {
@@ -22,7 +22,7 @@ func CreateAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	
+
 	ballot, err := CreateBallot(data.Code, data.Name)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
@@ -33,6 +33,7 @@ func CreateAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 
 }
 
+// FindAPI is an endpoint to get ballot information.
 func FindAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 
 	var data struct {
@@ -55,7 +56,7 @@ func FindAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 
 }
 
-
+// DeleteAPI creates an endpoint to delete ballot
 func DeleteAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 
 	var data struct {
@@ -74,12 +75,13 @@ func DeleteAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(c.BasicResponse{"Successfully deleted the ballot", 200})
+	json.NewEncoder(w).Encode(c.BasicResponse{
+		Message:    "Successfully deleted the ballot",
+		StatusCode: 200})
 
 }
 
-
-
+// BlindVoteAPI provides an endpoint to blind the vote
 func BlindVoteAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *[]byte) {
 
 	type Req struct {
@@ -87,10 +89,10 @@ func BlindVoteAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *
 	}
 
 	type Res struct {
-		Blinded []int  	`json:"blinded"`
-		Unblinder []int `json:"unblinder"`
-		VoteHash []int  `json:"vote_hash"`
-		Bias string 	`json:"bias"`
+		Blinded   []int  `json:"blinded"`
+		Unblinder []int  `json:"unblinder"`
+		VoteHash  []int  `json:"vote_hash"`
+		Bias      string `json:"bias"`
 	}
 
 	var data Req
@@ -101,7 +103,7 @@ func BlindVoteAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *
 		return
 	}
 
-	bias := strconv.FormatFloat((rand.Float64() * 100000) + rand.Float64(), 'f', 6, 64)
+	bias := strconv.FormatFloat((rand.Float64()*100000)+rand.Float64(), 'f', 6, 64)
 	vote := Vote{ballot.Code, data.CandidateEmail, bias}
 	hashed, err := vote.Hash()
 
@@ -117,16 +119,13 @@ func BlindVoteAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *
 		return
 	}
 
-
-
 	response := Res{c.ConvertBSToIS(blinded), c.ConvertBSToIS(unblinder), c.ConvertBSToIS(hashed), bias}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
 
-
-
+// SignBytesAPI provides an endpoint so sign with a specific ballot
 func SignBytesAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *[]byte) {
 
 	type Req struct {
@@ -152,9 +151,7 @@ func SignBytesAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *
 		return
 	}
 
-	/*
-		Before responding Note the token, save the token. Auth Field required.
-	*/
+	// Before responding Note the token, save the token. Auth Field required.
 	token := r.Header["token"][0]
 	googleToken, err := auth.ParseToken(token)
 	if err != nil {
@@ -174,14 +171,11 @@ func SignBytesAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *
 	json.NewEncoder(w).Encode(response)
 }
 
-
-
-
-
-func UnblindSignAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot,  body *[]byte) {
+// UnblindSignAPI provides an endpoint to unblind the sign
+func UnblindSignAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *[]byte) {
 
 	type Req struct {
-		Signed []int    `json:"signed"`
+		Signed    []int `json:"signed"`
 		Unblinder []int `json:"unblinder"`
 	}
 
@@ -205,13 +199,12 @@ func UnblindSignAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot,  bod
 	json.NewEncoder(w).Encode(response)
 }
 
-
-
+// VerifySignAPI provides a way to check if the sign given is proper
 func VerifySignAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *[]byte) {
 
 	type Req struct {
-		Hashed []int      `json:"vote_hash"`
-		Unblinded []int   `json:"unblinded"`
+		Hashed    []int `json:"vote_hash"`
+		Unblinded []int `json:"unblinded"`
 	}
 
 	type Res struct {
@@ -236,16 +229,3 @@ func VerifySignAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

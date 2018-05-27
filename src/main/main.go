@@ -4,12 +4,12 @@ import (
 	"auth"
 	"fmt"
 	// "net/http"
- // 	"ballot"
- // 	"mysql"
- // 	com "common"
- // 	"candidate"
- // 	"user"
- // 	"fmt"
+	// 	"ballot"
+	// 	"mysql"
+	// 	com "common"
+	// 	"candidate"
+	// 	"user"
+	// 	"fmt"
 )
 
 func main() {
@@ -38,7 +38,6 @@ func main() {
 	// fmt.Println("can crt", err)
 	// c, err := candidate.GetCandidate("nibbie", "aa@aa.com")
 	// fmt.Println(c, err)
-	
 
 	// openBallots := []*ballot.Ballot{b}
 	// http.HandleFunc("/ballot/create", com.BodyCheckWrapper(ballot.CreateAPI))

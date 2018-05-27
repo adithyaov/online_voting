@@ -4,24 +4,21 @@ import (
 	"math/big"
 )
 
-
+// Ballot describes a ballot
 type Ballot struct {
-	Code string 		  `json:"code"`
-	Name string 		  `json:"name"`
-	N big.Int 			  `json:"n"`
-	D big.Int 			  `json:"-"`
-	E int 				  `json:"e"`
-	RegexpVoter string 	  `json:"regex_voter"`
-	RegexpCandidate string `json:"regex_candidate"`
-	Phase string 	      `json:"phase"`
+	Code            string  `json:"code"`
+	Name            string  `json:"name"`
+	N               big.Int `json:"n"`
+	D               big.Int `json:"-"`
+	E               int     `json:"e"`
+	RegexpVoter     string  `json:"regex_voter"`
+	RegexpCandidate string  `json:"regex_candidate"`
+	Phase           string  `json:"phase"`
 }
 
-
+// Vote defines a vote structure
 type Vote struct {
-	BallotCode string     `json:"ballot_code"`
+	BallotCode     string `json:"ballot_code"`
 	CandidateEmail string `json:"candidate_email"`
-	Bias string  		  `json:"bias"`
+	Bias           string `json:"bias"`
 }
-
-
-
