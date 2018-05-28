@@ -227,9 +227,9 @@ func RestartOpenBallotsRT(openBallots map[string]*Ballot) error {
 
 	defer rows.Close()
 
-	var n, d string
 	for rows.Next() {
 		var ballot Ballot
+		var n, d string
 		err := rows.Scan(&ballot.Code, &ballot.Name, &ballot,
 			&n, &d, &ballot.E, &ballot.RegexpVoter,
 			&ballot.RegexpCandidate, &ballot.Phase)

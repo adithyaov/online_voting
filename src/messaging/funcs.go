@@ -12,12 +12,10 @@ import (
 // DeployFromChannel listens from a channel and deployes the message to every client
 func DeployFromChannel(clients map[*user.User]*websocket.Conn,
 	info *c.ThreadSafeType, ch chan Message) {
-	var msg Message
-	var err error
 	for {
-		msg = <-ch
+		msg := <-ch
 		for client, socket := range clients {
-			err = socket.WriteJSON(msg)
+			err := socket.WriteJSON(msg)
 			if err != nil {
 
 				if client.RoleCode == "M" {
@@ -30,7 +28,6 @@ func DeployFromChannel(clients map[*user.User]*websocket.Conn,
 
 				socket.Close()
 				delete(clients, client)
-
 			}
 		}
 	}
@@ -59,9 +56,9 @@ func handelUser(clients map[*user.User]*websocket.Conn,
 
 	moderator := findModerator(clients, info)
 
-	var userMsg UserMessage
-	var msg Message
 	for {
+		var userMsg UserMessage
+		var msg Message
 
 		err := clients[user].ReadJSON(&userMsg)
 		if err != nil {
@@ -88,9 +85,9 @@ func handelModerator(clients map[*user.User]*websocket.Conn,
 	info.Data.(map[string]int)["num_moderators"]++
 	info.Mutex.Unlock()
 
-	var moderatorMsg ModeratorMessage
-	var msg Message
 	for {
+		var moderatorMsg ModeratorMessage
+		var msg Message
 
 		err := clients[user].ReadJSON(&moderatorMsg)
 		if err != nil {
