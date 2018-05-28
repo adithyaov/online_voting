@@ -89,9 +89,8 @@ func handelModerator(clients map[*user.User]*websocket.Conn,
 
 // Wrapper wraps the services with clients and info to give handlerfunc
 func Wrapper(clients map[*user.User]*websocket.Conn,
-	info map[string]int, ch chan Message, upgrader websocket.Upgrader,
-	fn MessageService) http.HandlerFunc {
+	info map[string]int, ch chan Message, fn MessageService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fn(w, r, clients, info, ch, upgrader)
+		fn(w, r, clients, info, ch)
 	}
 }

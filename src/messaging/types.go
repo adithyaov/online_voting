@@ -27,5 +27,4 @@ type ModeratorMessage struct {
 
 // MessageService is the expected type of function for any services related to websockets
 type MessageService func(http.ResponseWriter, *http.Request,
-	map[*user.User]*websocket.Conn, map[string]int,
-	chan Message, websocket.Upgrader)
+	map[*user.User]*websocket.Conn, map[string]int, chan Message)
