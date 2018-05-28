@@ -2,6 +2,7 @@ package ballot
 
 import (
 	"math/big"
+	"net/http"
 )
 
 // Ballot describes a ballot
@@ -22,3 +23,6 @@ type Vote struct {
 	CandidateEmail string `json:"candidate_email"`
 	Bias           string `json:"bias"`
 }
+
+// Service is the expected type of service which needs a ballot and a body
+type Service func(http.ResponseWriter, *http.Request, *Ballot, *[]byte)

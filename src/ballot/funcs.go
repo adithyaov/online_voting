@@ -177,7 +177,7 @@ func (ballot *Ballot) VerifySign(hashed []byte, unblindedSign []byte) error {
 	return rsablind.VerifyBlindSignature(&publicKey, hashed, unblindedSign)
 }
 
-// Need to edit this function
+// SearchBallotRT searches for the ballot from the pool of open ballots
 func SearchBallotRT(openBallots map[string]*Ballot, ballotCode string) *Ballot {
 	if ballot, ok := openBallots[ballotCode]; ok {
 		return ballot
@@ -210,7 +210,7 @@ func SearchBallotRT(openBallots map[string]*Ballot, ballotCode string) *Ballot {
 
 // Wrapper wraps the functions which require ballot, searches the ballot and
 // runs the corresponding function
-func Wrapper(fn func(http.ResponseWriter, *http.Request, *Ballot, *[]byte), openBallots map[string]*Ballot) c.BodyExtracted {
+func Wrapper(openBallots map[string]*Ballot, fn Service) c.BodyExtracted {
 	return func(w http.ResponseWriter, r *http.Request, body *[]byte) {
 		var data struct {
 			BallotCode string `json:"ballot_code"`

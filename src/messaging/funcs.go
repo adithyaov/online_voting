@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"math/rand"
+	"net/http"
 	"user"
 
 	"github.com/gorilla/websocket"
@@ -40,8 +41,6 @@ func findModerator(clients map[*user.User]*websocket.Conn,
 func handelUser(clients map[*user.User]*websocket.Conn,
 	info map[string]int, user *user.User, ch chan Message) {
 
-	// read the token and populate the user
-
 	moderator := findModerator(clients, info)
 
 	for {
@@ -55,12 +54,12 @@ func handelUser(clients map[*user.User]*websocket.Conn,
 			break
 		}
 
-		if _, ok := clients[moderator]; ok == false {
-			moderator = findModerator(clients, info)
-			msg = Message{user, user, ModeratorUnavailableMsg}
+		if _, ok := clients[moderator]; ok {
+			msg = Message{user, moderator, userMsg.Text}
 			ch <- msg
 		} else {
-			msg = Message{user, moderator, userMsg.Text}
+			moderator = findModerator(clients, info)
+			msg = Message{user, user, ModeratorUnavailableMsg}
 			ch <- msg
 		}
 
@@ -69,8 +68,6 @@ func handelUser(clients map[*user.User]*websocket.Conn,
 
 func handelModerator(clients map[*user.User]*websocket.Conn,
 	info map[string]int, user *user.User, ch chan Message) {
-
-	// read the token and populate the moderator
 
 	for {
 		var moderatorMsg ModeratorMessage
@@ -87,5 +84,14 @@ func handelModerator(clients map[*user.User]*websocket.Conn,
 
 		ch <- msg
 
+	}
+}
+
+// Wrapper wraps the services with clients and info to give handlerfunc
+func Wrapper(clients map[*user.User]*websocket.Conn,
+	info map[string]int, ch chan Message, upgrader websocket.Upgrader,
+	fn MessageService) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fn(w, r, clients, info, ch, upgrader)
 	}
 }

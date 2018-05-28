@@ -1,7 +1,10 @@
 package messaging
 
 import (
+	"net/http"
 	"user"
+
+	"github.com/gorilla/websocket"
 )
 
 // Message is the basic message type
@@ -21,3 +24,8 @@ type ModeratorMessage struct {
 	To   *user.User `json:"to"`
 	Text string     `json:"text"`
 }
+
+// MessageService is the expected type of function for any services related to websockets
+type MessageService func(http.ResponseWriter, *http.Request,
+	map[*user.User]*websocket.Conn, map[string]int,
+	chan Message, websocket.Upgrader)

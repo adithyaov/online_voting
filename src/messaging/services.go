@@ -11,7 +11,7 @@ import (
 // HandleConnectionUser is a service to handel User connections
 func HandleConnectionUser(w http.ResponseWriter, r *http.Request,
 	clients map[*user.User]*websocket.Conn,
-	info map[string]int, ch chan Message) {
+	info map[string]int, ch chan Message, upgrader websocket.Upgrader) {
 
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -37,7 +37,7 @@ func HandleConnectionUser(w http.ResponseWriter, r *http.Request,
 // HandleConnectionModerator is a service to handel Moderator connections
 func HandleConnectionModerator(w http.ResponseWriter, r *http.Request,
 	clients map[*user.User]*websocket.Conn,
-	info map[string]int, ch chan Message) {
+	info map[string]int, ch chan Message, upgrader websocket.Upgrader) {
 
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
