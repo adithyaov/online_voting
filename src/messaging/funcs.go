@@ -9,14 +9,15 @@ import (
 )
 
 // DeployFromChannel listens from a channel and deployes the message to every client
-func DeployFromChannel(clients map[*websocket.Conn]bool, ch chan Message) {
+func DeployFromChannel(clients map[*user.User]*websocket.Conn,
+	info map[string]int, ch chan Message) {
 	for {
 		msg := <-ch
-		for client := range clients {
-			err := client.WriteJSON(msg)
+		for client, socket := range clients {
+			err := socket.WriteJSON(msg)
 			if err != nil {
-
-				client.Close()
+				info["num_moderators"] = info["num_moderators"] - 1
+				socket.Close()
 				delete(clients, client)
 			}
 		}
@@ -68,6 +69,8 @@ func handelUser(clients map[*user.User]*websocket.Conn,
 
 func handelModerator(clients map[*user.User]*websocket.Conn,
 	info map[string]int, user *user.User, ch chan Message) {
+
+	info["num_moderators"] = info["num_moderators"] + 1
 
 	for {
 		var moderatorMsg ModeratorMessage
