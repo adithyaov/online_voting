@@ -221,9 +221,9 @@ func SearchBallotRT(openBallots map[string]*Ballot, ballotCode string) *Ballot {
 // 	return nil
 // }
 
-// Wrapper wraps the functions which require ballot, searches the ballot and
+// BodyBallotWrapper wraps the functions which require ballot, searches the ballot and
 // runs the corresponding function
-func Wrapper(openBallots map[string]*Ballot, fn Service) c.BodyExtracted {
+func BodyBallotWrapper(openBallots map[string]*Ballot, fn BodyService) c.BodyExtracted {
 	return func(w http.ResponseWriter, r *http.Request, body *[]byte) {
 		var data struct {
 			BallotCode string `json:"ballot_code"`
@@ -241,5 +241,12 @@ func Wrapper(openBallots map[string]*Ballot, fn Service) c.BodyExtracted {
 			return
 		}
 		fn(w, r, ballot, body)
+	}
+}
+
+// OpenBallotsWrapper is wrapper over services which need openBallots
+func OpenBallotsWrapper(openBallots map[string]*Ballot, fn OpenBallotService) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fn(w, r, openBallots)
 	}
 }
