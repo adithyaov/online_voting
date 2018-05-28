@@ -45,7 +45,7 @@ func CreateBallot(code string, name string) (*Ballot, error) {
 func OpenBallot(code string) (*Ballot, error) {
 
 	query, args, err := sq.Select("*").From("Ballot").
-		Where(sq.Eq{"ballot_code": code}).ToSql()
+		Where(sq.Eq{"code": code}).ToSql()
 
 	if err != nil {
 		return nil, err
@@ -144,7 +144,7 @@ func (ballot *Ballot) AddVoter(email string) error {
 // UpdateRegexpVoter updates voter regex of corresponding ballot
 func (ballot *Ballot) UpdateRegexpVoter(regexp string) error {
 	query, args, err := sq.Update("Ballot").Set("regexp_voter", regexp).
-		Where(sq.Eq{"ballot_code": ballot.Code}).ToSql()
+		Where(sq.Eq{"code": ballot.Code}).ToSql()
 
 	if err != nil {
 		return err
@@ -158,7 +158,7 @@ func (ballot *Ballot) UpdateRegexpVoter(regexp string) error {
 // UpdateRegexpCandidate updates candidate regex of corresponding ballot
 func (ballot *Ballot) UpdateRegexpCandidate(regexp string) error {
 	query, args, err := sq.Update("Ballot").Set("regexp_candidate", regexp).
-		Where(sq.Eq{"ballot_code": ballot.Code}).ToSql()
+		Where(sq.Eq{"code": ballot.Code}).ToSql()
 
 	if err != nil {
 		return err
@@ -198,28 +198,55 @@ func SearchBallotRT(openBallots map[string]*Ballot, ballotCode string) *Ballot {
 	return nil
 }
 
-// // Need to edit this function
-// func CloseBallotRT(openBallots *([]*Ballot), ballotCode string) {
-// 	for i, b := range *openBallots {
-// 		if b.Code == ballotCode {
-// 			*openBallots = append((*openBallots)[:i], (*openBallots)[i+1:]...)
-// 		}
-// 	}
-// }
+// RestartOpenBallotsRT closes all the ballots and reopens them from DB
+func RestartOpenBallotsRT(openBallots map[string]*Ballot) error {
+	for code := range openBallots {
+		delete(openBallots, code)
+	}
+	// read from db and open all the ballots again
+	query, args, err := sq.Select("*").From("Ballot").
+		Where(sq.NotEq{"phase": "D"}).ToSql()
 
-// // Need to edit this function
-// func OpenBallotRT(openBallots *([]*Ballot), ballotCode string) error {
-// 	ballot := SearchBallotRT(openBallots, ballotCode)
-// 	if ballot != nil {
-// 		return nil
-// 	}
-// 	ballot, err := OpenBallot(ballotCode)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	*openBallots = append(*openBallots, ballot)
-// 	return nil
-// }
+	if err != nil {
+		return err
+	}
+
+	db, err := mysql.OpenDB()
+
+	if err != nil {
+		return err
+	}
+
+	defer db.Close()
+
+	rows, err := db.Query(query, args...)
+
+	if err != nil {
+		return err
+	}
+
+	defer rows.Close()
+
+	var n, d string
+	for rows.Next() {
+		var ballot Ballot
+		err := rows.Scan(&ballot.Code, &ballot.Name, &ballot,
+			&n, &d, &ballot.E, &ballot.RegexpVoter,
+			&ballot.RegexpCandidate, &ballot.Phase)
+		if err != nil {
+			continue
+		}
+		if _, chk := ballot.N.SetString(n, 10); chk != true {
+			continue
+		}
+		if _, chk := ballot.D.SetString(d, 10); chk != true {
+			continue
+		}
+		openBallots[ballot.Code] = &ballot
+	}
+
+	return nil
+}
 
 // BodyBallotWrapper wraps the functions which require ballot, searches the ballot and
 // runs the corresponding function

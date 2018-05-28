@@ -7,4 +7,4 @@ var KeySize = 2048
 var HashSize = 1536
 
 // Phases are the phases of the Ballot goes through
-var Phases = []string{"C", "R", "N", "V", "C"}
+var Phases = []string{"C", "R", "N", "V", "D"}
