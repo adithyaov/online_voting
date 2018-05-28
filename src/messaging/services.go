@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"auth"
+	c "common"
 	"net/http"
 	"user"
 
@@ -11,7 +12,7 @@ import (
 // HandleConnectionUser is a service to handel User connections
 func HandleConnectionUser(w http.ResponseWriter, r *http.Request,
 	clients map[*user.User]*websocket.Conn,
-	info map[string]int, ch chan Message) {
+	info *c.ThreadSafeType, ch chan Message) {
 
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -37,7 +38,7 @@ func HandleConnectionUser(w http.ResponseWriter, r *http.Request,
 // HandleConnectionModerator is a service to handel Moderator connections
 func HandleConnectionModerator(w http.ResponseWriter, r *http.Request,
 	clients map[*user.User]*websocket.Conn,
-	info map[string]int, ch chan Message) {
+	info *c.ThreadSafeType, ch chan Message) {
 
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {

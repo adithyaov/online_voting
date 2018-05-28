@@ -1,6 +1,7 @@
 package messaging
 
 import (
+	c "common"
 	"math/rand"
 	"net/http"
 	"user"
@@ -10,23 +11,30 @@ import (
 
 // DeployFromChannel listens from a channel and deployes the message to every client
 func DeployFromChannel(clients map[*user.User]*websocket.Conn,
-	info map[string]int, ch chan Message) {
+	info *c.ThreadSafeType, ch chan Message) {
 	for {
 		msg := <-ch
 		for client, socket := range clients {
 			err := socket.WriteJSON(msg)
 			if err != nil {
-				info["num_moderators"] = info["num_moderators"] - 1
-				socket.Close()
-				delete(clients, client)
+				func() {
+					info.Mutex.Lock()
+					defer info.Mutex.Unlock()
+					info.Data.(map[string]int)["num_moderators"]--
+					socket.Close()
+					delete(clients, client)
+				}()
 			}
 		}
 	}
 }
 
 func findModerator(clients map[*user.User]*websocket.Conn,
-	info map[string]int) *user.User {
-	skip := rand.Intn(info["num_moderators"])
+	info *c.ThreadSafeType) *user.User {
+
+	info.Mutex.Lock()
+	defer info.Mutex.Unlock()
+	skip := rand.Intn(info.Data.(map[string]int)["num_moderators"])
 
 	for client := range clients {
 		if client.RoleCode == "M" {
@@ -40,7 +48,7 @@ func findModerator(clients map[*user.User]*websocket.Conn,
 }
 
 func handelUser(clients map[*user.User]*websocket.Conn,
-	info map[string]int, user *user.User, ch chan Message) {
+	info *c.ThreadSafeType, user *user.User, ch chan Message) {
 
 	moderator := findModerator(clients, info)
 
@@ -68,9 +76,10 @@ func handelUser(clients map[*user.User]*websocket.Conn,
 }
 
 func handelModerator(clients map[*user.User]*websocket.Conn,
-	info map[string]int, user *user.User, ch chan Message) {
-
-	info["num_moderators"] = info["num_moderators"] + 1
+	info *c.ThreadSafeType, user *user.User, ch chan Message) {
+	info.Mutex.Lock()
+	info.Data.(map[string]int)["num_moderators"]++
+	info.Mutex.Unlock()
 
 	for {
 		var moderatorMsg ModeratorMessage
