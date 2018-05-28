@@ -221,11 +221,26 @@ func VerifySignAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body 
 
 	err = ballot.VerifySign(c.ConvertISToBS(data.Hashed), c.ConvertISToBS(data.Unblinded))
 
-	response := Res{""}
 	if err != nil {
-		response = Res{err.Error()}
+		http.Error(w, err.Error(), 400)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	json.NewEncoder(w).Encode(Res{""})
+}
+
+// FindBallotsAPI returns all ballots depending on the user
+func FindBallotsAPI(w http.ResponseWriter, r *http.Request, openBallots map[string]*Ballot) {
+
+	token := r.Header["token"][0]
+	gt, err := auth.ParseToken(token)
+
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	json.NewEncoder(w).Encode(GetBallots(gt.Email, openBallots))
+
 }

@@ -71,6 +71,19 @@ func OpenBallot(code string) (*Ballot, error) {
 	return &ballot, nil
 }
 
+// GetBallots searches map of openBallots corresponding to the voter Email.
+func GetBallots(voterEmail string, openBallots map[string]*Ballot) []*Ballot {
+	var ballots []*Ballot
+
+	for _, ballot := range openBallots {
+		if c.RegexpStr(ballot.RegexpVoter, voterEmail) == nil {
+			ballots = append(ballots, ballot)
+		}
+	}
+
+	return ballots
+}
+
 // DeleteBallot deletes the Ballot from the database
 func DeleteBallot(code string) error {
 
