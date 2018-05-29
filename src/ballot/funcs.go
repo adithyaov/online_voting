@@ -169,6 +169,34 @@ func (ballot *Ballot) UpdateRegexpCandidate(regexp string) error {
 	return err
 }
 
+// UpdateName updates ballot name of corresponding ballot
+func (ballot *Ballot) UpdateName(name string) error {
+	query, args, err := sq.Update("Ballot").Set("name", name).
+		Where(sq.Eq{"code": ballot.Code}).ToSql()
+
+	if err != nil {
+		return err
+	}
+
+	_, err = mysql.Exec(query, args)
+
+	return err
+}
+
+// UpdatePhase updates phase of corresponding ballot
+func (ballot *Ballot) UpdatePhase(phase string) error {
+	query, args, err := sq.Update("Ballot").Set("phase", phase).
+		Where(sq.Eq{"code": ballot.Code}).ToSql()
+
+	if err != nil {
+		return err
+	}
+
+	_, err = mysql.Exec(query, args)
+
+	return err
+}
+
 // SignBlindHash signs the blinded vote hash and returns the signed hash
 func (ballot *Ballot) SignBlindHash(blinded []byte) ([]byte, error) {
 	publicKey := rsa.PublicKey{N: &(ballot.N), E: ballot.E}
