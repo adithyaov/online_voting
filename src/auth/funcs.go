@@ -15,8 +15,8 @@ func (gt GoogleToken) ToClaims() jwt.MapClaims {
 	return jwt.MapClaims{
 		"email":          gt.Email,
 		"email_verified": strconv.FormatBool(gt.EmailVerified),
-		"iat":            gt.Iat.Unix(),
-		"exp":            gt.Exp.Unix(),
+		"iat":            strconv.FormatInt(gt.Iat.Unix(), 10),
+		"exp":            strconv.FormatInt(gt.Exp.Unix(), 10),
 		"name":           gt.Name,
 		"aud":            gt.Aud,
 		"role_code":      gt.RoleCode,
@@ -43,13 +43,13 @@ func GenerateToken(googleToken string) (string, error) {
 	// Also put nbf in the following claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email":          "111501017@smail.iitpkd.ac.in",
-		"role_code":      "U",
 		"email_verified": "true",
-		"iat":            "1433978353",
-		"exp":            "1433981953",
+		"iat":            strconv.FormatInt(time.Now().Unix(), 10),
+		"exp":            strconv.FormatInt(time.Now().Add(time.Hour).Unix(), 10),
 		"name":           "Adithya O V",
-		"picture":        "ssdsds",
 		"aud":            "1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com",
+		"role_code":      "U",
+		"picture":        "ssdsds",
 	})
 	tokenString, err := token.SignedString(SessionSecret)
 	if err != nil {
@@ -84,7 +84,7 @@ func ParseToken(tokenString string) (GoogleToken, error) {
 			return GoogleToken{}, err
 		}
 		return GoogleToken{claims["aud"].(string), time.Unix(iat, 0), time.Unix(exp, 0),
-			claims["email"].(string), claims["email"].(string), emailVer,
+			claims["email"].(string), claims["role_code"].(string), emailVer,
 			claims["name"].(string), claims["picture"].(string)}, nil
 	}
 	return GoogleToken{}, fmt.Errorf("Invalid Token")
