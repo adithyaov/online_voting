@@ -86,7 +86,7 @@ func (candidate *Candidate) UpdateNominees() error {
 
 // GetCandidate returns *Candidate after looking up the DB
 func GetCandidate(code string, email string) (*Candidate, error) {
-	query, args, err := sq.Select("U.name, U.email, B.code, B.name, B.e, B.n, C.details, C.nominee1, C.nominee2").
+	query, args, err := sq.Select("U.name, U.email, U.picture, B.code, B.name, B.e, B.n, C.details, C.nominee1_email, C.nominee2_email").
 		From("Candidate as C").
 		Join("User as U on U.email = C.user_email").
 		Join("Ballot as B on B.code = C.ballot_code").
@@ -104,7 +104,7 @@ func GetCandidate(code string, email string) (*Candidate, error) {
 	c.Ballot = &b
 	n := ""
 	err = mysql.QueryOne(query, args, []interface{}{
-		&(u.Name), &(u.Email), &(b.Code),
+		&(u.Name), &(u.Email), &(u.Picture), &(b.Code),
 		&(b.Name), &(b.E), &(n), &(c.Details),
 		&(c.Nominee1), &(c.Nominee2)})
 	if err != nil {

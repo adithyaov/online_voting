@@ -139,5 +139,7 @@ func Candidate() {
 	c2, err := candidate.GetCandidate("a", "a@xx.com")
 	chkErr(207, err)
 	fmt.Println(c2)
+	fmt.Println(c2.User)
+	fmt.Println(c2.Ballot)
 
 }
