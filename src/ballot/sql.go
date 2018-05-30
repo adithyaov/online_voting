@@ -10,7 +10,7 @@ CREATE TABLE Ballot(
 	n TEXT NOT NULL,
 	d TEXT NOT NULL,
 	e INT NOT NULL,
-	regexp_voter TEXT DEFAULT "^(.*)$"
+	regexp_voter TEXT DEFAULT "^(.*)$",
 	regexp_candidate TEXT DEFAULT "^(.*)$",
 	phase CHAR(1) DEFAULT "C"
 );

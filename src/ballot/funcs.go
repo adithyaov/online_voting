@@ -53,7 +53,7 @@ func OpenBallot(code string) (*Ballot, error) {
 
 	var ballot Ballot
 	var n, d string
-	err = mysql.QueryOne(query, args, []interface{}{&ballot.Code, &ballot.Name, &ballot,
+	err = mysql.QueryOne(query, args, []interface{}{&ballot.Code, &ballot.Name,
 		&n, &d, &ballot.E, &ballot.RegexpVoter,
 		&ballot.RegexpCandidate, &ballot.Phase})
 
@@ -88,7 +88,7 @@ func GetBallots(voterEmail string, openBallots map[string]*Ballot) []*Ballot {
 func DeleteBallot(code string) error {
 
 	query, args, err := sq.Delete("Ballot").
-		Where(sq.Eq{"ballot_code": code}).ToSql()
+		Where(sq.Eq{"code": code}).ToSql()
 
 	if err != nil {
 		return err
@@ -218,14 +218,6 @@ func (ballot *Ballot) VerifySign(hashed []byte, unblindedSign []byte) error {
 	return rsablind.VerifyBlindSignature(&publicKey, hashed, unblindedSign)
 }
 
-// SearchBallotRT searches for the ballot from the pool of open ballots
-func SearchBallotRT(openBallots map[string]*Ballot, ballotCode string) *Ballot {
-	if ballot, ok := openBallots[ballotCode]; ok {
-		return ballot
-	}
-	return nil
-}
-
 // RestartOpenBallotsRT closes all the ballots and reopens them from DB
 func RestartOpenBallotsRT(openBallots map[string]*Ballot) error {
 	for code := range openBallots {
@@ -258,11 +250,11 @@ func RestartOpenBallotsRT(openBallots map[string]*Ballot) error {
 	for rows.Next() {
 		var ballot Ballot
 		var n, d string
-		err := rows.Scan(&ballot.Code, &ballot.Name, &ballot,
+		err := rows.Scan(&ballot.Code, &ballot.Name,
 			&n, &d, &ballot.E, &ballot.RegexpVoter,
 			&ballot.RegexpCandidate, &ballot.Phase)
 		if err != nil {
-			continue
+			return err
 		}
 		if _, chk := ballot.N.SetString(n, 10); chk != true {
 			continue
@@ -290,11 +282,12 @@ func BodyBallotWrapper(openBallots map[string]*Ballot, fn BodyService) c.BodyExt
 			return
 		}
 
-		ballot := SearchBallotRT(openBallots, data.BallotCode)
-		if ballot == nil {
+		ballot, ok := openBallots[data.BallotCode]
+		if ok == false {
 			http.Error(w, "Ballot not found", 400)
 			return
 		}
+
 		fn(w, r, ballot, body)
 	}
 }
