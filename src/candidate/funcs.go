@@ -34,7 +34,7 @@ func (candidate *Candidate) UpdateDetails() error {
 	query, args, err := sq.Update("Candidate").Set("details", candidate.Details).
 		Where(sq.And{
 			sq.Eq{"ballot_code": candidate.Ballot.Code},
-			sq.Eq{"candidate_email": candidate.User.Email}}).ToSql()
+			sq.Eq{"user_email": candidate.User.Email}}).ToSql()
 	if err != nil {
 		return err
 	}
@@ -43,36 +43,39 @@ func (candidate *Candidate) UpdateDetails() error {
 	return err
 }
 
-// AddNominee adds a nominee to the corresponding candidate
-func (candidate *Candidate) AddNominee(nomineeEmail string) error {
+// UpdateNominees updates the nominees after basic checks
+func (candidate *Candidate) UpdateNominees() error {
 
-	if nomineeEmail == candidate.User.Email {
+	if candidate.Nominee1.String == candidate.User.Email ||
+		candidate.Nominee2.String == candidate.User.Email {
 		return errors.New("Cannot nominate yourself :-|")
 	}
 
-	if nomineeEmail == candidate.Nominee1.String ||
-		nomineeEmail == candidate.Nominee2.String {
-		return errors.New("Already nominated candidate :-|")
+	if candidate.Nominee1.String == candidate.Nominee2.String &&
+		candidate.Nominee1.Valid && candidate.Nominee2.Valid {
+		return errors.New("Double nomination not permitted :-|")
 	}
 
-	if err := c.RegexpStr(candidate.Ballot.RegexpVoter, nomineeEmail); err != nil {
+	if err := c.RegexpStr(candidate.Ballot.RegexpVoter, candidate.Nominee1.String); err != nil && candidate.Nominee1.Valid {
 		return err
 	}
 
-	var setField string
-
-	if !candidate.Nominee1.Valid {
-		setField = "nominee1_email"
-	} else if !candidate.Nominee1.Valid {
-		setField = "nominee2_email"
-	} else {
-		return nil
+	if err := c.RegexpStr(candidate.Ballot.RegexpVoter, candidate.Nominee2.String); err != nil && candidate.Nominee2.Valid {
+		return err
 	}
 
-	query, args, err := sq.Update("Candidate").Set(setField, nomineeEmail).
-		Where(sq.And{
-			sq.Eq{"ballot_code": candidate.Ballot.Code},
-			sq.Eq{"candidate_email": candidate.User.Email}}).ToSql()
+	builder := sq.Update("Candidate")
+
+	if candidate.Nominee1.Valid {
+		builder = builder.Set("nominee1_email", candidate.Nominee1.String)
+	}
+	if candidate.Nominee2.Valid {
+		builder = builder.Set("nominee2_email", candidate.Nominee2.String)
+	}
+
+	query, args, err := builder.Where(sq.And{
+		sq.Eq{"ballot_code": candidate.Ballot.Code},
+		sq.Eq{"user_email": candidate.User.Email}}).ToSql()
 	if err != nil {
 		return err
 	}
@@ -99,16 +102,18 @@ func GetCandidate(code string, email string) (*Candidate, error) {
 	c := Candidate{}
 	c.User = &u
 	c.Ballot = &b
-	N := ""
-	if _, chk := b.N.SetString(N, 10); chk != true {
-		return nil, err
-	}
+	n := ""
 	err = mysql.QueryOne(query, args, []interface{}{
 		&(u.Name), &(u.Email), &(b.Code),
-		&(b.Name), &(b.E), &(N), &(c.Details),
+		&(b.Name), &(b.E), &(n), &(c.Details),
 		&(c.Nominee1), &(c.Nominee2)})
 	if err != nil {
 		return nil, err
 	}
-	return &c, err
+
+	if _, chk := b.N.SetString(n, 10); chk != true {
+		return nil, errors.New("Could'nt set N as big.Int")
+	}
+
+	return &c, nil
 }

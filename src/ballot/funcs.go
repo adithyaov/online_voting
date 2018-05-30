@@ -7,6 +7,7 @@ import (
 	rsa "crypto/rsa"
 	_ "crypto/sha256" // Required for the init(), registering the hash.
 	"encoding/json"
+	"errors"
 	"mysql"
 	"net/http"
 
@@ -62,10 +63,10 @@ func OpenBallot(code string) (*Ballot, error) {
 	}
 
 	if _, chk := ballot.N.SetString(n, 10); chk != true {
-		return nil, err
+		return nil, errors.New("Could'nt set N as big.Int")
 	}
 	if _, chk := ballot.D.SetString(d, 10); chk != true {
-		return nil, err
+		return nil, errors.New("Could'nt set D as big.Int")
 	}
 
 	return &ballot, nil
@@ -186,6 +187,22 @@ func (ballot *Ballot) UpdateName(name string) error {
 // UpdatePhase updates phase of corresponding ballot
 func (ballot *Ballot) UpdatePhase(phase string) error {
 	query, args, err := sq.Update("Ballot").Set("phase", phase).
+		Where(sq.Eq{"code": ballot.Code}).ToSql()
+
+	if err != nil {
+		return err
+	}
+
+	_, err = mysql.Exec(query, args)
+
+	return err
+}
+
+// Update updates the prev values to current values in DB
+func (ballot *Ballot) Update() error {
+	query, args, err := sq.Update("Ballot").Set("phase", ballot.Phase).
+		Set("name", ballot.Name).Set("regexp_voter", ballot.RegexpVoter).
+		Set("regexp_candidate", ballot.RegexpCandidate).
 		Where(sq.Eq{"code": ballot.Code}).ToSql()
 
 	if err != nil {

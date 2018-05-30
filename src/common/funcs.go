@@ -58,11 +58,20 @@ func RegexpStr(expr string, str string) error {
 	}
 
 	if matched != true {
-		return errors.New("Invalid voter")
+		return errors.New("Match failed")
 	}
 
 	return nil
 
+}
+
+// NilOrVal returns nil if valid == false; value else
+func NilOrVal(valid bool, value interface{}) interface{} {
+	if valid {
+		return value
+	} else {
+		return nil
+	}
 }
 
 // MethodWrapper wraps a handler func to respond only to the given method

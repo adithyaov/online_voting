@@ -3,9 +3,12 @@ package auth
 import (
 	"errors"
 	"fmt"
+	"mysql"
 	"net/http"
 	"strconv"
 	"time"
+
+	sq "github.com/Masterminds/squirrel"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -40,16 +43,48 @@ func (gt GoogleToken) ToToken() (string, error) {
 func GenerateToken(googleToken string) (string, error) {
 	// Verify google token
 
+	// Dummy Vals
+	email := "a@xx.com"
+	name := "Adithya O V"
+	picture := "ssdsds"
+	rc := "A"
+
+	// Put in DB
+	var count int
+	query, args, err := sq.Select("COUNT(*)").From("User").
+		Where(sq.Eq{"email": email}).ToSql()
+	err = mysql.QueryOne(query, args, []interface{}{&count})
+	if err != nil {
+		return "", err
+	}
+
+	fmt.Println(count)
+
+	if count == 0 {
+		fmt.Println("Making")
+		query, args, err = sq.Insert("User").
+			Columns("email", "name", "role_code", "picture").
+			Values(email, name, rc, picture).ToSql()
+		if err != nil {
+			return "", err
+		}
+
+		_, err = mysql.Exec(query, args)
+		if err != nil {
+			return "", err
+		}
+	}
+
 	// Also put nbf in the following claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"email":          "111501017@smail.iitpkd.ac.in",
+		"email":          email,
 		"email_verified": "true",
 		"iat":            strconv.FormatInt(time.Now().Unix(), 10),
 		"exp":            strconv.FormatInt(time.Now().Add(time.Hour).Unix(), 10),
-		"name":           "Adithya O V",
+		"name":           name,
 		"aud":            "1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com",
-		"role_code":      "U",
-		"picture":        "ssdsds",
+		"role_code":      rc,
+		"picture":        picture,
 	})
 	tokenString, err := token.SignedString(SessionSecret)
 	if err != nil {
