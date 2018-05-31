@@ -3,12 +3,9 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"mysql"
 	"net/http"
 	"strconv"
 	"time"
-
-	sq "github.com/Masterminds/squirrel"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -49,31 +46,12 @@ func GenerateToken(googleToken string) (string, error) {
 	picture := "ssdsds"
 	rc := "A"
 
-	// Put in DB
-	var count int
-	query, args, err := sq.Select("COUNT(*)").From("User").
-		Where(sq.Eq{"email": email}).ToSql()
-	err = mysql.QueryOne(query, args, []interface{}{&count})
-	if err != nil {
-		return "", err
-	}
-
-	fmt.Println(count)
-
-	if count == 0 {
-		fmt.Println("Making")
-		query, args, err = sq.Insert("User").
-			Columns("email", "name", "role_code", "picture").
-			Values(email, name, rc, picture).ToSql()
-		if err != nil {
-			return "", err
-		}
-
-		_, err = mysql.Exec(query, args)
-		if err != nil {
-			return "", err
-		}
-	}
+	// moved user addition logic to user
+	/*
+		1. First Populate user with token
+		2. check if user exists
+		3. Create User if does not exist
+	*/
 
 	// Also put nbf in the following claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{

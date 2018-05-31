@@ -16,6 +16,25 @@ func (user *User) FromToken(gt auth.GoogleToken) {
 	user.Picture = gt.Picture
 }
 
+func (user *User) CheckIfExists() (bool, error) {
+
+	var count int
+	query, args, err := sq.Select("COUNT(*)").From("User").
+		Where(sq.Eq{"email": user.Email}).ToSql()
+	err = mysql.QueryOne(query, args, []interface{}{&count})
+	if err != nil {
+		return false, err
+	}
+
+	fmt.Println(count)
+
+	if count == 0 {
+		return false, nil
+	} else {
+		return true, nil
+	}
+}
+
 // Create is a basic function to create a user
 func (user *User) Create() error {
 	query, args, err := sq.Insert("User").Columns("name", "email", "role_code", "picture").
