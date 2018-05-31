@@ -16,6 +16,7 @@ func (user *User) FromToken(gt auth.GoogleToken) {
 	user.Picture = gt.Picture
 }
 
+// CheckIfExists return true if user exists else false. err if err
 func (user *User) CheckIfExists() (bool, error) {
 
 	var count int
@@ -30,9 +31,10 @@ func (user *User) CheckIfExists() (bool, error) {
 
 	if count == 0 {
 		return false, nil
-	} else {
-		return true, nil
 	}
+
+	return true, nil
+
 }
 
 // Create is a basic function to create a user
@@ -68,7 +70,7 @@ func (user *User) SetWith(email string) error {
 		return err
 	}
 
-	err = mysql.QueryOne(query, args, []interface{}{user.Email, user.Name, user.RoleCode, user.Picture})
+	err = mysql.QueryOne(query, args, []interface{}{&user.Email, &user.Name, &user.RoleCode, &user.Picture})
 	if err != nil {
 		return err
 	}

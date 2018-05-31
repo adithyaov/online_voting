@@ -143,3 +143,50 @@ func Candidate() {
 	fmt.Println(c2.Ballot)
 
 }
+
+// User gives some basic User tests
+func User() {
+	err := mysql.RunRawString(user.UserTableSQL)
+	chkErr(500, err)
+
+	jwtToken, err := auth.GenerateToken("some google token")
+	chkErr(501, err)
+
+	gt, err := auth.ParseToken(jwtToken)
+	chkErr(502, err)
+
+	u := user.User{}
+	u.FromToken(gt)
+	exists, err := u.CheckIfExists()
+	chkErr(503, err)
+	fmt.Println(exists)
+
+	err = u.Create()
+	chkErr(504, err)
+	fmt.Println(u)
+
+	err = u.Create()
+	chkErr(505, err)
+
+	exists, err = u.CheckIfExists()
+	chkErr(506, err)
+	fmt.Println(exists)
+
+	u2 := user.User{}
+	err = u2.SetWith("a@xx.com")
+	chkErr(509, err)
+	fmt.Println(u)
+	fmt.Println(u2)
+	fmt.Println(u == u2)
+
+	u.Name = "LALALA"
+	err = u.Update()
+	chkErr(510, err)
+
+	err = user.DeleteUser(u.Email)
+	chkErr(507, err)
+
+	exists, err = u.CheckIfExists()
+	chkErr(508, err)
+	fmt.Println(exists)
+}
