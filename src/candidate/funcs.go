@@ -117,3 +117,19 @@ func GetCandidate(code string, email string) (*Candidate, error) {
 
 	return &c, nil
 }
+
+// DeleteCandidate returns *Candidate after looking up the DB
+func DeleteCandidate(code string, email string) error {
+	query, args, err := sq.Delete("Candidate").
+		Where(sq.And{
+			sq.Eq{"C.ballot_code": code},
+			sq.Eq{"C.user_email": email}}).ToSql()
+	if err != nil {
+		return err
+	}
+	_, err = mysql.Exec(query, args)
+	if err != nil {
+		return err
+	}
+	return nil
+}

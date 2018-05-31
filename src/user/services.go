@@ -1,11 +1,12 @@
 package user
 
 import (
-	"net/http"
-	"encoding/json"
 	c "common"
+	"encoding/json"
+	"net/http"
 )
 
+// DeleteAPI is the api to delete User
 func DeleteAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 
 	var data struct {
@@ -24,14 +25,7 @@ func DeleteAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
 		return
 	}
 
-
-	json.NewEncoder(w).Encode(c.BasicResponse{"Successfully deleted user", 200})
+	json.NewEncoder(w).Encode(c.BasicResponse{Message: "Successfully deleted user",
+		StatusCode: 200})
 
 }
-
-
-
-
-
-
-
