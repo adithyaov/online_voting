@@ -1,6 +1,7 @@
 package auth
 
 import (
+	c "common"
 	"errors"
 	"fmt"
 	"net/http"
@@ -117,11 +118,8 @@ func Wrapper(validRoleCodes []string, fn http.HandlerFunc) http.HandlerFunc {
 		}
 
 		err = errors.New("Permission denied")
-		for _, code := range validRoleCodes {
-			if code == gt.RoleCode {
-				err = nil
-				break
-			}
+		if c.IsIn(gt.RoleCode, validRoleCodes) {
+			err = nil
 		}
 
 		if err != nil {

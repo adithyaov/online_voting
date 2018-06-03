@@ -65,6 +65,16 @@ func RegexpStr(expr string, str string) error {
 
 }
 
+// IsIn checks if x is in [y]
+func IsIn(x string, ys []string) bool {
+	for _, y := range ys {
+		if y == x {
+			return true
+		}
+	}
+	return false
+}
+
 // MethodWrapper wraps a handler func to respond only to the given method
 func MethodWrapper(requestType string, fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

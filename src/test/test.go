@@ -40,7 +40,7 @@ func Auth() {
 // Ballot gives some basic Ballot tests
 func Ballot() {
 	fmt.Println("------------------BALLOT-------------------")
-	err := mysql.RunRawString(ballot.BallotTable)
+	err := mysql.RunRawString(ballot.BallotTableSQL)
 	chkErr(0, err)
 	b, err := ballot.CreateBallot("a", "A - Ballot")
 	chkErr(1, err)
