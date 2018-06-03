@@ -160,6 +160,11 @@ func SignBytesAPI(w http.ResponseWriter, r *http.Request, ballot *Ballot, body *
 		return
 	}
 
+	if !(gt.Email == data.VoterEmail || gt.RoleCode == "A") {
+		http.Error(w, "Not permitted.", 400)
+		return
+	}
+
 	response := Res{c.ConvertBSToIS(signed)}
 
 	w.Header().Set("Content-Type", "application/json")
