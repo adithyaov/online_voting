@@ -1,6 +1,7 @@
 package auth
 
 import (
+	c "common"
 	"time"
 )
 
@@ -38,4 +39,10 @@ type GoogleToken struct {
 	EmailVerified bool      `json:"email_verified"`
 	Name          string    `json:"name"`
 	Picture       string    `json:"picture"`
+}
+
+// Service is the type required for servicechecking
+type Service struct {
+	c.Service
+	Token GoogleToken
 }

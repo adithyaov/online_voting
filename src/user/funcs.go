@@ -81,6 +81,23 @@ func (user *User) SetWith(email string) error {
 	return nil
 }
 
+// GetUser gets user with the data of specific email
+func GetUser(email string) (*User, error) {
+	user := User{}
+	query, args, err := sq.Select("email, name, role_code, picture").From("User").
+		Where(sq.Eq{"email": email}).ToSql()
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = mysql.QueryOne(query, args, []interface{}{&user.Email, &user.Name, &user.RoleCode, &user.Picture})
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 // UpdateRoleCode update the role_code of the user
 func UpdateRoleCode(email string, roleCode string) error {
 	query, args, err := sq.Update("User").Set("role_code", roleCode).

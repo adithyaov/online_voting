@@ -107,8 +107,14 @@ func (s *Service) FillBody() error {
 	return nil
 }
 
-func (s *Service) Error(str string, statusCode int) {
+// Tell sets the status and "tells" the message
+func (s *Service) Tell(str string, statusCode int) {
+	s.Encode(BasicResponse{str, statusCode}, statusCode)
+}
+
+// Encode sets the status gives the result described
+func (s *Service) Encode(data interface{}, statusCode int) {
 	s.Writer.Header().Set("Content-Type", "application/json")
 	s.Writer.WriteHeader(statusCode)
-	json.NewEncoder(s.Writer).Encode(BasicResponse{str, statusCode})
+	json.NewEncoder(s.Writer).Encode(data)
 }

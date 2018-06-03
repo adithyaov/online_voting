@@ -1,7 +1,6 @@
 package ballot
 
 import (
-	"auth"
 	c "common"
 	"encoding/json"
 	"math/rand"
@@ -18,17 +17,17 @@ func CreateAPI(s Service) {
 
 	err := json.Unmarshal(s.Body, &data)
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
 	ballot, err := CreateBallot(data.Code, data.Name)
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
-	json.NewEncoder(s.Writer).Encode(ballot)
+	s.Encode(ballot, 200)
 
 }
 
@@ -41,17 +40,17 @@ func FindAPI(s Service) {
 
 	err := json.Unmarshal(s.Body, &data)
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
 	b, err := OpenBallot(data.Code)
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
-	json.NewEncoder(s.Writer).Encode(b)
+	s.Encode(b, 200)
 
 }
 
@@ -64,19 +63,17 @@ func DeleteAPI(s Service) {
 
 	err := json.Unmarshal(s.Body, &data)
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
 	err = DeleteBallot(data.Code)
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
-	json.NewEncoder(s.Writer).Encode(c.BasicResponse{
-		Message:    "Successfully deleted the ballot",
-		StatusCode: 200})
+	s.Tell("Successfully deleted the ballot", 200)
 
 }
 
@@ -98,17 +95,17 @@ func BlindVoteAPI(s Service) {
 
 	err := json.Unmarshal(s.Body, &data)
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
 	if ok, err := s.Ballot.IsCandidate(data.CandidateEmail); err == nil {
 		if ok == false {
-			s.Error("Candidate not a part of Ballot", 400)
+			s.Tell("Candidate not a part of Ballot", 400)
 			return
 		}
 	} else {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
@@ -117,14 +114,14 @@ func BlindVoteAPI(s Service) {
 	hashed, err := vote.Hash()
 
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
 	blinded, unblinder, err := s.Ballot.BlindVote(vote)
 
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
@@ -132,8 +129,7 @@ func BlindVoteAPI(s Service) {
 		c.ConvertBSToIS(unblinder),
 		c.ConvertBSToIS(hashed), bias}
 
-	s.Writer.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(s.Writer).Encode(response)
+	s.Encode(response, 200)
 }
 
 // SignBytesAPI provides an endpoint so sign with a specific ballot
@@ -152,40 +148,38 @@ func SignBytesAPI(s Service) {
 
 	err := json.Unmarshal(s.Body, &data)
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
 	signed, err := s.Ballot.SignBlindHash(c.ConvertISToBS(data.Blinded))
 
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
-	// Before responding Note the token, save the token. Auth Field required.
-	token := s.Request.Header["token"][0]
-	gt, err := auth.ParseToken(token)
-	if err != nil {
-		s.Error(err.Error(), 400)
-		return
-	}
+	// // Before responding Note the token, save the token. Auth Field required.
+	// token := s.Request.Header["token"][0]
+	// gt, err := auth.ParseToken(token)
+	// if err != nil {
+	// 	s.Tell(err.Error(), 400)
+	// 	return
+	// }
 
-	if !(gt.Email == data.VoterEmail || gt.RoleCode == "A") {
-		s.Error("Not permitted.", 400)
-		return
-	}
+	// if !(gt.Email == data.VoterEmail || gt.RoleCode == "A") {
+	// 	s.Tell("Not permitted.", 400)
+	// 	return
+	// }
 
 	response := Res{c.ConvertBSToIS(signed)}
 
-	s.Writer.Header().Set("Content-Type", "application/json")
-
 	if err := s.Ballot.AddVoter(data.VoterEmail); err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
-	json.NewEncoder(s.Writer).Encode(response)
+	s.Encode(response, 200)
 }
 
 // UnblindSignAPI provides an endpoint to unblind the sign
@@ -204,7 +198,7 @@ func UnblindSignAPI(s Service) {
 
 	err := json.Unmarshal(s.Body, &data)
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
@@ -213,8 +207,7 @@ func UnblindSignAPI(s Service) {
 
 	response := Res{c.ConvertBSToIS(unblinded)}
 
-	s.Writer.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(s.Writer).Encode(response)
+	s.Encode(response, 200)
 }
 
 // VerifySignAPI provides a way to check if the sign given is proper
@@ -233,7 +226,7 @@ func VerifySignAPI(s Service) {
 
 	err := json.Unmarshal(s.Body, &data)
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
@@ -241,12 +234,11 @@ func VerifySignAPI(s Service) {
 		c.ConvertISToBS(data.Unblinded))
 
 	if err != nil {
-		s.Error(err.Error(), 200)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
-	s.Writer.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(s.Writer).Encode(Res{""})
+	s.Encode(Res{""}, 200)
 }
 
 // FindBallotsAPI returns all ballots depending on the user
@@ -260,15 +252,15 @@ func FindBallotsAPI(s Service) {
 
 	err := json.Unmarshal(s.Body, &data)
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
 	if err != nil {
-		s.Error(err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
-	json.NewEncoder(s.Writer).Encode(GetBallots(data.Email, s.OpenBallots))
+	s.Encode(GetBallots(data.Email, s.OpenBallots), 200)
 
 }

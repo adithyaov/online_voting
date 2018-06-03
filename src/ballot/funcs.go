@@ -319,7 +319,7 @@ func BodyBallotWrapper(openBallots map[string]*Ballot, fn func(Service)) func(Se
 
 		err := s.FillBallot(openBallots)
 		if err != nil {
-			s.Error(err.Error(), 400)
+			s.Tell(err.Error(), 400)
 			return
 		}
 
@@ -333,7 +333,7 @@ func OpenBallotsWrapper(openBallots map[string]*Ballot, fn func(Service)) func(S
 
 		err := s.FillOpenBallots(openBallots)
 		if err != nil {
-			s.Error(err.Error(), 400)
+			s.Tell(err.Error(), 400)
 			return
 		}
 

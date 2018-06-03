@@ -3,29 +3,27 @@ package user
 import (
 	c "common"
 	"encoding/json"
-	"net/http"
 )
 
 // DeleteAPI is the api to delete User
-func DeleteAPI(w http.ResponseWriter, r *http.Request, body *[]byte) {
+func DeleteAPI(s c.Service) {
 
 	var data struct {
 		Email string `json:"email"`
 	}
 
-	err := json.Unmarshal(*body, &data)
+	err := json.Unmarshal(s.Body, &data)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
 	err = DeleteUser(data.Email)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		s.Tell(err.Error(), 400)
 		return
 	}
 
-	json.NewEncoder(w).Encode(c.BasicResponse{Message: "Successfully deleted user",
-		StatusCode: 200})
+	s.Tell("Successfully deleted user", 200)
 
 }
