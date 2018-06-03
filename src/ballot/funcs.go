@@ -8,8 +8,8 @@ import (
 	_ "crypto/sha256" // Required for the init(), registering the hash.
 	"encoding/json"
 	"errors"
+	"fmt"
 	"mysql"
-	"net/http"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/cryptoballot/fdh"
@@ -214,6 +214,33 @@ func (ballot *Ballot) Update() error {
 	return err
 }
 
+// IsCandidate checks if the given candidate is for the specific ballot or not
+func (ballot *Ballot) IsCandidate(candidateEmail string) (bool, error) {
+
+	var count int
+	query, args, err := sq.Select("COUNT(*)").From("Candidate").
+		Where(sq.And{
+			sq.Eq{"user_email": candidateEmail},
+			sq.Eq{"ballot_code": ballot.Code}}).ToSql()
+
+	if err != nil {
+		return false, err
+	}
+
+	err = mysql.QueryOne(query, args, []interface{}{&count})
+	if err != nil {
+		return false, err
+	}
+
+	fmt.Println(count)
+
+	if count == 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
+
 // SignBlindHash signs the blinded vote hash and returns the signed hash
 func (ballot *Ballot) SignBlindHash(blinded []byte) ([]byte, error) {
 	publicKey := rsa.PublicKey{N: &(ballot.N), E: ballot.E}
@@ -287,31 +314,55 @@ func RestartOpenBallotsRT(openBallots map[string]*Ballot) error {
 
 // BodyBallotWrapper wraps the functions which require ballot, searches the ballot and
 // runs the corresponding function
-func BodyBallotWrapper(openBallots map[string]*Ballot, fn BodyService) c.BodyExtracted {
-	return func(w http.ResponseWriter, r *http.Request, body *[]byte) {
-		var data struct {
-			BallotCode string `json:"ballot_code"`
-		}
+func BodyBallotWrapper(openBallots map[string]*Ballot, fn func(Service)) func(Service) {
+	return func(s Service) {
 
-		err := json.Unmarshal(*body, &data)
+		err := s.FillBallot(openBallots)
 		if err != nil {
-			http.Error(w, err.Error(), 400)
+			s.Error(err.Error(), 400)
 			return
 		}
 
-		ballot, ok := openBallots[data.BallotCode]
-		if ok == false {
-			http.Error(w, "Ballot not found", 400)
-			return
-		}
-
-		fn(w, r, ballot, body)
+		fn(s)
 	}
 }
 
 // OpenBallotsWrapper is wrapper over services which need openBallots
-func OpenBallotsWrapper(openBallots map[string]*Ballot, fn OpenBallotService) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		fn(w, r, openBallots)
+func OpenBallotsWrapper(openBallots map[string]*Ballot, fn func(Service)) func(Service) {
+	return func(s Service) {
+
+		err := s.FillOpenBallots(openBallots)
+		if err != nil {
+			s.Error(err.Error(), 400)
+			return
+		}
+
+		fn(s)
 	}
+}
+
+// FillBallot fills the Service with the proper ballot
+func (s *Service) FillBallot(openBallots map[string]*Ballot) error {
+	var data struct {
+		BallotCode string `json:"ballot_code"`
+	}
+
+	err := json.Unmarshal(s.Body, &data)
+	if err != nil {
+		return err
+	}
+
+	ballot, ok := openBallots[data.BallotCode]
+	if ok == false {
+		return errors.New("Ballot not found")
+	}
+
+	s.Ballot = ballot
+	return nil
+}
+
+// FillOpenBallots fills the Service with the OpenBallots
+func (s *Service) FillOpenBallots(openBallots map[string]*Ballot) error {
+	s.OpenBallots = openBallots
+	return nil
 }

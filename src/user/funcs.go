@@ -22,6 +22,10 @@ func (user *User) CheckIfExists() (bool, error) {
 	var count int
 	query, args, err := sq.Select("COUNT(*)").From("User").
 		Where(sq.Eq{"email": user.Email}).ToSql()
+	if err != nil {
+		return false, err
+	}
+
 	err = mysql.QueryOne(query, args, []interface{}{&count})
 	if err != nil {
 		return false, err

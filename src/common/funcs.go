@@ -1,6 +1,7 @@
 package common
 
 import (
+	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -84,4 +85,30 @@ func MethodWrapper(requestType string, fn http.HandlerFunc) http.HandlerFunc {
 		}
 		fn(w, r)
 	}
+}
+
+// FillBody reads the body from the req and fills it.
+func (s *Service) FillBody() error {
+	if s.Request.Body == nil {
+		return errors.New("Empty Body")
+	}
+
+	body, err := ioutil.ReadAll(s.Request.Body)
+	s.Request.Body.Close()
+	if err != nil {
+		return err
+	}
+
+	if len(body) > MaxReqBody {
+		return errors.New("Body too long :-(")
+	}
+
+	s.Body = body
+	return nil
+}
+
+func (s *Service) Error(str string, statusCode int) {
+	s.Writer.Header().Set("Content-Type", "application/json")
+	s.Writer.WriteHeader(statusCode)
+	json.NewEncoder(s.Writer).Encode(BasicResponse{str, statusCode})
 }

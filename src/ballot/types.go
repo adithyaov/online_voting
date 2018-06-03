@@ -1,6 +1,7 @@
 package ballot
 
 import (
+	c "common"
 	"math/big"
 	"net/http"
 )
@@ -29,3 +30,10 @@ type BodyService func(http.ResponseWriter, *http.Request, *Ballot, *[]byte)
 
 // OpenBallotService is the ecpected type of service which needs a ballot
 type OpenBallotService func(http.ResponseWriter, *http.Request, map[string]*Ballot)
+
+// Service is the expected input type for all services
+type Service struct {
+	c.Service
+	Ballot      *Ballot
+	OpenBallots map[string]*Ballot
+}

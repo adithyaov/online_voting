@@ -19,3 +19,10 @@ type ThreadSafeType struct {
 	Mutex sync.Mutex
 	Data  interface{}
 }
+
+// Service is the expected input type for all services
+type Service struct {
+	Writer  http.ResponseWriter
+	Request *http.Request
+	Body    []byte
+}
