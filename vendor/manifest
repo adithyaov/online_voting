@@ -1,0 +1,53 @@
+{
+	"version": 0,
+	"dependencies": [
+		{
+			"importpath": "github.com/Masterminds/squirrel",
+			"repository": "https://github.com/Masterminds/squirrel",
+			"revision": "40ef4f86bf59a996c348a9f56ddb4c4d3d49a6df",
+			"branch": "v1"
+		},
+		{
+			"importpath": "github.com/cryptoballot/fdh",
+			"repository": "https://github.com/cryptoballot/fdh",
+			"revision": "5eb31ce2010cf845b41e581e11d7dae11619e988",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/cryptoballot/rsablind",
+			"repository": "https://github.com/cryptoballot/rsablind",
+			"revision": "14f9913880b71892808a318b2759875118d9c22a",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/dgrijalva/jwt-go",
+			"repository": "https://github.com/dgrijalva/jwt-go",
+			"revision": "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/gorilla/websocket",
+			"repository": "https://github.com/gorilla/websocket",
+			"revision": "21ab95fa12b9bdd8fecf5fa3586aad941cc98785",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/lann/builder",
+			"repository": "https://github.com/lann/builder",
+			"revision": "1b87b36280d04fe7882d1512bf038ea2967ad534",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/lann/ps",
+			"repository": "https://github.com/lann/ps",
+			"revision": "62de8c46ede02a7675c4c79c84883eb164cb71e3",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/mattn/go-sqlite3",
+			"repository": "https://github.com/mattn/go-sqlite3",
+			"revision": "b8b158db6fdb72096ff3510373df0f61ea8de773",
+			"branch": "master"
+		}
+	]
+}
