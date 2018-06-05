@@ -1,14 +1,23 @@
 package main
 
 import (
+	"auth"
 	"ballot"
 	c "common"
 	"net/http"
+	"os"
 )
 
 func main() {
 	openBallots := make(map[string]*ballot.Ballot)
+	err := ballot.RestartOpenBallotsRT(openBallots)
 
-	http.HandleFunc("/", c.CreateService(c.BodyCheckWrapper(
-		ballot.BodyBallotWrapper(openBallots, ballot.CreateAPI))))
+	if err != nil {
+		os.Exit(1)
+	}
+
+	http.HandleFunc("/", c.CreateService(auth.Wrapper("A", c.BodyCheckWrapper(ballot.CreateAPI))))
+
+	http.ListenAndServe(":8080", nil)
+
 }

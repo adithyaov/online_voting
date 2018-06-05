@@ -105,11 +105,13 @@ func ParseToken(tokenString string) (GoogleToken, error) {
 
 // Wrapper wraps the corresponding function after checking
 // the jwt token in the header
-func Wrapper(validCodeRune, fn func(c.Service)) func(c.Service) {
-	return func(s c.Service) {
+func Wrapper(validCodeRune string, fn func(Service)) func(c.Service) {
+	return func(sBasic c.Service) {
 
-		token := s.Request.Header["token"][0]
-		gt, err := ParseToken(token)
+		s := Service{}
+		s.Service = sBasic
+
+		err := s.ExtractToken()
 
 		if err != nil {
 			s.Tell(err.Error(), 400)
@@ -117,7 +119,7 @@ func Wrapper(validCodeRune, fn func(c.Service)) func(c.Service) {
 		}
 
 		err = errors.New("Permission denied")
-		if c.IsIn(gt.RoleCode, validCodeRune) {
+		if c.IsIn(s.Token.RoleCode, validCodeRune) {
 			err = nil
 		}
 
@@ -128,4 +130,26 @@ func Wrapper(validCodeRune, fn func(c.Service)) func(c.Service) {
 
 		fn(s)
 	}
+}
+
+// ExtractToken extracts the token from the header and sets it in the service
+func (s *Service) ExtractToken() error {
+	token := s.Request.Header["token"]
+	var gt GoogleToken
+	var err error
+	err = nil
+
+	if len(token) == 0 {
+		gt = GoogleToken{RoleCode: "X"}
+	} else {
+		gt, err = ParseToken(token[0])
+	}
+
+	if err != nil {
+		return err
+	}
+
+	s.Token = gt
+	return nil
+
 }

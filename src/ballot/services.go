@@ -1,6 +1,7 @@
 package ballot
 
 import (
+	"auth"
 	c "common"
 	"encoding/json"
 	"math/rand"
@@ -8,7 +9,7 @@ import (
 )
 
 // CreateAPI is an endpoint to create a ballot.
-func CreateAPI(s Service) {
+func CreateAPI(s auth.Service) {
 
 	var data struct {
 		Code string `json:"code"`
@@ -32,7 +33,7 @@ func CreateAPI(s Service) {
 }
 
 // FindAPI is an endpoint to get ballot information.
-func FindAPI(s Service) {
+func FindAPI(s auth.Service) {
 
 	var data struct {
 		Code string `json:"code"`
@@ -55,7 +56,7 @@ func FindAPI(s Service) {
 }
 
 // DeleteAPI creates an endpoint to delete ballot
-func DeleteAPI(s Service) {
+func DeleteAPI(s auth.Service) {
 
 	var data struct {
 		Code string `json:"code"`
@@ -159,18 +160,18 @@ func SignBytesAPI(s Service) {
 		return
 	}
 
-	// // Before responding Note the token, save the token. Auth Field required.
-	// token := s.Request.Header["token"][0]
-	// gt, err := auth.ParseToken(token)
-	// if err != nil {
-	// 	s.Tell(err.Error(), 400)
-	// 	return
-	// }
+	// Before responding Note the token, save the token. Auth Field required.
+	token := s.Request.Header["token"][0]
+	gt, err := auth.ParseToken(token)
+	if err != nil {
+		s.Tell(err.Error(), 400)
+		return
+	}
 
-	// if !(gt.Email == data.VoterEmail || gt.RoleCode == "A") {
-	// 	s.Tell("Not permitted.", 400)
-	// 	return
-	// }
+	if !(gt.Email == data.VoterEmail || c.IsIn(gt.RoleCode, "A")) {
+		s.Tell("Not permitted.", 400)
+		return
+	}
 
 	response := Res{c.ConvertBSToIS(signed)}
 

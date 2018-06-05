@@ -1,6 +1,7 @@
 package ballot
 
 import (
+	"auth"
 	c "common"
 	"crypto"
 	"crypto/rand"
@@ -314,8 +315,8 @@ func RestartOpenBallotsRT(openBallots map[string]*Ballot) error {
 
 // BodyBallotWrapper wraps the functions which require ballot, searches the ballot and
 // runs the corresponding function
-func BodyBallotWrapper(openBallots map[string]*Ballot, fn func(Service)) func(c.Service) {
-	return func(s c.Service) {
+func BodyBallotWrapper(openBallots map[string]*Ballot, fn func(Service)) func(auth.Service) {
+	return func(s auth.Service) {
 		var ballotService Service
 		ballotService.Service = s
 		err := ballotService.FillBallot(openBallots)
@@ -329,8 +330,8 @@ func BodyBallotWrapper(openBallots map[string]*Ballot, fn func(Service)) func(c.
 }
 
 // OpenBallotsWrapper is wrapper over services which need openBallots
-func OpenBallotsWrapper(openBallots map[string]*Ballot, fn func(Service)) func(c.Service) {
-	return func(s c.Service) {
+func OpenBallotsWrapper(openBallots map[string]*Ballot, fn func(Service)) func(auth.Service) {
+	return func(s auth.Service) {
 		var ballotService Service
 		ballotService.Service = s
 
