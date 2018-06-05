@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"net/http"
 	"regexp"
 	"strings"
 )
@@ -28,6 +29,14 @@ func BodyCheckWrapper(fn func(Service)) func(Service) {
 			return
 		}
 		s.Body = body
+		fn(s)
+	}
+}
+
+// CreateService maps http.HandlerFunc -> Service
+func CreateService(fn func(Service)) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		s := Service{Writer: w, Request: r}
 		fn(s)
 	}
 }
