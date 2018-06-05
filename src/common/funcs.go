@@ -4,31 +4,31 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"net/http"
 	"regexp"
 	"strings"
 )
 
 // BodyCheckWrapper wraps the function with the BodyExtracted signature,
 // checks for an empty and the limit of the body.
-func BodyCheckWrapper(fn BodyExtracted) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Body == nil {
-			http.Error(w, "Please send a request body", 400)
+func BodyCheckWrapper(fn func(Service)) func(Service) {
+	return func(s Service) {
+		if s.Request.Body == nil {
+			s.Tell("Please send a request body", 400)
 			return
 		}
-		body, err := ioutil.ReadAll(r.Body)
-		r.Body.Close()
+		body, err := ioutil.ReadAll(s.Request.Body)
+		s.Request.Body.Close()
 		if err != nil {
-			http.Error(w, err.Error(), 400)
+			s.Tell(err.Error(), 400)
 			return
 		}
 
 		if len(body) > MaxReqBody {
-			http.Error(w, "Body too long :-(", 400)
+			s.Tell("Body too long :-(", 400)
 			return
 		}
-		fn(w, r, &body)
+		s.Body = body
+		fn(s)
 	}
 }
 
