@@ -13,22 +13,13 @@ import (
 // checks for an empty and the limit of the body.
 func BodyCheckWrapper(fn func(Service)) func(Service) {
 	return func(s Service) {
-		if s.Request.Body == nil {
-			s.Tell("Please send a request body", 400)
-			return
-		}
-		body, err := ioutil.ReadAll(s.Request.Body)
-		s.Request.Body.Close()
+		err := s.FillBody()
+
 		if err != nil {
 			s.Tell(err.Error(), 400)
 			return
 		}
 
-		if len(body) > MaxReqBody {
-			s.Tell("Body too long :-(", 400)
-			return
-		}
-		s.Body = body
 		fn(s)
 	}
 }
