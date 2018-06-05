@@ -4,7 +4,6 @@ import (
 	c "common"
 	"errors"
 	"fmt"
-	"net/http"
 	"strconv"
 	"time"
 
@@ -106,27 +105,27 @@ func ParseToken(tokenString string) (GoogleToken, error) {
 
 // Wrapper wraps the corresponding function after checking
 // the jwt token in the header
-func Wrapper(validRoleCodes []string, fn http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func Wrapper(validCodeRune, fn func(c.Service)) func(c.Service) {
+	return func(s c.Service) {
 
-		token := r.Header["token"][0]
+		token := s.Request.Header["token"][0]
 		gt, err := ParseToken(token)
 
 		if err != nil {
-			http.Error(w, err.Error(), 400)
+			s.Tell(err.Error(), 400)
 			return
 		}
 
 		err = errors.New("Permission denied")
-		if c.IsIn(gt.RoleCode, validRoleCodes) {
+		if c.IsIn(gt.RoleCode, validCodeRune) {
 			err = nil
 		}
 
 		if err != nil {
-			http.Error(w, err.Error(), 400)
+			s.Tell(err.Error(), 400)
 			return
 		}
 
-		fn(w, r)
+		fn(s)
 	}
 }

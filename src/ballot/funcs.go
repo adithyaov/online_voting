@@ -314,30 +314,33 @@ func RestartOpenBallotsRT(openBallots map[string]*Ballot) error {
 
 // BodyBallotWrapper wraps the functions which require ballot, searches the ballot and
 // runs the corresponding function
-func BodyBallotWrapper(openBallots map[string]*Ballot, fn func(Service)) func(Service) {
-	return func(s Service) {
-
-		err := s.FillBallot(openBallots)
+func BodyBallotWrapper(openBallots map[string]*Ballot, fn func(Service)) func(c.Service) {
+	return func(s c.Service) {
+		var ballotService Service
+		ballotService.Service = s
+		err := ballotService.FillBallot(openBallots)
 		if err != nil {
 			s.Tell(err.Error(), 400)
 			return
 		}
 
-		fn(s)
+		fn(ballotService)
 	}
 }
 
 // OpenBallotsWrapper is wrapper over services which need openBallots
-func OpenBallotsWrapper(openBallots map[string]*Ballot, fn func(Service)) func(Service) {
-	return func(s Service) {
+func OpenBallotsWrapper(openBallots map[string]*Ballot, fn func(Service)) func(c.Service) {
+	return func(s c.Service) {
+		var ballotService Service
+		ballotService.Service = s
 
-		err := s.FillOpenBallots(openBallots)
+		err := ballotService.FillOpenBallots(openBallots)
 		if err != nil {
 			s.Tell(err.Error(), 400)
 			return
 		}
 
-		fn(s)
+		fn(ballotService)
 	}
 }
 

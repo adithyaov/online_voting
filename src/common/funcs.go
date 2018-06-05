@@ -66,10 +66,14 @@ func RegexpStr(expr string, str string) error {
 
 }
 
-// IsIn checks if x is in [y]
-func IsIn(x string, ys []string) bool {
-	for _, y := range ys {
-		if y == x {
+// IsIn checks if x is in [y], x and y need to ASCII only
+func IsIn(x string, y string) bool {
+	chkMap := make(map[byte]bool)
+	for i := 0; i < len(x); i++ {
+		chkMap[x[i]] = false
+	}
+	for i := 0; i < len(y); i++ {
+		if _, ok := chkMap[y[i]]; ok {
 			return true
 		}
 	}
@@ -77,13 +81,13 @@ func IsIn(x string, ys []string) bool {
 }
 
 // MethodWrapper wraps a handler func to respond only to the given method
-func MethodWrapper(requestType string, fn http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if strings.ToUpper(r.Method) != strings.ToUpper(requestType) {
-			http.Error(w, "Method not allowed :-(", 400)
+func MethodWrapper(requestType string, fn func(Service)) func(Service) {
+	return func(s Service) {
+		if strings.ToUpper(s.Request.Method) != strings.ToUpper(requestType) {
+			s.Tell("Method not allowed :-(", 400)
 			return
 		}
-		fn(w, r)
+		fn(s)
 	}
 }
 
