@@ -7,10 +7,12 @@ import (
 	c "common"
 	"net/http"
 	"os"
+	"test"
 	"user"
 )
 
 func main() {
+	test.Init()
 	openBallots := make(map[string]*ballot.Ballot)
 	err := ballot.RestartOpenBallotsRT(openBallots)
 
@@ -30,24 +32,28 @@ func main() {
 		c.BodyCheckWrapper(auth.Wrapper("A", ballot.DeleteAPI)))))
 
 	http.HandleFunc("/ballot/blind-vote", c.CreateService(c.MethodWrapper("POST",
-		c.BodyCheckWrapper(auth.Wrapper("AUMX",
-			ballot.BodyBallotWrapper(openBallots, ballot.BlindVoteAPI))))))
+		c.BodyCheckWrapper(auth.Wrapper("AUMX", ballot.ToAuthWrapper(
+			ballot.BodyBallotWrapper(openBallots, ballot.BlindVoteAPI)))))))
 
 	http.HandleFunc("/ballot/sign-bytes", c.CreateService(c.MethodWrapper("POST",
-		c.BodyCheckWrapper(auth.Wrapper("AUM",
-			ballot.BodyBallotWrapper(openBallots, ballot.SignBytesAPI))))))
+		c.BodyCheckWrapper(auth.Wrapper("AUM", ballot.ToAuthWrapper(
+			ballot.BodyBallotWrapper(openBallots, ballot.SignBytesAPI)))))))
 
 	http.HandleFunc("/ballot/unblind-sign", c.CreateService(c.MethodWrapper("POST",
-		c.BodyCheckWrapper(auth.Wrapper("AUMX",
-			ballot.BodyBallotWrapper(openBallots, ballot.UnblindSignAPI))))))
+		c.BodyCheckWrapper(auth.Wrapper("AUMX", ballot.ToAuthWrapper(
+			ballot.BodyBallotWrapper(openBallots, ballot.UnblindSignAPI)))))))
 
 	http.HandleFunc("/ballot/verify-sign", c.CreateService(c.MethodWrapper("POST",
-		c.BodyCheckWrapper(auth.Wrapper("AUMX",
-			ballot.BodyBallotWrapper(openBallots, ballot.VerifySignAPI))))))
+		c.BodyCheckWrapper(auth.Wrapper("AUMX", ballot.ToAuthWrapper(
+			ballot.BodyBallotWrapper(openBallots, ballot.VerifySignAPI)))))))
 
 	http.HandleFunc("/ballot/find-ballots", c.CreateService(c.MethodWrapper("POST",
-		c.BodyCheckWrapper(auth.Wrapper("AUM",
-			ballot.BodyBallotWrapper(openBallots, ballot.FindBallotsAPI))))))
+		c.BodyCheckWrapper(auth.Wrapper("AUM", ballot.ToAuthWrapper(
+			ballot.OpenBallotsWrapper(openBallots, ballot.FindBallotsAPI)))))))
+
+	http.HandleFunc("/ballot/restart", c.CreateService(c.MethodWrapper("POST",
+		c.BodyCheckWrapper(auth.Wrapper("A", ballot.ToAuthWrapper(
+			ballot.OpenBallotsWrapper(openBallots, ballot.FindBallotsAPI)))))))
 
 	// Candidate EP's
 
@@ -71,10 +77,10 @@ func main() {
 	http.HandleFunc("/user/delete", c.CreateService(c.MethodWrapper("POST",
 		c.BodyCheckWrapper(auth.Wrapper("AUM", user.DeleteAPI)))))
 
-	http.HandleFunc("/user/delete", c.CreateService(c.MethodWrapper("POST",
+	http.HandleFunc("/user/update-personal", c.CreateService(c.MethodWrapper("POST",
 		c.BodyCheckWrapper(auth.Wrapper("AUM", user.UpdatePersonalAPI)))))
 
-	http.HandleFunc("/user/delete", c.CreateService(c.MethodWrapper("POST",
+	http.HandleFunc("/user/update-role", c.CreateService(c.MethodWrapper("POST",
 		c.BodyCheckWrapper(auth.Wrapper("A", user.UpdateRoleAPI)))))
 
 	http.ListenAndServe(":8080", nil)

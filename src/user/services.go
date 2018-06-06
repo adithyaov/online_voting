@@ -2,7 +2,6 @@ package user
 
 import (
 	"auth"
-	c "common"
 	"encoding/json"
 )
 
@@ -65,7 +64,7 @@ func DeleteAPI(s auth.Service) {
 		return
 	}
 
-	if !(data.Email == s.Token.Email || c.IsIn(s.Token.RoleCode, "A")) {
+	if auth.IsOwnerOr(data.Email, s.Token, "A") == false {
 		s.Tell(err.Error(), 400)
 		return
 	}
@@ -96,7 +95,7 @@ func UpdatePersonalAPI(s auth.Service) {
 	}
 
 	// Ownership or Admin
-	if !(data.Email == s.Token.Email || c.IsIn(s.Token.RoleCode, "A")) {
+	if auth.IsOwnerOr(data.Email, s.Token, "A") == false {
 		s.Tell(err.Error(), 400)
 		return
 	}

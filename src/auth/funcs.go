@@ -41,10 +41,10 @@ func GenerateToken(googleToken string) (string, error) {
 	// Verify google token
 
 	// Dummy Vals
-	email := "a@xx.com"
-	name := "Adithya O V"
-	picture := "ssdsds"
-	rc := "A"
+	email := "a@gmail.com"
+	name := "A"
+	picture := "pic1"
+	rc := "AMUX"
 
 	// moved user addition logic to user
 	/*
@@ -152,4 +152,14 @@ func (s *Service) ExtractToken() error {
 	s.Token = gt
 	return nil
 
+}
+
+// IsOwnerOr gived bool for the fact that he is an owner or a part of code rune
+func IsOwnerOr(emailRecieved string, gt GoogleToken, validCodeRune string) bool {
+
+	if emailRecieved == gt.Email || c.IsIn(gt.RoleCode, validCodeRune) {
+		return true
+	}
+
+	return false
 }

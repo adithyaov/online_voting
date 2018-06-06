@@ -3,7 +3,6 @@ package candidate
 import (
 	"auth"
 	"ballot"
-	c "common"
 	"encoding/json"
 	"user"
 )
@@ -24,7 +23,7 @@ func CreateAPI(s auth.Service) {
 		return
 	}
 
-	if !(data.UserEmail == s.Token.Email || c.IsIn(s.Token.RoleCode, "A")) {
+	if auth.IsOwnerOr(data.UserEmail, s.Token, "A") == false {
 		s.Tell(err.Error(), 400)
 		return
 	}
@@ -67,7 +66,7 @@ func AddNomineeAPI(s auth.Service) {
 		return
 	}
 
-	if !(data.UserEmail == s.Token.Email || c.IsIn(s.Token.RoleCode, "A")) {
+	if auth.IsOwnerOr(data.UserEmail, s.Token, "A") == false {
 		s.Tell(err.Error(), 400)
 		return
 	}
@@ -114,7 +113,7 @@ func UpdateDetailsAPI(s auth.Service) {
 		return
 	}
 
-	if !(data.UserEmail == s.Token.Email || c.IsIn(s.Token.RoleCode, "A")) {
+	if auth.IsOwnerOr(data.UserEmail, s.Token, "A") == false {
 		s.Tell(err.Error(), 400)
 		return
 	}
@@ -151,7 +150,7 @@ func DeleteAPI(s auth.Service) {
 		return
 	}
 
-	if !(data.UserEmail == s.Token.Email || c.IsIn(s.Token.RoleCode, "A")) {
+	if auth.IsOwnerOr(data.UserEmail, s.Token, "A") == false {
 		s.Tell(err.Error(), 400)
 		return
 	}

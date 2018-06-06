@@ -162,8 +162,8 @@ func SignBytesAPI(s Service) {
 
 	// Before responding Note the token, save the token. Auth Field required.
 
-	if !(s.Token.Email == data.VoterEmail || c.IsIn(s.Token.RoleCode, "A")) {
-		s.Tell("Not permitted", 400)
+	if auth.IsOwnerOr(data.VoterEmail, s.Token, "A") == false {
+		s.Tell(err.Error(), 400)
 		return
 	}
 
@@ -258,4 +258,13 @@ func FindBallotsAPI(s Service) {
 
 	s.Encode(GetBallots(data.Email, s.OpenBallots), 200)
 
+}
+
+// RestartOpenBallotAPI is the EP for restarting ballots
+func RestartOpenBallotAPI(s Service) {
+	err := RestartOpenBallotsRT(s.OpenBallots)
+	if err != nil {
+		s.Tell(err.Error(), 400)
+		return
+	}
 }
