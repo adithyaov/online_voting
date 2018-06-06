@@ -28,6 +28,9 @@ func main() {
 	http.HandleFunc("/ballot/find", c.CreateService(c.MethodWrapper("POST",
 		c.BodyCheckWrapper(auth.Wrapper("AUMX", ballot.FindAPI)))))
 
+	http.HandleFunc("/ballot/update", c.CreateService(c.MethodWrapper("POST",
+		c.BodyCheckWrapper(auth.Wrapper("A", ballot.UpdateAPI)))))
+
 	http.HandleFunc("/ballot/delete", c.CreateService(c.MethodWrapper("POST",
 		c.BodyCheckWrapper(auth.Wrapper("A", ballot.DeleteAPI)))))
 

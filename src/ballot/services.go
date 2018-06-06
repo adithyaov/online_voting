@@ -251,11 +251,6 @@ func FindBallotsAPI(s Service) {
 		return
 	}
 
-	if err != nil {
-		s.Tell(err.Error(), 400)
-		return
-	}
-
 	s.Encode(GetBallots(data.Email, s.OpenBallots), 200)
 
 }
@@ -268,4 +263,42 @@ func RestartOpenBallotAPI(s Service) {
 		return
 	}
 	s.Encode(s.OpenBallots, 200)
+}
+
+// UpdateAPI updates the ballot accordingly
+func UpdateAPI(s auth.Service) {
+	type Req struct {
+		Code            string `json:"code"`
+		Name            string `json:"name"`
+		RegexpCandidate string `json:"regexp_voter"`
+		RegexpVoter     string `json:"regexp_candidate"`
+		Phase           string `json:"phase"`
+	}
+
+	var data Req
+
+	err := json.Unmarshal(s.Body, &data)
+	if err != nil {
+		s.Tell(err.Error(), 400)
+		return
+	}
+
+	ballot, err := OpenBallot(data.Code)
+	if err != nil {
+		s.Tell(err.Error(), 400)
+		return
+	}
+
+	ballot.Name = data.Name
+	ballot.RegexpCandidate = data.RegexpCandidate
+	ballot.RegexpVoter = data.RegexpVoter
+	ballot.Phase = data.Phase
+
+	err = ballot.Update()
+	if err != nil {
+		s.Tell(err.Error(), 400)
+		return
+	}
+
+	s.Encode(ballot, 200)
 }
