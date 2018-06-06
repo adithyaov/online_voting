@@ -1,14 +1,14 @@
 package candidate
 
 import (
+	"auth"
 	"ballot"
-	c "common"
 	"encoding/json"
 	"user"
 )
 
 // CreateAPI provides the endpoint for createing a candidate
-func CreateAPI(s c.Service) {
+func CreateAPI(s auth.Service) {
 	type Req struct {
 		BallotCode string `json:"ballot_code"`
 		UserEmail  string `json:"user_email"`
@@ -46,7 +46,7 @@ func CreateAPI(s c.Service) {
 }
 
 // AddNomineeAPI adds a nominee
-func AddNomineeAPI(s c.Service) {
+func AddNomineeAPI(s auth.Service) {
 	type Req struct {
 		BallotCode   string `json:"ballot_code"`
 		UserEmail    string `json:"user_email"`
@@ -88,7 +88,7 @@ func AddNomineeAPI(s c.Service) {
 }
 
 // UpdateDetailsAPI gives an endpoint to update details
-func UpdateDetailsAPI(s c.Service) {
+func UpdateDetailsAPI(s auth.Service) {
 	type Req struct {
 		BallotCode string `json:"ballot_code"`
 		UserEmail  string `json:"user_email"`
@@ -121,7 +121,7 @@ func UpdateDetailsAPI(s c.Service) {
 }
 
 // DeleteAPI gives an endpoint to delete candidate
-func DeleteAPI(s c.Service) {
+func DeleteAPI(s auth.Service) {
 	type Req struct {
 		BallotCode string `json:"ballot_code"`
 		UserEmail  string `json:"user_email"`

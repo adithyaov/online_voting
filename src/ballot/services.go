@@ -161,15 +161,9 @@ func SignBytesAPI(s Service) {
 	}
 
 	// Before responding Note the token, save the token. Auth Field required.
-	token := s.Request.Header["token"][0]
-	gt, err := auth.ParseToken(token)
-	if err != nil {
-		s.Tell(err.Error(), 400)
-		return
-	}
 
-	if !(gt.Email == data.VoterEmail || c.IsIn(gt.RoleCode, "A")) {
-		s.Tell("Not permitted.", 400)
+	if !(s.Token.Email == data.VoterEmail || c.IsIn(s.Token.RoleCode, "A")) {
+		s.Tell("Not permitted", 400)
 		return
 	}
 

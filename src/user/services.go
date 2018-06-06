@@ -1,12 +1,12 @@
 package user
 
 import (
-	c "common"
+	"auth"
 	"encoding/json"
 )
 
 // DeleteAPI is the api to delete User
-func DeleteAPI(s c.Service) {
+func DeleteAPI(s auth.Service) {
 
 	var data struct {
 		Email string `json:"email"`

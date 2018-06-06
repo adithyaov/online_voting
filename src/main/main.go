@@ -16,7 +16,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	http.HandleFunc("/", c.CreateService(auth.Wrapper("A", c.BodyCheckWrapper(ballot.CreateAPI))))
+	http.HandleFunc("/", c.CreateService(c.BodyCheckWrapper(auth.Wrapper("A", ballot.CreateAPI))))
 
 	http.ListenAndServe(":8080", nil)
 

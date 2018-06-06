@@ -134,7 +134,7 @@ func Wrapper(validCodeRune string, fn func(Service)) func(c.Service) {
 
 // ExtractToken extracts the token from the header and sets it in the service
 func (s *Service) ExtractToken() error {
-	token := s.Request.Header["token"]
+	token := s.Request.Header["Token"]
 	var gt GoogleToken
 	var err error
 	err = nil
