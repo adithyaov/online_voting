@@ -1,112 +1,96 @@
 package messaging
 
 import (
-	c "common"
+	"auth"
 	"math/rand"
-	"net/http"
 	"user"
-
-	"github.com/gorilla/websocket"
 )
 
-// DeployFromChannel listens from a channel and deployes the message to every client
-func DeployFromChannel(clients map[*user.User]*websocket.Conn,
-	info *c.ThreadSafeType, ch chan Message) {
+// Deploy listens from a channel and deployes the message to every client
+func (channel *Channel) Deploy() {
+
 	for {
-		msg := <-ch
-		for client, socket := range clients {
-			err := socket.WriteJSON(msg)
-			if err != nil {
+		msg := <-channel.Tunnel
+		for _, mapValues := range channel.UserSets {
+			for client, socket := range mapValues {
+				err := socket.WriteJSON(msg)
 
-				if client.RoleCode == "M" {
-					func() {
-						info.Mutex.Lock()
-						defer info.Mutex.Unlock()
-						info.Data.(map[string]int)["num_moderators"]--
-					}()
+				if err != nil {
+					socket.Close()
+					delete(mapValues, client)
 				}
-
-				socket.Close()
-				delete(clients, client)
 			}
 		}
 	}
 }
 
-func findModerator(clients map[*user.User]*websocket.Conn,
-	info *c.ThreadSafeType) *user.User {
-
-	info.Mutex.Lock()
-	defer info.Mutex.Unlock()
-	skip := rand.Intn(info.Data.(map[string]int)["num_moderators"])
-
-	for client := range clients {
-		if client.RoleCode == "M" {
-			if skip == 0 {
-				return client
-			}
-			skip--
+// FindRandomInSet finds a random user in a given set
+func (channel *Channel) FindRandomInSet(setName string) *user.User {
+	index := rand.Intn(len(channel.UserSets[setName]))
+	c := 0
+	for user := range channel.UserSets[setName] {
+		if index == c {
+			return user
 		}
+		c++
 	}
 	return nil
 }
 
-func handelUser(clients map[*user.User]*websocket.Conn,
-	info *c.ThreadSafeType, user *user.User, ch chan Message) {
+// HandelUser handels the user messages
+func (channel *Channel) HandelUser(user *user.User) {
 
-	moderator := findModerator(clients, info)
+	moderator := channel.FindRandomInSet("M")
 
 	for {
 		var userMsg UserMessage
 		var msg Message
 
-		err := clients[user].ReadJSON(&userMsg)
+		err := channel.UserSets["U"][user].ReadJSON(&userMsg)
 		if err != nil {
-
-			delete(clients, user)
+			delete(channel.UserSets["U"], user)
 			break
 		}
 
-		if _, ok := clients[moderator]; ok {
-			msg = Message{user, moderator, userMsg.Text}
-			ch <- msg
+		if _, ok := channel.UserSets["M"][moderator]; ok {
+			msg = Message{user, moderator, userMsg.Text, "user_query"}
+			channel.Tunnel <- msg
 		} else {
-			moderator = findModerator(clients, info)
-			msg = Message{user, user, ModeratorUnavailableMsg}
-			ch <- msg
+			moderator = channel.FindRandomInSet("M")
+			msg = Message{user, user, ModeratorUnavailableMsg, "self_message"}
+			channel.Tunnel <- msg
 		}
 
 	}
 }
 
-func handelModerator(clients map[*user.User]*websocket.Conn,
-	info *c.ThreadSafeType, user *user.User, ch chan Message) {
-	info.Mutex.Lock()
-	info.Data.(map[string]int)["num_moderators"]++
-	info.Mutex.Unlock()
+// HandelModerator handels the moderator messages
+func (channel *Channel) HandelModerator(user *user.User) {
 
 	for {
 		var moderatorMsg ModeratorMessage
 		var msg Message
 
-		err := clients[user].ReadJSON(&moderatorMsg)
+		err := channel.UserSets["M"][user].ReadJSON(&moderatorMsg)
 		if err != nil {
 
-			delete(clients, user)
+			delete(channel.UserSets["M"], user)
 			break
 		}
 
-		msg = Message{user, moderatorMsg.To, moderatorMsg.Text}
+		msg = Message{user, moderatorMsg.To, moderatorMsg.Text, "moderator_message"}
 
-		ch <- msg
+		channel.Tunnel <- msg
 
 	}
 }
 
 // Wrapper wraps the services with clients and info to give handlerfunc
-func Wrapper(clients map[*user.User]*websocket.Conn,
-	info map[string]int, ch chan Message, fn MessageService) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		fn(w, r, clients, info, ch)
+func Wrapper(channel Channel, fn func(Service)) func(auth.Service) {
+	return func(sAuth auth.Service) {
+		s := Service{}
+		s.Service = sAuth
+		s.Channel = channel
+		fn(s)
 	}
 }

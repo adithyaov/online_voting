@@ -5,6 +5,7 @@ import (
 	"ballot"
 	"candidate"
 	c "common"
+	"messaging"
 	"net/http"
 	"os"
 	"test"
@@ -14,6 +15,7 @@ import (
 func main() {
 	test.Init()
 	openBallots := make(map[string]*ballot.Ballot)
+	var transportChannel messaging.Channel
 	err := ballot.RestartOpenBallotsRT(openBallots)
 
 	if err != nil {
@@ -88,6 +90,13 @@ func main() {
 
 	http.HandleFunc("/user/update-role", c.CreateService(c.MethodWrapper("POST",
 		c.BodyCheckWrapper(auth.Wrapper("A", user.UpdateRoleAPI)))))
+
+	// Messaging EP's
+	http.HandleFunc("/messaging/user", c.CreateService(auth.Wrapper("AUM",
+		messaging.Wrapper(transportChannel, messaging.HandleConnectionUser))))
+
+	http.HandleFunc("/messaging/moderator", c.CreateService(auth.Wrapper("AM",
+		messaging.Wrapper(transportChannel, messaging.HandleConnectionModerator))))
 
 	http.ListenAndServe(":8080", nil)
 
