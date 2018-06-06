@@ -3,6 +3,7 @@ package candidate
 import (
 	"auth"
 	"ballot"
+	c "common"
 	"encoding/json"
 	"user"
 )
@@ -19,6 +20,11 @@ func CreateAPI(s auth.Service) {
 
 	err := json.Unmarshal(s.Body, &data)
 	if err != nil {
+		s.Tell(err.Error(), 400)
+		return
+	}
+
+	if !(data.UserEmail == s.Token.Email || c.IsIn(s.Token.RoleCode, "A")) {
 		s.Tell(err.Error(), 400)
 		return
 	}
@@ -57,6 +63,11 @@ func AddNomineeAPI(s auth.Service) {
 
 	err := json.Unmarshal(s.Body, &data)
 	if err != nil {
+		s.Tell(err.Error(), 400)
+		return
+	}
+
+	if !(data.UserEmail == s.Token.Email || c.IsIn(s.Token.RoleCode, "A")) {
 		s.Tell(err.Error(), 400)
 		return
 	}
@@ -103,6 +114,11 @@ func UpdateDetailsAPI(s auth.Service) {
 		return
 	}
 
+	if !(data.UserEmail == s.Token.Email || c.IsIn(s.Token.RoleCode, "A")) {
+		s.Tell(err.Error(), 400)
+		return
+	}
+
 	candidate, err := GetCandidate(data.BallotCode, data.UserEmail)
 	if err != nil {
 		s.Tell(err.Error(), 400)
@@ -131,6 +147,11 @@ func DeleteAPI(s auth.Service) {
 
 	err := json.Unmarshal(s.Body, &data)
 	if err != nil {
+		s.Tell(err.Error(), 400)
+		return
+	}
+
+	if !(data.UserEmail == s.Token.Email || c.IsIn(s.Token.RoleCode, "A")) {
 		s.Tell(err.Error(), 400)
 		return
 	}

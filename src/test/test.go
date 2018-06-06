@@ -4,6 +4,7 @@ import (
 	"auth"
 	"ballot"
 	"candidate"
+	"database/sql"
 	"fmt"
 	"mysql"
 	"user"
@@ -189,4 +190,36 @@ func User() {
 	exists, err = u.CheckIfExists()
 	chkErr(508, err)
 	fmt.Println(exists)
+}
+
+// Init inits all the DB related and sets up dummy info.
+func Init() {
+	err := mysql.RunRawString(user.UserTableSQL)
+	chkErr(0, err)
+	err = mysql.RunRawString(ballot.BallotTableSQL)
+	chkErr(1, err)
+	err = mysql.RunRawString(candidate.CandidateTableSQL)
+	chkErr(2, err)
+	b, err := ballot.CreateBallot("a", "A")
+	chkErr(3, err)
+	u1 := user.User{Email: "a@gmail.com", Name: "A", RoleCode: "AMUX", Picture: "pic1"}
+	u2 := user.User{Email: "b@gmail.com", Name: "B", RoleCode: "AMUX", Picture: "pic2"}
+	u3 := user.User{Email: "c@gmail.com", Name: "C", RoleCode: "AMUX", Picture: "pic3"}
+	err = u1.Create()
+	chkErr(4, err)
+	err = u2.Create()
+	chkErr(5, err)
+	err = u3.Create()
+	chkErr(6, err)
+	can := candidate.Candidate{User: &u1, Ballot: b,
+		Nominee1: sql.NullString{Valid: true, String: u2.Email},
+		Nominee2: sql.NullString{Valid: true, String: u3.Email},
+		Details:  "none://doc.dtx"}
+	err = can.Create()
+	chkErr(7, err)
+	err = can.UpdateDetails()
+	chkErr(8, err)
+	err = can.UpdateNominees()
+	chkErr(9, err)
+
 }
