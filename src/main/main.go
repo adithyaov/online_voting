@@ -53,7 +53,7 @@ func main() {
 
 	http.HandleFunc("/ballot/restart", c.CreateService(c.MethodWrapper("POST",
 		c.BodyCheckWrapper(auth.Wrapper("A", ballot.ToAuthWrapper(
-			ballot.OpenBallotsWrapper(openBallots, ballot.FindBallotsAPI)))))))
+			ballot.OpenBallotsWrapper(openBallots, ballot.RestartOpenBallotAPI)))))))
 
 	// Candidate EP's
 

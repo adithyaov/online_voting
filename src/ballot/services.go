@@ -267,4 +267,5 @@ func RestartOpenBallotAPI(s Service) {
 		s.Tell(err.Error(), 400)
 		return
 	}
+	s.Encode(s.OpenBallots, 200)
 }
