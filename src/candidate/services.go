@@ -158,3 +158,26 @@ func DeleteAPI(s auth.Service) {
 	DeleteCandidate(data.BallotCode, data.UserEmail)
 	s.Tell("Successfully deleted candidate", 200)
 }
+
+// BallotCandidatesAPI returns a userlist of candidates for a specific ballot
+func BallotCandidatesAPI(s auth.Service) {
+	type Req struct {
+		Code string `json:"code"`
+	}
+
+	var data Req
+	err := json.Unmarshal(s.Body, &data)
+	if err != nil {
+		s.Tell(err.Error(), 400)
+		return
+	}
+
+	userList, err := GetCandidatesPerBallot(data.Code)
+	if err != nil {
+		s.Tell(err.Error(), 400)
+		return
+	}
+
+	s.Encode(userList, 200)
+
+}

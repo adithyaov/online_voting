@@ -118,6 +118,46 @@ func GetCandidate(code string, email string) (*Candidate, error) {
 	return &c, nil
 }
 
+// GetCandidatesPerBallot returns Users meant for a specific ballot
+func GetCandidatesPerBallot(code string) ([]*user.User, error) {
+	query, args, err := sq.Select("U.name, U.email, U.picture, U.role_code").
+		From("Candidate as C").
+		Join("User as U on U.email = C.user_email").
+		Where(sq.Eq{"C.ballot_code": code}).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var userList []*user.User
+
+	db, err := mysql.OpenDB()
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer db.Close()
+
+	rows, err := db.Query(query, args...)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var user user.User
+		err := rows.Scan(&user.Name, &user.Email, &user.Picture, &user.RoleCode)
+		if err != nil {
+			return nil, err
+		}
+		userList = append(userList, &user)
+	}
+
+	return userList, nil
+}
+
 // DeleteCandidate returns *Candidate after looking up the DB
 func DeleteCandidate(code string, email string) error {
 	query, args, err := sq.Delete("Candidate").

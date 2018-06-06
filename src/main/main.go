@@ -72,6 +72,9 @@ func main() {
 	http.HandleFunc("/candidate/delete", c.CreateService(c.MethodWrapper("POST",
 		c.BodyCheckWrapper(auth.Wrapper("AUM", candidate.DeleteAPI)))))
 
+	http.HandleFunc("/candidate/per-ballot", c.CreateService(c.MethodWrapper("POST",
+		c.BodyCheckWrapper(auth.Wrapper("AUMX", candidate.BallotCandidatesAPI)))))
+
 	// User EP's
 
 	http.HandleFunc("/user/token-service", c.CreateService(c.MethodWrapper("POST",
