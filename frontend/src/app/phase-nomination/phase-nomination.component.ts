@@ -11,9 +11,9 @@ import { Candidate, Ballot, Token } from '../types';
 })
 export class PhaseNominationComponent implements OnInit {
 
-	@Input() ballot: Ballot;
-	candidates: Candidate[];
-	token: Token;
+  @Input() ballot: Ballot;
+  candidates: Candidate[];
+  token: Token;
 
   constructor(
     private ballotService: BallotService,
@@ -21,9 +21,9 @@ export class PhaseNominationComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-  	this.token = this.tokenService.getToken();
-  	this.ballotService.getCandidates(this.ballot.code)
-  		.subscribe(candidates => this.candidates = candidates);
+    this.token = this.tokenService.getToken();
+    this.ballotService.getCandidates(this.ballot.code)
+      .subscribe(candidates => this.candidates = candidates);
   }
 
 }

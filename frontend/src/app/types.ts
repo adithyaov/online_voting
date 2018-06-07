@@ -9,26 +9,26 @@ class Ballot {
 }
 
 class User {
-	name: string;
-	picture: string;
-	email: string;
-	role_code: string;
+  name: string;
+  picture: string;
+  email: string;
+  role_code: string;
 }
 
 class Token {
-	jwt_token: string;
-	user: User;
+  jwt_token: string;
+  user: User;
 }
 
 
 class Candidate {
-	user: User;
-	ballot: Ballot;
-	document: string;
-	nominee1: string;
-	nominee2: string;
+  user: User;
+  ballot: Ballot;
+  document: string;
+  nominee1: string;
+  nominee2: string;
 }
 
 
-export { Ballot, Token, Candidate, User }
+export { Ballot, Token, Candidate, User };
 

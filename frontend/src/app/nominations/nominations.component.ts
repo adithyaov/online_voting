@@ -11,8 +11,8 @@ import { Candidate, Token } from '../types';
 })
 export class NominationsComponent implements OnInit {
 
-	candidates: Candidate[];
-	token: Token;
+  candidates: Candidate[];
+  token: Token;
 
   constructor(
     private userService: UserService,
@@ -20,10 +20,10 @@ export class NominationsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-  	this.token = this.tokenService.getToken();
-  	this.userService.getNominations()
-  		.subscribe(candidates => this.candidates = candidates);
-  	console.log(this.candidates)
+    this.token = this.tokenService.getToken();
+    this.userService.getNominations()
+      .subscribe(candidates => this.candidates = candidates);
+    console.log(this.candidates);
   }
 
 }

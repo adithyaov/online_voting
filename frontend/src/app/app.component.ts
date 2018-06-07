@@ -8,19 +8,21 @@ import { Token } from './types';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
   constructor(private tokenService: TokenService) { }
 
-  infoModel: boolean = false;
+  token = this.tokenService.setToken();
+  title = 'application';
+  infoModel = false;
+
   activateInfoModel(): void {
-  	this.infoModel = true;
-  	console.log(this.infoModel)
+    this.infoModel = true;
+    console.log(this.infoModel);
   }
   deactivateInfoModel(): void {
-  	this.infoModel = false;
-  	console.log(this.infoModel)
+    this.infoModel = false;
+    console.log(this.infoModel);
   }
 
-  token: Token = this.tokenService.setToken();
 
-  title = 'application';
 }

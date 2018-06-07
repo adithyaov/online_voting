@@ -12,6 +12,6 @@ export class UserService {
     return of(CANDIDATES);
   }
 
-	constructor() { }
+  constructor() { }
 
 }

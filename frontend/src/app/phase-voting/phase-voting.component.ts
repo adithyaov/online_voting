@@ -11,10 +11,10 @@ import { Candidate, Ballot, Token } from '../types';
 })
 export class PhaseVotingComponent implements OnInit {
 
-	@Input() ballot: Ballot;
-	candidates: Candidate[];
-	token: Token;
-	voted: boolean = false;
+  @Input() ballot: Ballot;
+  candidates: Candidate[];
+  token: Token;
+  voted = false;
 
   constructor(
     private ballotService: BallotService,
@@ -22,8 +22,8 @@ export class PhaseVotingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-  	this.token = this.tokenService.getToken();
-  	this.ballotService.getCandidates(this.ballot.code)
-  		.subscribe(candidates => this.candidates = candidates);
+    this.token = this.tokenService.getToken();
+    this.ballotService.getCandidates(this.ballot.code)
+      .subscribe(candidates => this.candidates = candidates);
   }
 }

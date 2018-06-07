@@ -15,11 +15,11 @@ export class BallotService {
   }
 
   getBallot(code: string): Observable<Ballot> {
-    return of(BALLOTS.filter(b => b.code == code)[0]);
+    return of(BALLOTS.filter(b => b.code === code)[0]);
   }
 
   getCandidates(code: string): Observable<Candidate[]> {
-  	return of(CANDIDATES);
+    return of(CANDIDATES);
   }
 
 }

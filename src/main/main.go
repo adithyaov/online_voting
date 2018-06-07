@@ -92,6 +92,7 @@ func main() {
 		c.BodyCheckWrapper(auth.Wrapper("A", user.UpdateRoleAPI)))))
 
 	// Messaging EP's
+
 	http.HandleFunc("/messaging/user", c.CreateService(auth.Wrapper("AUM",
 		messaging.Wrapper(transportChannel, messaging.HandleConnectionUser))))
 
