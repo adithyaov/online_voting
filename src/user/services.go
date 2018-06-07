@@ -9,13 +9,14 @@ import (
 func AuthUserAPI(s auth.Service) {
 
 	type Res struct {
-		Token  string `json:"token"`
+		Token  string `json:"jwt_token"`
+		User   *User  `json:"user"`
 		Status string `json:"status"`
 	}
 
-	token := s.Request.Header["GoogleToken"]
+	token := s.Request.Header["Google-Token"]
 	if len(token) == 0 {
-		s.Tell("No GoogleToken found in Header", 400)
+		s.Tell("No Google-Token found in Header", 400)
 		return
 	}
 
@@ -37,7 +38,7 @@ func AuthUserAPI(s auth.Service) {
 	}
 
 	if ok {
-		s.Encode(Res{jwtToken, "sustained"}, 200)
+		s.Encode(Res{jwtToken, &user, "sustained"}, 200)
 		return
 	}
 
@@ -47,7 +48,7 @@ func AuthUserAPI(s auth.Service) {
 		return
 	}
 
-	s.Encode(Res{jwtToken, "created"}, 200)
+	s.Encode(Res{jwtToken, &user, "created"}, 200)
 
 }
 

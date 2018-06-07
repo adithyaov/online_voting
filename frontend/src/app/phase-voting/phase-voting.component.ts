@@ -22,7 +22,7 @@ export class PhaseVotingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.token = this.tokenService.getToken();
+    this.token = this.tokenService.currentToken();
     this.ballotService.getCandidates(this.ballot.code)
       .subscribe(candidates => this.candidates = candidates);
   }

@@ -11,9 +11,9 @@ import { Candidate, Ballot, Token } from '../types';
 })
 export class PhaseRegisterComponent implements OnInit {
 
-	@Input() ballot: Ballot;
-	token: Token;
-	documentUrl: string = "undefined";
+  @Input() ballot: Ballot;
+  token: Token;
+  documentUrl = 'undefined';
 
   constructor(
     private ballotService: BallotService,
@@ -21,6 +21,6 @@ export class PhaseRegisterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-  	this.token = this.tokenService.getToken();
+    this.token = this.tokenService.currentToken();
   }
 }

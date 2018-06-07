@@ -377,3 +377,19 @@ func (s *Service) FillOpenBallots(openBallots map[string]*Ballot) error {
 	s.OpenBallots = openBallots
 	return nil
 }
+
+// MarshalJSON makes the big.Int json serealizable
+func (ballot Ballot) MarshalJSON() ([]byte, error) {
+	type MarshableBallot struct {
+		Code            string `json:"code"`
+		Name            string `json:"name"`
+		N               string `json:"n"`
+		E               int    `json:"e"`
+		RegexpVoter     string `json:"regex_voter"`
+		RegexpCandidate string `json:"regex_candidate"`
+		Phase           string `json:"phase"`
+	}
+	mBallot := MarshableBallot{ballot.Code, ballot.Name, ballot.N.String(), ballot.E,
+		ballot.RegexpVoter, ballot.RegexpCandidate, ballot.Phase}
+	return json.Marshal(mBallot)
+}

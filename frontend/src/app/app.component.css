@@ -1,0 +1,13 @@
+.display-info .chip {
+    max-width: 450px;
+    overflow: auto;
+}
+
+.display-info td {
+    text-align: left;
+}
+
+.display-info .name {
+    margin-left: 10px;
+    font-weight: bold;
+}

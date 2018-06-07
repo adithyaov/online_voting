@@ -14,20 +14,25 @@ import { TokenService } from '../token.service';
 export class BallotDetailsComponent implements OnInit {
 
   ballot: Ballot;
-  token: Token;
 
   constructor(
     private route: ActivatedRoute,
     private ballotService: BallotService,
     private location: Location,
-    private tokenService: TokenService
+    private token: TokenService
   ) { }
 
   ngOnInit(): void {
-    this.token = this.tokenService.getToken();
     const code = this.route.snapshot.paramMap.get('code');
+    this.setBallot(code);
+  }
+
+  setBallot(code): void {
     this.ballotService.getBallot(code)
-      .subscribe(ballot => this.ballot = ballot);
+      .subscribe(ballot => {
+        console.log(ballot);
+        this.ballot = ballot;
+      });
   }
 
 

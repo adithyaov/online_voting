@@ -1,0 +1,4 @@
+.ballot-table .limit-width {
+    max-width: 400px;
+    overflow: auto;
+}

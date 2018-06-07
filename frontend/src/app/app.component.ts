@@ -9,9 +9,8 @@ import { Token } from './types';
 })
 export class AppComponent {
 
-  constructor(private tokenService: TokenService) { }
+  constructor(private token: TokenService) { }
 
-  token = this.tokenService.setToken();
   title = 'application';
   infoModel = false;
 
@@ -19,6 +18,7 @@ export class AppComponent {
     this.infoModel = true;
     console.log(this.infoModel);
   }
+
   deactivateInfoModel(): void {
     this.infoModel = false;
     console.log(this.infoModel);

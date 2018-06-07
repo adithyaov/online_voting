@@ -3,8 +3,8 @@ interface Ballot {
   name: string;
   e: number;
   n: string;
-  regexpVoter: string;
-  regexpCandidate: string;
+  regexp_voter: string;
+  regexp_candidate: string;
   phase: string;
 }
 
@@ -12,12 +12,13 @@ interface User {
   name: string;
   picture: string;
   email: string;
-  roleCode: string;
+  role_code: string;
 }
 
 interface Token {
-  jwtToken: string;
+  jwt_token: string;
   user: User;
+  status: string;
 }
 
 

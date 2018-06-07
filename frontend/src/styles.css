@@ -3,7 +3,7 @@
 
 .wrapper {
   display: grid;
-  grid-template-columns: 200px auto 300px;
+  grid-template-columns: 200px auto 340px;
   grid-template-rows: auto auto auto;
   grid-column-gap: 20px;
   grid-template-areas: 

@@ -20,7 +20,7 @@ export class NominationsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.token = this.tokenService.getToken();
+    this.token = this.tokenService.currentToken();
     this.userService.getNominations()
       .subscribe(candidates => this.candidates = candidates);
     console.log(this.candidates);

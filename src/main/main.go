@@ -8,12 +8,11 @@ import (
 	"messaging"
 	"net/http"
 	"os"
-	"test"
 	"user"
 )
 
 func main() {
-	test.Init()
+	//test.Init()
 	openBallots := make(map[string]*ballot.Ballot)
 	var transportChannel messaging.Channel
 	err := ballot.RestartOpenBallotsRT(openBallots)
@@ -21,6 +20,10 @@ func main() {
 	if err != nil {
 		os.Exit(1)
 	}
+
+	// FrontEnd config
+
+	http.Handle("/", http.FileServer(http.Dir("./static")))
 
 	// Ballot EP's
 
@@ -79,8 +82,8 @@ func main() {
 
 	// User EP's
 
-	http.HandleFunc("/user/token-service", c.CreateService(c.MethodWrapper("POST",
-		c.BodyCheckWrapper(auth.Wrapper("AUMX", user.AuthUserAPI)))))
+	http.HandleFunc("/user/token-service", c.CreateService(
+		c.MethodWrapper("POST", auth.Wrapper("AUMX", user.AuthUserAPI))))
 
 	http.HandleFunc("/user/delete", c.CreateService(c.MethodWrapper("POST",
 		c.BodyCheckWrapper(auth.Wrapper("AUM", user.DeleteAPI)))))

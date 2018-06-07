@@ -9,52 +9,52 @@
 	  	<b>PEN</b>BALLOT
 	  </section>
 	  <section class="navbar-section">
-	    <a *ngIf="!token" class="btn btn-primary" href="">Login</a>
-	    <a *ngIf="token" class="btn btn-primary" href="">Logout</a>
+	    <a *ngIf="!token.currentToken()" (click)="token.requestToken()" class="btn btn-primary">Login</a>
+	    <a *ngIf="token.currentToken()" (click)="token.destroyToken()" class="btn btn-primary">Logout</a>
 	  </section>
 	</div>
 
 
 	<div class="sidebar">
 		<ul class="menu">
-			<div class="tile tile-centered" *ngIf="token">
+			<div class="tile tile-centered" *ngIf="token.currentToken()">
 		    <div class="tile-icon">
-		      <img src="{{token.user.picture}}" class="avatar" alt="Avatar">
+		      <img src="{{token.currentToken().user.picture}}" class="avatar" alt="Avatar">
 		    </div>
 		    <div class="tile-content">
-		      {{token.user.name}}
+		      {{token.currentToken().user.name}}
 		    </div>
 		  </div>
 
-		  <li class="divider" *ngIf="token">
-		  <li class="menu-item" *ngIf="token">
+		  <li class="divider" *ngIf="token.currentToken()">
+		  <li class="menu-item" *ngIf="token.currentToken()">
 		  	<a class="c-hand" (click)="activateInfoModel()"><i class="icon icon-emoji"></i> My Info</a>
 		  </li>
-		  <li class="menu-item" *ngIf="token">
+		  <li class="menu-item" *ngIf="token.currentToken()">
 		  	<a routerLink="/ballots"><i class="icon icon-apps"></i> My Ballots</a>
 		  </li>
-		  <li class="menu-item" *ngIf="token">
+		  <li class="menu-item" *ngIf="token.currentToken()">
 		  	<a routerLink="/nominations"><i class="icon icon-bookmark"></i> My Nominations</a>
 		  </li>
 
 		  <li class="divider" data-content="OTHER"></li>
 		  <li class="menu-item"><a href="#"><i class="icon icon-message"></i> Announcements</a></li>
 		  <li class="menu-item"><a href="#"><i class="icon icon-check"></i> Online Help</a></li>
-		  <li class="menu-item" *ngIf="token && token.user.role_code == 'A'"><a href="#"><i class="icon icon-shutdown"></i> Admin (Gear 4)</a></li> 
+		  <li class="menu-item" *ngIf="token.currentToken() && token.currentToken().user.role_code == 'A'"><a href="#"><i class="icon icon-shutdown"></i> Admin (Gear 4)</a></li> 
 		</ul>
 	</div>
 
 
 	<div class="content">
-		<router-outlet *ngIf="token"></router-outlet>
-		<div class="empty" *ngIf="!token">
+		<router-outlet *ngIf="token.currentToken()"></router-outlet>
+		<div class="empty" *ngIf="!token.currentToken()">
 		  <div class="empty-icon">
 		    <i class="icon icon-people"></i>
 		  </div>
 		  <p class="empty-title h5">You need to be logged in to see the ballots</p>
 		  <p class="empty-subtitle">Click the button below to Login.</p>
 		  <div class="empty-action">
-		    <button class="btn btn-primary">Login</button>
+		    <a (click)="token.requestToken()" class="btn btn-primary">Login</a>
 		  </div>
 		</div>
 	</div>
@@ -96,7 +96,7 @@
 	      </div>
 	    </div>
 	  </div>
-	  <div class="panel-footer" *ngIf="token">
+	  <div class="panel-footer" *ngIf="token.currentToken()">
 	    <div class="input-group">
 	      <input class="form-input" placeholder="Hello" type="text">
 	      <button class="btn btn-primary input-group-btn">Send</button>
@@ -113,19 +113,42 @@
 
 
 <!-- Info model -->
-<div *ngIf="infoModel" class="modal-sm modal active">
+<div *ngIf="infoModel" class="modal-md modal active">
   <a (click)="deactivateInfoModel()" class="modal-overlay" aria-label="Close"></a>
   <div class="modal-container">
     <div class="modal-body">
       <div class="content">
-        <div class="text-center">
+        <div class="text-center display-info">
         	<figure class="avatar avatar-lg">
-            <img src="{{token.user.picture}}" alt="Avatar">
+            <img src="{{token.currentToken().user.picture}}" alt="Avatar">
           </figure>
-          <span style="margin-left: 10px">{{token.user.name}}</span>
-          <div class="divider"></div>
-          Email <span class="chip">{{token.user.email}}</span><br />
-          Token <span class="chip">{{token.jwt_token}}</span>
+          <span class="name">{{token.currentToken().user.name}}</span>
+					<div class="divider" data-content="PERSONAL"></div>
+					<table>
+						<tr>
+							<td class="key">Role</td>
+							<td class="value"><span class="chip">{{token.currentToken().user.role_code}}</span></td>
+						</tr>
+						<tr>
+							<td class="key">Email</td>
+							<td class="value"><span class="chip">{{token.currentToken().user.email}}</span></td>
+						</tr>
+					</table>
+					<div class="divider" data-content="TOKEN"></div>
+					<table>
+						<tr>
+							<td class="key">Header</td>
+							<td class="value"><span class="chip">{{token.currentToken().jwt_token.split('.')[0]}}</span></td>
+						</tr>
+						<tr>
+							<td class="key">Payload</td>
+							<td class="value"><span class="chip">{{token.currentToken().jwt_token.split('.')[1]}}</span></td>
+						</tr>
+						<tr>
+							<td class="key">Signature</td>
+							<td class="value"><span class="chip">{{token.currentToken().jwt_token.split('.')[2]}}</span></td>
+						</tr>
+					</table>
         </div>
       </div>
     </div>

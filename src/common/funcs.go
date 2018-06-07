@@ -119,6 +119,10 @@ func (s *Service) Tell(str string, statusCode int) {
 // Encode sets the status gives the result described
 func (s *Service) Encode(data interface{}, statusCode int) {
 	s.Writer.Header().Set("Content-Type", "application/json")
+	s.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	s.Writer.Header().Set("Access-Control-Allow-Methods", "*")
+	s.Writer.Header().Set("Access-Control-Allow-Headers", "*")
+	s.Writer.Header().Set("Access-Control-Allow-Headers", "*")
 	s.Writer.WriteHeader(statusCode)
 	json.NewEncoder(s.Writer).Encode(data)
 }
