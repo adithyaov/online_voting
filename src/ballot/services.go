@@ -251,6 +251,11 @@ func FindBallotsAPI(s Service) {
 		return
 	}
 
+	if auth.IsOwnerOr(data.Email, s.Token, "A") == false {
+		s.Tell(err.Error(), 400)
+		return
+	}
+
 	s.Encode(GetBallots(data.Email, s.OpenBallots), 200)
 
 }
