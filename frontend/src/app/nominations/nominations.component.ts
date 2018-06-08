@@ -12,15 +12,13 @@ import { Candidate, Token } from '../types';
 export class NominationsComponent implements OnInit {
 
   candidates: Candidate[];
-  token: Token;
 
   constructor(
     private userService: UserService,
-    private tokenService: TokenService
+    private token: TokenService
   ) { }
 
   ngOnInit() {
-    this.token = this.tokenService.currentToken();
     this.userService.getNominations()
       .subscribe(candidates => this.candidates = candidates);
     console.log(this.candidates);

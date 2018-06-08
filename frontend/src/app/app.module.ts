@@ -10,6 +10,8 @@ import { NominationsComponent } from './nominations/nominations.component';
 import { PhaseRegisterComponent } from './phase-register/phase-register.component';
 import { PhaseVotingComponent } from './phase-voting/phase-voting.component';
 import { PhaseNominationComponent } from './phase-nomination/phase-nomination.component';
+import { LoadingBarModule } from '@ngx-loading-bar/core';
+
 
 @NgModule({
   declarations: [
@@ -22,6 +24,7 @@ import { PhaseNominationComponent } from './phase-nomination/phase-nomination.co
     PhaseNominationComponent
   ],
   imports: [
+    LoadingBarModule.forRoot(),
     BrowserModule,
     AppRoutingModule,
     HttpClientModule

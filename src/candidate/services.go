@@ -159,7 +159,7 @@ func DeleteAPI(s auth.Service) {
 	s.Tell("Successfully deleted candidate", 200)
 }
 
-// BallotCandidatesAPI returns a userlist of candidates for a specific ballot
+// BallotCandidatesAPI returns a candidateList of candidates for a specific ballot
 func BallotCandidatesAPI(s auth.Service) {
 	type Req struct {
 		Code string `json:"code"`
@@ -172,12 +172,12 @@ func BallotCandidatesAPI(s auth.Service) {
 		return
 	}
 
-	userList, err := GetCandidatesPerBallot(data.Code)
+	candidateList, err := GetCandidatesPerBallot(data.Code)
 	if err != nil {
 		s.Tell(err.Error(), 400)
 		return
 	}
 
-	s.Encode(userList, 200)
+	s.Encode(candidateList, 200)
 
 }

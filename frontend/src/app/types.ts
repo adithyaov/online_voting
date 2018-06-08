@@ -21,13 +21,17 @@ interface Token {
   status: string;
 }
 
+interface NullString {
+  valid: boolean;
+  string: string;
+}
 
 interface Candidate {
   user: User;
-  ballot: Ballot;
-  document: string;
-  nominee1: string;
-  nominee2: string;
+  ballot_code: string;
+  details: string;
+  nominee1: NullString;
+  nominee2: NullString;
 }
 
 

@@ -29,7 +29,7 @@ const BALLOTS: Ballot[] = [
 
 const CANDIDATES: Candidate[] = [
   {user: {role_code: 'A', name: 'Test', email: 'lala@gmail.com', picture: undefined},
-  ballot: BALLOTS[5], nominee1: undefined, nominee2: undefined, document: 'oogle.ciom'},
+  ballot_code: BALLOTS[5]['code'], nominee1: undefined, nominee2: undefined, details: 'oogle.ciom'},
 ];
 
 export {

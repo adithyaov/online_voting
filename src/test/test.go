@@ -202,6 +202,8 @@ func Init() {
 	chkErr(2, err)
 	b, err := ballot.CreateBallot("a", "A")
 	chkErr(3, err)
+	err = b.UpdatePhase("N")
+	chkErr(3, err)
 	u1 := user.User{Email: "a@gmail.com", Name: "A", RoleCode: "AMUX", Picture: "pic1"}
 	u2 := user.User{Email: "b@gmail.com", Name: "B", RoleCode: "AMUX", Picture: "pic2"}
 	u3 := user.User{Email: "c@gmail.com", Name: "C", RoleCode: "AMUX", Picture: "pic3"}

@@ -16,19 +16,25 @@
 	    <div class="tile tile-centered" style="border: none;">
 	      <div class="tile-content">
 	        <div class="tile-title text-gray">Document URL</div>
-	        <div class="tile-subtitle">{{candidate.document}}</div>
+	        <div class="tile-subtitle">{{candidate.details}}</div>
 	      </div>
 	    </div>
 	    <div class="tile tile-centered" style="border: none;">
 	      <div class="tile-content">
 	        <div class="tile-title text-gray">Nominee 1 email id</div>
-	        <div class="tile-subtitle">{{candidate.nominee1}}</div>
+	        <div class="tile-subtitle">
+						{{candidate.nominee1.string}}
+						<small>[{{candidate.nominee1.valid}}]</small>
+					</div>
 	      </div>
 	    </div>
 	    <div class="tile tile-centered" style="border: none;">
 	      <div class="tile-content">
 	        <div class="tile-title text-gray">Nominee 2 email id</div>
-	        <div class="tile-subtitle">{{candidate.nominee2}}</div>
+	        <div class="tile-subtitle">
+						{{candidate.nominee2.string}}
+						<small>[{{candidate.nominee2.valid}}]</small>
+					</div>
 	      </div>
 	    </div>
 	  </div>

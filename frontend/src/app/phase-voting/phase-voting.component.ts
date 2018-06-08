@@ -13,17 +13,18 @@ export class PhaseVotingComponent implements OnInit {
 
   @Input() ballot: Ballot;
   candidates: Candidate[];
-  token: Token;
   voted = false;
 
   constructor(
     private ballotService: BallotService,
-    private tokenService: TokenService
+    private token: TokenService
   ) { }
 
   ngOnInit() {
-    this.token = this.tokenService.currentToken();
     this.ballotService.getCandidates(this.ballot.code)
-      .subscribe(candidates => this.candidates = candidates);
+      .subscribe(candidates => {
+        this.candidates = candidates;
+        console.log(this.candidates);
+      });
   }
 }

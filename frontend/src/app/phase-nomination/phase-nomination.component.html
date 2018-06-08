@@ -9,27 +9,33 @@
 	  </div>
 	  <div class="divider text-center" data-content="PROFILE"></div>
 	  <div class="panel-body">
-	    <div class="tile tile-centered" style="border: none;">
-	      <div class="tile-content">
-	        <div class="tile-title text-gray">Document URL</div>
-	        <div class="tile-subtitle">{{candidate.document}}</div>
-	      </div>
-	    </div>
-	    <div class="tile tile-centered" style="border: none;">
-	      <div class="tile-content">
-	        <div class="tile-title text-gray">Nominee 1 email id</div>
-	        <div class="tile-subtitle">{{candidate.nominee1}}</div>
-	      </div>
-	    </div>
-	    <div class="tile tile-centered" style="border: none;">
-	      <div class="tile-content">
-	        <div class="tile-title text-gray">Nominee 2 email id</div>
-	        <div class="tile-subtitle">{{candidate.nominee2}}</div>
-	      </div>
-	    </div>
-	  </div>
+				<div class="tile tile-centered" style="border: none;">
+					<div class="tile-content">
+						<div class="tile-title text-gray">Document URL</div>
+						<div class="tile-subtitle">{{candidate.details}}</div>
+					</div>
+				</div>
+				<div class="tile tile-centered" style="border: none;">
+					<div class="tile-content">
+						<div class="tile-title text-gray">Nominee 1 email id</div>
+						<div class="tile-subtitle">
+							{{candidate.nominee1.string}}
+							<small>[{{candidate.nominee1.valid}}]</small>
+						</div>
+					</div>
+				</div>
+				<div class="tile tile-centered" style="border: none;">
+					<div class="tile-content">
+						<div class="tile-title text-gray">Nominee 2 email id</div>
+						<div class="tile-subtitle">
+							{{candidate.nominee2.string}}
+							<small>[{{candidate.nominee2.valid}}]</small>
+						</div>
+					</div>
+				</div>
+			</div>
 	  <div class="panel-footer">
-	    <button *ngIf="(candidate.nominee1 != token.user.email && candidate.nominee2 != token.user.email && token.user.email != candidate.user.email) && (candidate.nominee1 == undefined || candidate.nominee2 == undefined)" class="btn btn-primary btn-block">Nominate {{candidate.user.name}}</button>
+	    <button *ngIf="(candidate.nominee1 != token.currentToken().user.email && candidate.nominee2 != token.currentToken().user.email && token.currentToken().user.email != candidate.user.email) && (candidate.nominee1 == undefined || candidate.nominee2 == undefined)" class="btn btn-primary btn-block">Nominate {{candidate.user.name}}</button>
 	  </div>
 	</div>
 </div>

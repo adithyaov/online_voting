@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	//test.Init()
+	// test.Init()
 	openBallots := make(map[string]*ballot.Ballot)
 	var transportChannel messaging.Channel
 	err := ballot.RestartOpenBallotsRT(openBallots)

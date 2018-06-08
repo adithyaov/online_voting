@@ -3,6 +3,7 @@ package candidate
 import (
 	"ballot"
 	c "common"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"mysql"
@@ -119,8 +120,8 @@ func GetCandidate(code string, email string) (*Candidate, error) {
 }
 
 // GetCandidatesPerBallot returns Users meant for a specific ballot
-func GetCandidatesPerBallot(code string) ([]*user.User, error) {
-	query, args, err := sq.Select("U.name, U.email, U.picture, U.role_code").
+func GetCandidatesPerBallot(code string) ([]*PartialCandidate, error) {
+	query, args, err := sq.Select("U.name, U.email, U.picture, U.role_code, C.details, C.nominee1_email, C.nominee2_email").
 		From("Candidate as C").
 		Join("User as U on U.email = C.user_email").
 		Where(sq.Eq{"C.ballot_code": code}).ToSql()
@@ -128,7 +129,7 @@ func GetCandidatesPerBallot(code string) ([]*user.User, error) {
 		return nil, err
 	}
 
-	var userList []*user.User
+	var candidateList []*PartialCandidate
 
 	db, err := mysql.OpenDB()
 
@@ -148,14 +149,18 @@ func GetCandidatesPerBallot(code string) ([]*user.User, error) {
 
 	for rows.Next() {
 		var user user.User
-		err := rows.Scan(&user.Name, &user.Email, &user.Picture, &user.RoleCode)
+		var candidate PartialCandidate
+		candidate.BallotCode = code
+		candidate.User = &user
+		err := rows.Scan(&user.Name, &user.Email, &user.Picture, &user.RoleCode, &candidate.Details,
+			&candidate.Nominee1, &candidate.Nominee2)
 		if err != nil {
 			return nil, err
 		}
-		userList = append(userList, &user)
+		candidateList = append(candidateList, &candidate)
 	}
 
-	return userList, nil
+	return candidateList, nil
 }
 
 // DeleteCandidate returns *Candidate after looking up the DB
@@ -172,4 +177,23 @@ func DeleteCandidate(code string, email string) error {
 		return err
 	}
 	return nil
+}
+
+// MarshalJSON makes the sql.NullString json serealizable
+func (pc PartialCandidate) MarshalJSON() ([]byte, error) {
+	type NewNullString struct {
+		Valid  bool   `json:"valid"`
+		String string `json:"string"`
+	}
+	type MarshablePC struct {
+		User       *user.User    `json:"user"`
+		BallotCode string        `json:"ballot_code"`
+		Details    string        `json:"details"`
+		Nominee1   NewNullString `json:"nominee1"`
+		Nominee2   NewNullString `json:"nominee2"`
+	}
+	mPC := MarshablePC{pc.User, pc.BallotCode, pc.Details,
+		NewNullString{pc.Nominee1.Valid, pc.Nominee1.String},
+		NewNullString{pc.Nominee2.Valid, pc.Nominee2.String}}
+	return json.Marshal(mPC)
 }
