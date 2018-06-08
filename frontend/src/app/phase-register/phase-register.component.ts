@@ -12,7 +12,7 @@ import { Candidate, Ballot, Token } from '../types';
 export class PhaseRegisterComponent implements OnInit {
 
   @Input() ballot: Ballot;
-  documentUrl = 'undefined';
+  documentUrl: string = undefined;
 
   constructor(
     private ballotService: BallotService,

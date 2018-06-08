@@ -28,9 +28,8 @@ export class BallotDetailsComponent implements OnInit {
   }
 
   setBallot(code): void {
-    this.ballotService.getBallot(code)
+    this.ballotService.ballotObservable(code)
       .subscribe(ballot => {
-        console.log(ballot);
         this.ballot = ballot;
       });
   }

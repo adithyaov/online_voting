@@ -20,10 +20,9 @@ export class PhaseNominationComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.ballotService.getCandidates(this.ballot.code)
+    this.ballotService.candidatesObservable(this.ballot.code)
       .subscribe(candidates => {
         this.candidates = candidates;
-        console.log(this.candidates);
       });
   }
 

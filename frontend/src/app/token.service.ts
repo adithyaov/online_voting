@@ -24,30 +24,26 @@ export class TokenService {
 
   token: Token = undefined;
 
-  requestToken(): Token {
-    this.loader.start();
-    this.http.post<Token>(GETTOKENURL, {}, makeHeaders({'Google-Token': 'ssss'}))
+  observable(googleToken: string): Observable<Token> {
+    return this.http.post<Token>(GETTOKENURL, {}, makeHeaders({'Google-Token': googleToken}))
     .pipe(
       retry(3),
       catchError((error) => {
-        this.loader.complete();
         console.log(error);
         return throwError('error');
       })
-    ).subscribe(t => {
+    );
+  }
+
+  subscribe(googleToken: string): void {
+    this.observable(googleToken).subscribe(t => {
       this.token = t;
       this.loader.complete();
-      return this.token;
     });
   }
 
-  destroyToken(): Token {
+  destroy(): void {
     this.token = undefined;
-    return this.token;
-  }
-
-  currentToken(): Token {
-    return this.token;
   }
 
 }

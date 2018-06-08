@@ -22,29 +22,28 @@ export class BallotService {
     private loader: LoadingBarService
   ) { }
 
-  getBallots(): Observable<Ballot[]> {
+  ballotsObservable(): Observable<Ballot[]> {
     // return of(BALLOTS);
     const data = {
-      email: this.token.currentToken().user.email,
+      email: this.token.token.user.email,
     };
     return this.http.post<Ballot[]>(GETBALLOTSURL, data,
-      makeHeaders({'Token': this.token.currentToken().jwt_token}))
+      makeHeaders({'Token': this.token.token.jwt_token}))
       .pipe(
         retry(3),
         catchError((error) => {
-          console.log('some error dude');
           console.log(error);
           return throwError('error');
         })
       );
   }
 
-  getBallot(code: string): Observable<Ballot> {
+  ballotObservable(code: string): Observable<Ballot> {
     const data = {
       code: code,
     };
     return this.http.post<Ballot>(GETBALLOTURL, data,
-      makeHeaders({'Token': this.token.currentToken().jwt_token}))
+      makeHeaders({'Token': this.token.token.jwt_token}))
       .pipe(
         retry(3),
         catchError((error) => {
@@ -55,12 +54,12 @@ export class BallotService {
       );
   }
 
-  getCandidates(code: string): Observable<Candidate[]> {
+  candidatesObservable(code: string): Observable<Candidate[]> {
     const data = {
       code: code,
     };
     return this.http.post<Candidate[]>(GETCANDIDATESOFBALLOTURL, data,
-      makeHeaders({'Token': this.token.currentToken().jwt_token}))
+      makeHeaders({'Token': this.token.token.jwt_token}))
       .pipe(
         retry(3),
         catchError((error) => {

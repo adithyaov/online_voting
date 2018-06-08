@@ -35,7 +35,7 @@
 				</div>
 			</div>
 	  <div class="panel-footer">
-	    <button *ngIf="(candidate.nominee1 != token.currentToken().user.email && candidate.nominee2 != token.currentToken().user.email && token.currentToken().user.email != candidate.user.email) && (candidate.nominee1 == undefined || candidate.nominee2 == undefined)" class="btn btn-primary btn-block">Nominate {{candidate.user.name}}</button>
+	    <button *ngIf="(candidate.nominee1 != token.token.user.email && candidate.nominee2 != token.token.user.email && token.token.user.email != candidate.user.email) && (candidate.nominee1 == undefined || candidate.nominee2 == undefined)" class="btn btn-primary btn-block">Nominate {{candidate.user.name}}</button>
 	  </div>
 	</div>
 </div>

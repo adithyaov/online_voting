@@ -12,23 +12,19 @@ export class BallotsComponent implements OnInit {
 
   constructor(
     private ballotService: BallotService,
-    private tokenService: TokenService
+    private token: TokenService
   ) { }
 
-
-  token: Token;
   ballots: Ballot[];
 
   ngOnInit() {
-    this.token = this.tokenService.currentToken();
-    // GoOn depending on the token
     this.getBallots();
   }
 
 
 
   getBallots(): void {
-    this.ballotService.getBallots()
+    this.ballotService.ballotsObservable()
       .subscribe(ballots => this.ballots = ballots);
   }
 

@@ -1,5 +1,5 @@
 
-<div class="ballots" *ngIf="token">
+<div class="ballots" *ngIf="token.token">
   <div class="card" *ngFor="let ballot of ballots">
     <div class="card-header">
       <div class="card-title h5">{{ballot.name}}</div>
