@@ -6,6 +6,8 @@ import { BallotService } from '../ballot.service';
 import { Ballot, Candidate, Token } from '../types';
 import { TokenService } from '../token.service';
 
+import { LoadingBarService } from '@ngx-loading-bar/core';
+
 @Component({
   selector: 'app-ballot-details',
   templateUrl: './ballot-details.component.html',
@@ -19,7 +21,8 @@ export class BallotDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private ballotService: BallotService,
     private location: Location,
-    private token: TokenService
+    private token: TokenService,
+    private loader: LoadingBarService
   ) { }
 
   ngOnInit(): void {
@@ -28,9 +31,11 @@ export class BallotDetailsComponent implements OnInit {
   }
 
   setBallot(code): void {
+    this.loader.start();
     this.ballotService.ballotObservable(code)
       .subscribe(ballot => {
         this.ballot = ballot;
+        this.loader.complete();
       });
   }
 
