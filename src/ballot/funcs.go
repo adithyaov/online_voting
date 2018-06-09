@@ -143,6 +143,36 @@ func (ballot *Ballot) AddVoter(email string) error {
 	return err
 }
 
+// CheckUserVote checks if the user voted int the ballot or not
+func (ballot *Ballot) CheckUserVote(email string) (bool, error) {
+
+	//Check if valid voter, regexp
+	if err := c.RegexpStr(ballot.RegexpVoter, email); err != nil {
+		return false, err
+	}
+
+	query, args, err := sq.Select("COUNT(*)").From("BallotUser").
+		Where(sq.And{
+			sq.Eq{"user_email": email},
+			sq.Eq{"ballot_code": ballot.Code}}).ToSql()
+
+	if err != nil {
+		return false, err
+	}
+
+	var count int
+	err = mysql.QueryOne(query, args, []interface{}{&count})
+	if err != nil {
+		return false, err
+	}
+
+	if count == 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
+
 // UpdateRegexpVoter updates voter regex of corresponding ballot
 func (ballot *Ballot) UpdateRegexpVoter(regexp string) error {
 	query, args, err := sq.Update("Ballot").Set("regexp_voter", regexp).

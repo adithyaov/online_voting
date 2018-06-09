@@ -36,6 +36,7 @@ export class TokenService {
   }
 
   subscribe(googleToken: string): void {
+    this.loader.start();
     this.observable(googleToken).subscribe(t => {
       this.token = t;
       this.loader.complete();

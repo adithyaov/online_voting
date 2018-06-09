@@ -307,3 +307,28 @@ func UpdateAPI(s auth.Service) {
 
 	s.Encode(ballot, 200)
 }
+
+// CheckUserVoteAPI provides EP for CheckUserVote
+func CheckUserVoteAPI(s Service) {
+
+	type Req struct {
+		Email string `json:"email"`
+	}
+
+	type Res struct {
+		Status bool `json:"status"`
+	}
+
+	var data Req
+
+	err := json.Unmarshal(s.Body, &data)
+	if err != nil {
+		s.Tell(err.Error(), 400)
+		return
+	}
+
+	status, err := s.Ballot.CheckUserVote(data.Email)
+
+	s.Encode(Res{status}, 200)
+
+}
