@@ -1,176 +1,56 @@
 <html>
-    <head>
-        <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.0/normalize.css">
-        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
-        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
-        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
-        <style>
-            .sidebar {
-                padding: 15px;
-                position: fixed;
-                top: 0px;
-                left: 0px;
-                width: 280px;
-                height: 100%;
-                overflow: auto;
-                border-right: .05rem solid #e7e9ed
-            }
-            .sidebar .logo {
-                margin: .35rem .4rem;
-            }
-            .ballot-btn .phase {
-                padding-top: 4px;
-                padding-bottom: 4px;
-                padding-left: 15px;
-                padding-right: 15px;
-            }
 
-            .ballotbar {
-                padding: 10px;
-                position: fixed;
-                top: 0px;
-                right: 0px;
-                width: 400px;
-                height: 100%;
-                overflow: auto;
-            }
+<head>
+  <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.0/normalize.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+  <style>
+    .side-bar {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      width: 280px;
+      height: 100%;
+      overflow: auto;
+      border-right: .05rem solid #e7e9ed !important;
+    }
 
-            .test {
-                padding: 15px;
-                position: fixed;
-                top: 0px;
-                left: 280px;
-                height: 100%;
-                overflow: auto;
-                width: calc(100% - 400px - 280px);
-            }
+    .ballot-bar {
+      position: fixed;
+      top: 0px;
+      right: 0px;
+      width: 30%;
+      height: 100%;
+      overflow: auto;
+    }
 
-            .cmd {
-                padding: 15px;
-                position: fixed;
-                bottom: 0px;
-                right: 0px;
-                width: 100%;
-            }
-            
-        </style>
-    </head>
-    <body>
-        <div class="sidebar">
-            <div class="columns">
-                <div class="column col-8">
-                    <div class="logo rounded"><span class="text-bold">PEN</span>BALLOT</div>
-                </div>
-                <div class="column col-4">
-                    <button class="btn btn-block">Leave</button>
-                </div>
-            </div>
-            <ul class="nav">
-                <li class="divider" data-content="ADITHYA KUMAR"></li>
-                <li class="nav-item">
-                    <a href="#">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#">Nominations</a>
-                </li>
-                <li class="divider" data-content="SOCKET"></li>
-                <li class="nav-item">
-                    <a href="#">Online Help</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="badge" data-badge="6">Announcements</a>
-                </li>
-                <li class="divider" data-content="DEV"></li>
-                <li class="nav-item">
-                    <a href="#">Documentation</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#">Github</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#">Contributers</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#">Guidelines</a>
-                </li>
-                <li class="divider" data-content="LEGAL"></li>
-                <li class="nav-item">
-                    <a href="#">Terms of usage</a>
-                </li>
-            </ul>
-        </div>
-        <div class="test">
-            <div class="text-center text-bold">BALLOT DETAILS <small>GS2011</small></div>
-            <div style="height: 20px;"></div>
-            <div class="code" data-lang="NAME">
-                <code>
-                    <b>General Secratary Elections 2018</b>
-                </code>
-            </div>
-            <div style="height: 10px;"></div>
-            <div class="columns">
-                <div class="column">
-                    <div class="code" data-lang="PUBLIC KEY">
-                        <code>
-                            67887
-                        </code>
-                    </div>
-                </div>
-                <div class="column">
-                    <div class="code" data-lang="PHASE">
-                        <code>
-                            Create
-                        </code>
-                    </div>
-                </div>
-            </div>
-            <div style="height: 10px;"></div>
-            <div class="code" data-lang="GROUP MODULUS">
-                <code>
-                    792730197018927098126318263182609128640912864981246019824601298461092846120984612098461209846120986219086476387560925723095809741086410284671826523987461798456182541287542168746152746124762154621
-                </code>
-            </div>
-                
-        </div>
-        <div class="ballotbar bg-gray">
-            <div class="card ballot-btn">
-                <div class="card-header">
-                    <div class="phase bg-secondary rounded tooltip tooltip-left float-right h3" data-tooltip="Lorem ipsum dolor sit amet">C</div>
-                    <div class="card-title h6">General Secretary Elections</div>
-                    <div class="card-subtitle text-gray">GS-2015</div>
-                </div>
-            </div>
-            <div style="height: 10px;"></div>
-            <div class="card ballot-btn">
-                <div class="card-header">
-                    <div class="phase bg-warning rounded tooltip tooltip-left float-right h3" data-tooltip="Lorem ipsum dolor sit amet">R</div>
-                    <div class="card-title h6">Sports Secretary Elections</div>
-                    <div class="card-subtitle text-gray">SS-2015</div>
-                </div>
-            </div>
-            <div style="height: 10px;"></div>
-            <div class="card ballot-btn">
-                <div class="card-header">
-                    <div class="phase bg-dark rounded tooltip tooltip-left float-right h3" data-tooltip="Lorem ipsum dolor sit amet">N</div>
-                    <div class="card-title h6 text-dark">Cultural Secretary Elections</div>
-                    <div class="card-subtitle text-gray">CS-2015</div>
-                </div>
-            </div>
-            <div style="height: 10px;"></div>
-            <div class="card ballot-btn">
-                <div class="card-header">
-                    <div class="phase bg-success rounded tooltip tooltip-left float-right h3" data-tooltip="Lorem ipsum dolor sit amet">V</div>
-                    <div class="card-title h6">Mess Secretary Elections</div>
-                    <div class="card-subtitle text-gray">MS-2015</div>
-                </div>
-            </div>
-            <div style="height: 100px"></div>
-        </div>
-        <div class="cmd bg-gray">
-            <div class="has-icon-left tooltip tooltip-top" data-tooltip="type dev.help to learn more">
-                <i class="form-icon icon icon-arrow-right"></i>
-                <input type="text" class="form-input input-lg" placeholder="execute commands, eg: ballot.open.[GS2017]">
-            </div>
-        </div>
-    </body>
+    .content {
+      position: fixed;
+      top: 0px;
+      left: 280px;
+      height: 100%;
+      overflow: auto;
+      width: calc(100% - 30% - 280px);
+    }
+
+    .cmd {
+      position: fixed;
+      bottom: 0px;
+      right: 0px;
+      width: 100%;
+    }
+
+    .show-frame {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+  <iframe class="show-frame side-bar" src="./side_bar.html"></iframe>
+  <iframe class="show-frame ballot-bar" src="./ballot_bar.html"></iframe>
+  <iframe class="show-frame content" src="./heading.html"></iframe>
+</body>
+
 </html>
