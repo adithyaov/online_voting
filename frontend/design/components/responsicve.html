@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .debug:nth-child(even) {
+            background-color: olive;
+        }
+
+        .debug:nth-child(odd) {
+            background-color: aqua;
+        }
+
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        @media only screen and (min-width: 1025px) {
+            .side-bar {
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                width: 280px;
+                height: 100%;
+                padding-bottom: 100px;
+
+            }
+
+            .content {
+                position: fixed;
+                top: 0px;
+                left: 280px;
+                width: calc(100% - 280px - 28%);
+                height: 100%;
+                padding-bottom: 100px;
+
+            }
+
+            .ballot-bar {
+                position: fixed;
+                top: 0px;
+                right: 0px;
+                width: 28%;
+                height: 100%;
+                padding-bottom: 100px;
+
+            }
+
+            .cmd {
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
+                min-height: 50px;
+                width: 100%;
+            }
+
+        }
+
+        @media only screen and (min-width: 768px) and (max-width: 1024px) {
+            .side-bar {
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                width: 280px;
+                height: 44%;
+            }
+
+            .content {
+                position: fixed;
+                top: 0px;
+                left: 280px;
+                width: calc(100% - 280px);
+                height: 100%;
+                padding-bottom: 100px;
+
+            }
+
+            .ballot-bar {
+                position: fixed;
+                top: 44%;
+                left: 0px;
+                width: 280px;
+                height: 56%;
+                padding-bottom: 100px;
+
+            }
+
+            .cmd {
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
+                min-height: 50px;
+                width: 100%;
+            }
+
+        }
+
+        @media only screen and (min-width: 580px) and (max-width: 767px) {
+            .side-bar {
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                width: 280px;
+                height: 44%;
+            }
+
+            .content {
+                position: fixed;
+                top: 0px;
+                left: 280px;
+                width: calc(100% - 280px);
+                height: 100%;
+                padding-bottom: 100px;
+
+            }
+
+            .ballot-bar {
+                position: fixed;
+                top: 44%;
+                left: 0px;
+                width: 280px;
+                height: 56%;
+                padding-bottom: 100px;
+            }
+
+            .cmd {
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
+                min-height: 50px;
+                width: 280px;
+            }
+        }
+
+        @media only screen and (max-width: 579px) {
+
+            .side-bar {
+                position: relative;
+                width: 100%;
+                min-height: 100px;
+            }
+
+            .content {
+                position: relative;
+                width: 100%;
+                min-height: 100px;
+            }
+
+            .ballot-bar {
+                position: relative;
+                width: 100%;
+                min-height: 100px;
+            }
+
+            .cmd {
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
+                min-height: 50px;
+                width: 100%;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="side-bar debug"></div>
+    <div class="content debug"></div>
+    <div class="ballot-bar debug"></div>
+    <div class="cmd debug"></div>
+</body>
+
+</html>

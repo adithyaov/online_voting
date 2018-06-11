@@ -1,0 +1,372 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.0/normalize.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+  <style>
+    .side-bar,
+    .ballot-bar,
+    .content {
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    @media only screen and (min-width: 1025px) {
+      .side-bar {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 280px;
+        height: 100%;
+
+      }
+
+      .content {
+        position: fixed;
+        top: 0px;
+        left: 280px;
+        width: calc(100% - 280px - 28%);
+        height: 100%;
+
+      }
+
+      .ballot-bar-wrapper {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 28%;
+        height: 100%;
+
+      }
+
+      .cmd {
+        position: fixed;
+        bottom: 0px;
+        left: 280px;
+        min-height: 50px;
+        width: calc(100% - 280px);
+      }
+
+    }
+
+    @media only screen and (min-width: 768px) and (max-width: 1024px) {
+      .side-bar {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 280px;
+        height: 44%;
+        border-right: 1px solid #f0f0f0;
+
+      }
+
+      .content {
+        position: fixed;
+        top: 0px;
+        left: 280px;
+        width: calc(100% - 280px);
+        height: 100%;
+
+      }
+
+      .ballot-bar-wrapper {
+        position: fixed;
+        top: 44%;
+        left: 0px;
+        width: 280px;
+        height: 56%;
+
+      }
+
+      .cmd {
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
+        min-height: 50px;
+        width: 100%;
+      }
+
+    }
+
+    @media only screen and (min-width: 580px) and (max-width: 767px) {
+      .side-bar {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 280px;
+        height: 44%;
+        border-right: 1px solid #f0f0f0;
+      }
+
+      .content {
+        position: fixed;
+        top: 0px;
+        left: 280px;
+        width: calc(100% - 280px);
+        height: 100%;
+
+      }
+
+      .ballot-bar-wrapper {
+        position: fixed;
+        top: 44%;
+        left: 0px;
+        width: 280px;
+        height: 56%;
+      }
+
+      .cmd {
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
+        min-height: 50px;
+        width: 280px;
+      }
+    }
+
+    @media only screen and (max-width: 579px) {
+
+      .side-bar {
+        position: relative;
+        width: 100%;
+        min-height: 100px;
+        border: 0px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .content {
+        position: relative;
+        width: 100%;
+        min-height: 100px;
+      }
+
+      .ballot-bar-wrapper {
+        position: relative;
+        width: 100%;
+        min-height: 100px;
+      }
+
+      .cmd {
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
+        min-height: 50px;
+        width: 100%;
+      }
+
+    }
+
+    .side-bar {
+      padding: 15px;
+    }
+
+    .side-bar .logo {
+      margin: .35rem .4rem;
+    }
+
+    .user-set {
+      padding: 10px;
+    }
+
+    .user-set {
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .user-card {
+      position: relative;
+    }
+
+    .user-card .link-holder a {
+      padding: 4px;
+    }
+
+    .user-card .display-picture {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+
+    .ballot-bar-wrapper {
+      padding: 10px;
+    }
+
+    .ballot-bar {
+      padding: 5px;
+      background-color: #fff;
+    }
+
+    .ballot-card {
+      padding: 5px;
+      margin: 5px 0px;
+      background-color: #fff;
+    }
+
+    .ballot-card .phase {
+      padding-top: 4px;
+      padding-bottom: 4px;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    .cmd {
+      padding: 15px;
+    }
+
+    .heading {
+      padding: 15px;
+    }
+
+    .ballot-details {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="side-bar">
+    <div class="columns">
+      <div class="column col-8">
+        <div class="logo rounded">
+          <span class="text-bold">PEN</span>BALLOT</div>
+      </div>
+      <div class="column col-4">
+        <button class="btn btn-block">Bye ?</button>
+      </div>
+    </div>
+    <ul class="nav">
+      <li class="divider" data-content="ADITHYA KUMAR"></li>
+      <li class="nav-item">
+        <a href="#">Profile</a>
+      </li>
+      <li class="nav-item">
+        <a href="#">Nominations</a>
+      </li>
+      <li class="divider" data-content="SOCKET"></li>
+      <li class="nav-item">
+        <a href="#">Online Help</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="badge" data-badge="6">Announcements</a>
+      </li>
+      <li class="divider" data-content="DEV"></li>
+      <li class="nav-item">
+        <a href="#">Documentation</a>
+      </li>
+      <li class="nav-item">
+        <a href="#">Github</a>
+      </li>
+      <li class="nav-item">
+        <a href="#">Contributers</a>
+      </li>
+      <li class="nav-item">
+        <a href="#">Guidelines</a>
+      </li>
+      <li class="divider" data-content="LEGAL"></li>
+      <li class="nav-item">
+        <a href="#">Terms of usage</a>
+      </li>
+    </ul>
+  </div>
+  <div class="content bg-gray" style="padding: 10px;">
+    <div class="clo" style="background-color: #fff;">
+      <header class="heading">
+        <div class="text-center text-bold">BALLOT DETAILS
+          <small>GS2011</small>
+        </div>
+      </header>
+
+      <div class="ballot-details">
+        <div class="code" data-lang="NAME">
+          <code>
+          <b>General Secratary Elections 2018</b>
+        </code>
+        </div>
+        <div style="height: 10px;"></div>
+        <div class="columns">
+          <div class="column">
+            <div class="code" data-lang="PUBLIC KEY">
+              <code>
+              67887
+            </code>
+            </div>
+          </div>
+          <div class="column">
+            <div class="code" data-lang="PHASE">
+              <code>
+              Create
+            </code>
+            </div>
+          </div>
+        </div>
+        <div style="height: 10px;"></div>
+        <div class="code" data-lang="GROUP MODULUS">
+          <code>
+          792730197018927098126318263182609128640912864981246019824601298461092846120984612098461209846120986219086476387560925723095809741086410284671826523987461798456182541287542168746152746124762154621
+        </code>
+        </div>
+
+      </div>
+      <div style="height: 15px;"></div>
+    </div>
+  </div>
+  <div class="ballot-bar-wrapper bg-gray">
+    <div class="ballot-bar">
+      <div class="tile tile-centered ballot-card">
+        <div class="tile-icon">
+          <div class="phase bg-secondary rounded tooltip tooltip-right float-right h3" data-tooltip="Lorem ipsum dolor sit amet">C</div>
+        </div>
+        <div class="tile-content">
+          <div class="tile-title">General Secretary Elections</div>
+          <div class="tile-subtitle text-gray">GS-2015</div>
+        </div>
+        <div class="tile-action">
+          <button class="btn">
+            Open
+          </button>
+        </div>
+      </div>
+      <div class="tile tile-centered ballot-card">
+        <div class="tile-icon">
+          <div class="phase bg-primary rounded tooltip tooltip-right float-right h3" data-tooltip="Lorem ipsum dolor sit amet">R</div>
+        </div>
+        <div class="tile-content">
+          <div class="tile-title">Sports Secretary Elections</div>
+          <div class="tile-subtitle text-gray">SS-2018</div>
+        </div>
+        <div class="tile-action">
+          <button class="btn">
+            Open
+          </button>
+        </div>
+      </div>
+      <div class="tile tile-centered ballot-card">
+        <div class="tile-icon">
+          <div class="phase bg-warning rounded tooltip tooltip-right float-right h3" data-tooltip="Lorem ipsum dolor sit amet">N</div>
+        </div>
+        <div class="tile-content">
+          <div class="tile-title">Cultural Secretary Elections</div>
+          <div class="tile-subtitle text-gray">CS-2018</div>
+        </div>
+        <div class="tile-action">
+          <button class="btn">
+            Open
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cmd bg-gray">
+    <div class="has-icon-left tooltip tooltip-top" data-tooltip="type dev.help to learn more">
+      <i class="form-icon icon icon-arrow-right"></i>
+      <input type="text" class="form-input input-lg" placeholder="execute commands, eg: ballot.open.[GS2017]">
+    </div>
+  </div>
+</body>
+
+</html>
