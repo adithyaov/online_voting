@@ -1,0 +1,9 @@
+{
+  "services": "src/services/",
+  "reducers": "src/store/reducers/",
+  "actions": "src/store/actions/",
+  "effects": "src/store/effects/",
+  "models": "src/store/models/",
+  "containers": "src/containers/",
+  "components": "src/components/"
+}
