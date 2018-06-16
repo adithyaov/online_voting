@@ -1,0 +1,45 @@
+.side-bar .logo {
+    margin: 0.35rem 0.4rem;
+}
+
+.side-bar {
+    background-color: #fff;
+}
+
+.heading {
+    padding: 5px;
+}
+
+/* PADDINGS AND MARGINS */
+
+@media only screen and (min-width: 1025px) {
+    .side-bar {
+        padding: 10px;
+        margin-right: 5px;
+        height: 100%;
+        -webkit-box-shadow: 1px 1px 10px -10px #000000;
+        box-shadow: 1px 1px 10px -10px #000000;
+        overflow: auto;
+    }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1024px) {
+    .side-bar {
+        padding: 10px;
+        margin-right: 5px;
+        height: 100%;
+        -webkit-box-shadow: 1px 1px 10px -10px #000000;
+        box-shadow: 1px 1px 10px -10px #000000;
+        overflow: auto;
+    }
+}
+
+@media only screen and (max-width: 599px) {
+    .side-bar {
+        padding: 10px;
+        height: 100%;
+        -webkit-box-shadow: 1px 1px 10px -10px #000000;
+        box-shadow: 1px 1px 10px -10px #000000;
+        overflow: auto;
+    }
+}

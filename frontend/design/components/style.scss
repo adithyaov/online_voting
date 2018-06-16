@@ -1,0 +1,32 @@
+$secondary-color: #f1f1fc;
+@mixin padding($t, $b, $l, $r) {
+  padding-top: $t;
+  padding-bottom: $b;
+  padding-left: $l;
+  padding-right: $r;
+}
+
+@mixin margin($pt, $pb, $pl, $pr) {
+  margin-top: $t;
+  margin-bottom: $b;
+  margin-left: $l;
+  margin-right: $r;
+}
+
+.wrapper {
+  @media only screen and (min-width: 1025px) {
+    display: grid;
+    grid-template-columns: 270px calc(100% - 270px - 340px) 340px;
+    grid-template-rows: auto 80px;
+  }
+  @media only screen and (min-width: 590px) and (max-width: 1024px) {
+    display: grid;
+    grid-template-columns: 270px calc(100% - 270px);
+    grid-template-rows: auto auto 80px;
+  }
+  @media only screen and (max-width: 589px) {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto auto auto 80px;
+  }
+}

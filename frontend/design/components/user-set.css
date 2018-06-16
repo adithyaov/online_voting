@@ -1,0 +1,53 @@
+.user-set {
+  display: grid;
+  grid-gap: 10px;
+}
+
+/* > 1025 */
+
+@media only screen and (min-width: calc(270px + 340px + 10px + 600px + 20px + 20px)) {
+  .user-set {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (min-width: 1025px) and (max-width: calc(270px + 340px + 10px + 600px + 20px + 20px - 1px)) {
+  .user-set {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* > 600 && < 1024 */
+
+@media only screen and (min-width: calc(270px + 600px + 20px + 20px)) and (max-width: 1024px) {
+  .user-set {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: calc(270px + 600px + 20px + 20px - 1px)) {
+  .user-set {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  .user-set {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.user-card {
+  position: relative;
+  min-width: 300px;
+}
+
+.user-card .card {
+  width: calc(100% - 32px);
+}
+
+.user-card .display-picture {
+  position: absolute;
+  top: calc(50% - 32px);
+  right: 0px;
+}
