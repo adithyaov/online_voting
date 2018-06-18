@@ -1,0 +1,16 @@
+<div class="ballot-card">
+  <div class="tile tile-centered">
+    <div class="tile-icon">
+      <div [ngClass]="phaseIconProps[ballot.phase].classes" class="phase rounded tooltip tooltip-right float-right h3" [attr.data-tooltip]="phaseIconProps[ballot.phase].tooltip">{{ballot.phase}}</div>
+    </div>
+    <div class="tile-content">
+      <div class="tile-title">{{ballot.name}}</div>
+      <div class="tile-subtitle text-gray">{{ballot.code}}</div>
+    </div>
+    <div class="tile-action">
+      <button class="btn" (click)="open(ballot.code)">
+        Open
+      </button>
+    </div>
+  </div>
+</div>

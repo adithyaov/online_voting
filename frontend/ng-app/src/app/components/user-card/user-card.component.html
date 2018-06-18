@@ -1,0 +1,29 @@
+<div class="user-card">
+  <div class="display-picture">
+    <figure class="avatar avatar-xl" data-initial="GG">
+      <img [src]="candidate.user.picture" [alt]="candidate.user.name">
+    </figure>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title h6">{{candidate.user.name}}</div>
+      <div class="card-subtitle text-gray text-ellipsis">{{candidate.user.email}}</div>
+    </div>
+
+    <div *ngIf="candidate.nominee1.valid || candidate.nominee2.valid" class="card-body">
+      <div>Nominees</div>
+      <ul class="nominees">
+        <li *ngIf="candidate.nominee1.valid" class="text-ellipsis">{{candidate.nominee1.string}}</li>
+        <li *ngIf="candidate.nominee2.valid" class="text-ellipsis">{{candidate.nominee2.string}}</li>
+      </ul>
+    </div>
+
+    <div class="card-footer">
+      <a target="new" [href]="candidate.details" class="btn">Document</a>
+      <button (click)="vote(candidate.user.email)" *ngIf="phase == 'V'" class="btn btn-primary">Vote</button>
+      <button (click)="nominate(candidate.user.email)" *ngIf="phase == 'N' &&
+        !((candidate.nominee1.valid && candidate.nominee1.string == currentEmail) || 
+        (candidate.nominee2.valid && candidate.nominee2.string == currentEmail))" class="btn btn-error">Nominate</button>
+    </div>
+  </div>
+</div>
