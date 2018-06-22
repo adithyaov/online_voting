@@ -1,0 +1,66 @@
+<div class="user-card">
+    <div class="display-picture">
+        <figure class="avatar avatar-xl" data-initial="GG">
+            <img src="{candidate.user.picture}" alt="{candidate.user.name}">
+        </figure>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title h6">{candidate.user.name}</div>
+            <div class="card-subtitle text-gray">{candidate.user.email}</div>
+        </div>
+        <div class="card-footer">
+            <a href="{candidate.details}" class="btn">Document</a>
+            {#if phase=="V" && !voted}
+            <button class="btn btn-primary" on:click="voteFor(candidate.user.email)">Vote</button>
+            {:elseif phase=="N" && !((candidate.nominee1.valid && candidate.nominee1.string == currentUser.email) || (candidate.nominee2.valid
+            && candidate.nominee2.string == currentUser.email) || (candidate.user.email == currentUser.email))}
+            <button on:click="nominate(candidate.user.email)" class="btn btn-error">Nominate</button>
+            {/if}
+        </div>
+    </div>
+</div>
+
+<style>
+    .user-card {
+        position: relative;
+    }
+
+    .user-card .card {
+        width: calc(100% - 32px);
+    }
+
+    .user-card .display-picture {
+        position: absolute;
+        top: calc(50% - 32px);
+        right: 0px;
+    }
+</style>
+
+<script>
+
+    export default {
+        oncreate() {
+            console.log({
+                'candidate.user.picture': this.get().candidate.user.picture,
+                'candidate.user.name': this.get().candidate.user.name,
+                'candidate.user.email': this.get().candidate.user.email,
+                'candidate.details': this.get().candidate.details,
+                'phase': this.get().phase,
+                'candidate.nominee1.valid': this.get().candidate.nominee1.valid,
+                'candidate.nominee1.string': this.get().candidate.nominee1.string,
+                'candidate.nominee2.valid': this.get().candidate.nominee2.valid,
+                'candidate.nominee2.string': this.get().candidate.nominee2.string,
+                'currentUser.email': this.get().currentUser.email
+            })
+        },
+        methods: {
+            voteFor(email) {
+                this.fire('vote', { candidateEmail: email })
+            },
+            nominate(email) {
+                this.fire('nominate', { candidateEmail: email })
+            }
+        }
+    }
+</script>

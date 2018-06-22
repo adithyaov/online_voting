@@ -1,14 +1,14 @@
 <div class="ballot-card">
     <div class="tile tile-centered">
         <div class="tile-icon">
-            <div class="phase bg-secondary rounded tooltip tooltip-right float-right h3" data-tooltip="Lorem ipsum dolor sit amet">C</div>
+            <div class="phase rounded tooltip tooltip-right float-right h3 {phaseBtnProps[ballot.phase].classes.join(' ')}" data-tooltip="{phaseBtnProps[ballot.phase].tooltip}">C</div>
         </div>
         <div class="tile-content">
-            <div class="tile-title">General Secretary Elections</div>
-            <div class="tile-subtitle text-gray">GS-2015</div>
+            <div class="tile-title">{ballot.name}</div>
+            <div class="tile-subtitle text-gray">{ballot.code}</div>
         </div>
         <div class="tile-action">
-            <button class="btn">
+            <button class="btn" on:click="openBallot(ballot.code)">
                 Open
             </button>
         </div>
@@ -28,3 +28,22 @@
         padding-right: 15px;
     }
 </style>
+
+<script>
+
+    export default {
+        oncreate() {
+            console.log({
+                "phaseBtnProps[ballot.phase].classes.join(' ')": this.get().phaseBtnProps[ballot.phase].classes.join(' '),
+                "phaseBtnProps[ballot.phase].tooltip": this.get().phaseBtnProps[ballot.phase].tooltip,
+                "ballot.name": this.get().ballot.name,
+                "ballot.code": this.get().ballot.code
+            })
+        },
+        methods: {
+            openBallot(ballotCode) {
+                this.fire('openBallot', { ballotCode: ballotCode })
+            }
+        }
+    }
+</script>

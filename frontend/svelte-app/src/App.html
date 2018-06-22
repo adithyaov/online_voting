@@ -1,19 +1,30 @@
-<h1>Hedddllo {name}!</h1>
+<UserCard currentUser={currentUser} phase="V" voted={false} candidate={candidate}></UserCard>
+<UserCard currentUser={currentUser} phase="V" voted={true} candidate={candidate}></UserCard>
+<UserCard currentUser={currentUser} phase="N" voted={true} candidate={candidate}></UserCard>
 
-<BallotBtn></BallotBtn>
 
-<style>
-	h1 {
-		color: purple;
-	}
-</style>
 
 <script>
 	import BallotBtn from './components/BallotBtn.html';
+	import UserCard from './components/UserCard.html';
+	import { phaseBtnProps } from './common';
+	import { BALLOTS, USER, CANDIDATES } from './mock-data.js';
 
 	export default {
 		components: {
-			BallotBtn
+			UserCard
+		},
+		data() {
+			return {
+				ballot: BALLOTS[1],
+				phaseBtnProps: phaseBtnProps,
+				candidate: CANDIDATES[0],
+				currentUser: USER
+			}
+		},
+		methods: {
+			test(event) {
+			}
 		}
-	} 
+	}
 </script>
