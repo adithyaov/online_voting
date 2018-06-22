@@ -10,6 +10,6 @@ const app = new App({
 });
 
 window.onhashchange = () =>
-  store.fire('routeChange', { nowRoute: location.hash });
+  store.fire('routeChange', { newRoute: location.hash });
 
 export default app;

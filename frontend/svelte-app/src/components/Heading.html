@@ -1,0 +1,26 @@
+<style>
+    .heading {
+        margin-top: 10px;
+    }
+</style>
+
+<div class="heading text-center">
+    <div class="text-bold">
+        {#if type == 'dual'} {data.head}
+        <small>{data.sub}</small>
+        {:elseif type == 'default'} {data.text} {/if}
+    </div>
+</div>
+
+<script>
+    export default {
+        data() {
+            return {
+                type: 'default',
+                data: {
+                    text: 'DEFAULT'
+                }
+            }
+        }
+    }
+</script>

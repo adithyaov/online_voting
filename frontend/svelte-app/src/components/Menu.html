@@ -1,0 +1,64 @@
+<div class="side-bar">
+    <div class="columns">
+        <div class="column col-8">
+            <div class="logo rounded">
+                <span class="text-bold">PEN</span>BALLOT</div>
+        </div>
+        <div class="column col-4">
+            <button class="btn btn-block">Logout</button>
+        </div>
+    </div>
+    <ul class="nav">
+        {#each navItems as item} {#if item.type == 'link'}
+        <li class="nav-item">
+            <a href="{item.data.route}">{item.data.value}</a>
+        </li>
+        {:elseif item.type == 'divider'}
+        <li class="divider" data-content="{item.data.text}"></li>
+        {/if} {/each}
+    </ul>
+</div>
+
+
+
+<style>
+    .side-bar {
+        padding: 10px;
+    }
+
+    .side-bar .logo {
+        margin: .35rem .4rem;
+    }
+</style>
+
+<script>
+    export default {
+        data() {
+            return {
+                navItems: [
+                    {
+                        type: 'link',
+                        data: {
+                            route: '#ballot/gs-2015',
+                            value: 'Ballots'
+                        }
+                    },
+                    {
+                        type: 'divider',
+                        data: {
+                            text: 'DEV'
+                        }
+                    }
+                ]
+            }
+        },
+        methods: {
+            logout() {
+                this.fire('logout', {})
+            },
+            login() {
+                this.fire('login', { googleToken: 'xxx' })
+            }
+        }
+    }
+</script>

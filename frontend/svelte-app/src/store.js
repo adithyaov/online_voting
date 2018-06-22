@@ -15,10 +15,17 @@ const store = new Store({
   notifications: []
 });
 
-import routeChangeHandeler from './handelers/routeChange.js';
-store.on('routeChange', routeChangeHandeler);
+const init = ctx => {
+  store.on(ctx.eventName, ctx.handler);
+};
 
-import oppenBallotHandeler from './handelers/openBallot.js';
-store.on('openBallot', oppenBallotHandeler);
+const multiInit = ctxs => {
+  ctxs.forEach(ctx => {
+    init(ctx);
+  });
+};
+
+import handlers from './handlers';
+multiInit(handlers);
 
 export default store;
