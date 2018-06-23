@@ -3,10 +3,21 @@
 
 var React = require("react");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
+var Cmd$ReactTemplate = require("./components/Cmd.bs.js");
 var SideBar$ReactTemplate = require("./components/SideBar.bs.js");
 var BallotBar$ReactTemplate = require("./components/BallotBar.bs.js");
+var BallotDetails$ReactTemplate = require("./components/BallotDetails.bs.js");
+var ContentHeading$ReactTemplate = require("./components/ContentHeading.bs.js");
 
 var component = ReasonReact.statelessComponent("Root");
+
+function divider(dataContent) {
+  return React.cloneElement(React.createElement("li", {
+                  className: "divider"
+                }), {
+              "data-content": dataContent
+            });
+}
 
 function make() {
   return /* record */[
@@ -26,11 +37,15 @@ function make() {
                               className: "side-bar-wrapper"
                             }, ReasonReact.element(/* None */0, /* None */0, SideBar$ReactTemplate.make(/* array */[]))), React.createElement("div", {
                               className: "content-wrapper"
-                            }, "content"), React.createElement("div", {
+                            }, React.createElement("div", {
+                                  className: "content"
+                                }, ReasonReact.element(/* None */0, /* None */0, ContentHeading$ReactTemplate.make(/* array */[])), React.createElement("div", {
+                                      className: "divider-wrapper"
+                                    }, divider("BALLOT INFO")), ReasonReact.element(/* None */0, /* None */0, BallotDetails$ReactTemplate.make(/* array */[])))), React.createElement("div", {
                               className: "ballot-bar-wrapper"
                             }, ReasonReact.element(/* None */0, /* None */0, BallotBar$ReactTemplate.make(/* array */[]))), React.createElement("div", {
                               className: "cmd-wrapper"
-                            }, "cmd"));
+                            }, ReasonReact.element(/* None */0, /* None */0, Cmd$ReactTemplate.make(/* array */[]))));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
@@ -41,5 +56,6 @@ function make() {
 }
 
 exports.component = component;
+exports.divider = divider;
 exports.make = make;
 /* component Not a pure module */

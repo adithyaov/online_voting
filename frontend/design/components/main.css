@@ -1,6 +1,9 @@
 .divider-wrapper {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 0px;
+}
+
+.hdiv {
+    height: 10px;
 }
 
 .loading-wrapper {
