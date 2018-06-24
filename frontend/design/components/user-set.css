@@ -109,3 +109,11 @@
 .user-card {
     position: relative;
 }
+
+.user-card .card-footer .btn {
+    margin-right: 5px;
+}
+
+.user-card .card-footer .btn:last-child {
+    margin-right: 0px;
+}

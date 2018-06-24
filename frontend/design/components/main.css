@@ -2,8 +2,12 @@
     padding: 0px;
 }
 
-.hdiv {
+.h10 {
     height: 10px;
+}
+
+.h5 {
+    height: 5px;
 }
 
 .loading-wrapper {
