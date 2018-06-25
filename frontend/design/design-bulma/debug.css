@@ -1,0 +1,11 @@
+* {
+    border: 1px solid blue;
+    margin: -1px;
+}
+
+html,
+body {
+    border: 0;
+    padding: 0;
+    margin: 0
+}
