@@ -1,4 +1,5 @@
-let create = (ballotCode, userEmail, details, axiosConfig) => {
+let create =
+    (ballotCode: string, userEmail: string, details: string, axiosConfig) => {
   let data = {
     "ballot_code": ballotCode,
     "user_email": userEmail,
@@ -7,7 +8,8 @@ let create = (ballotCode, userEmail, details, axiosConfig) => {
   Axios.postDatac("/ballot/create", data, axiosConfig);
 };
 
-let addNominee = (ballotCode, userEmail, nomineeEmail, axiosConfig) => {
+let addNominee =
+    (ballotCode: string, userEmail: string, nomineeEmail: string, axiosConfig) => {
   let data = {
     "ballot_code": ballotCode,
     "user_email": userEmail,
@@ -16,7 +18,8 @@ let addNominee = (ballotCode, userEmail, nomineeEmail, axiosConfig) => {
   Axios.postDatac("/ballot/add-nominee", data, axiosConfig);
 };
 
-let updateDetails = (ballotCode, userEmail, details, axiosConfig) => {
+let updateDetails =
+    (ballotCode: string, userEmail: string, details: string, axiosConfig) => {
   let data = {
     "ballot_code": ballotCode,
     "user_email": userEmail,
@@ -25,12 +28,12 @@ let updateDetails = (ballotCode, userEmail, details, axiosConfig) => {
   Axios.postDatac("/ballot/update-details", data, axiosConfig);
 };
 
-let delete = (ballotCode, userEmail, axiosConfig) => {
+let delete = (ballotCode: string, userEmail: string, axiosConfig) => {
   let data = {"ballot_code": ballotCode, "user_email": userEmail};
   Axios.postDatac("/ballot/delete", data, axiosConfig);
 };
 
-let ballotCandidates = (code, axiosConfig) => {
+let ballotCandidates = (code: string, axiosConfig) => {
   let data = {"code": code};
   Axios.postDatac("/ballot/per-ballot", data, axiosConfig);
 };
