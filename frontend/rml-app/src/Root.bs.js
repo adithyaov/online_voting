@@ -3,14 +3,17 @@
 
 var React = require("react");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
-var Cmd$ReactTemplate = require("./components/Cmd.bs.js");
-var SideBar$ReactTemplate = require("./components/SideBar.bs.js");
-var UserSet$ReactTemplate = require("./components/UserSet.bs.js");
+var Nav$ReactTemplate = require("./components/Nav.bs.js");
+var Footer$ReactTemplate = require("./components/Footer.bs.js");
 var BallotBar$ReactTemplate = require("./components/BallotBar.bs.js");
+var PhaseView$ReactTemplate = require("./components/PhaseView.bs.js");
 var BallotDetails$ReactTemplate = require("./components/BallotDetails.bs.js");
-var ContentHeading$ReactTemplate = require("./components/ContentHeading.bs.js");
 
 var component = ReasonReact.statelessComponent("Root");
+
+function str(str_) {
+  return str_;
+}
 
 function make() {
   return /* record */[
@@ -24,21 +27,21 @@ function make() {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function () {
-              return React.createElement("div", {
-                          className: "wrapper"
-                        }, React.createElement("div", {
-                              className: "side-bar-wrapper"
-                            }, ReasonReact.element(/* None */0, /* None */0, SideBar$ReactTemplate.make(/* array */[]))), React.createElement("div", {
-                              className: "content-wrapper"
+              return React.createElement("div", undefined, ReasonReact.element(/* None */0, /* None */0, Nav$ReactTemplate.make(/* array */[])), React.createElement("section", {
+                              className: "section"
                             }, React.createElement("div", {
-                                  className: "content"
-                                }, ReasonReact.element(/* None */0, /* None */0, ContentHeading$ReactTemplate.make(/* array */[])), ReasonReact.element(/* None */0, /* None */0, BallotDetails$ReactTemplate.make(/* array */[])), React.createElement("div", {
-                                      className: "h10"
-                                    }), ReasonReact.element(/* None */0, /* None */0, UserSet$ReactTemplate.make(/* array */[])))), React.createElement("div", {
-                              className: "ballot-bar-wrapper"
-                            }, ReasonReact.element(/* None */0, /* None */0, BallotBar$ReactTemplate.make(/* array */[]))), React.createElement("div", {
-                              className: "cmd-wrapper"
-                            }, ReasonReact.element(/* None */0, /* None */0, Cmd$ReactTemplate.make(/* array */[]))));
+                                  className: "container"
+                                }, React.createElement("div", {
+                                      className: "tile is-ancestor"
+                                    }, React.createElement("div", {
+                                          className: "tile is-parent"
+                                        }, React.createElement("div", {
+                                              className: "tile is-child"
+                                            }, ReasonReact.element(/* None */0, /* None */0, BallotDetails$ReactTemplate.make(/* array */[])), React.createElement("hr", undefined), ReasonReact.element(/* None */0, /* None */0, PhaseView$ReactTemplate.make(/* array */[])))), React.createElement("div", {
+                                          className: "tile is-parent is-3"
+                                        }, React.createElement("div", {
+                                              className: "tile is-child"
+                                            }, ReasonReact.element(/* None */0, /* None */0, BallotBar$ReactTemplate.make(/* array */[]))))))), ReasonReact.element(/* None */0, /* None */0, Footer$ReactTemplate.make(/* array */[])));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
@@ -49,5 +52,6 @@ function make() {
 }
 
 exports.component = component;
+exports.str = str;
 exports.make = make;
 /* component Not a pure module */

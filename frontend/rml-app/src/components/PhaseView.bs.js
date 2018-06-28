@@ -3,10 +3,13 @@
 
 var React = require("react");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
-var Common$ReactTemplate = require("../Common.bs.js");
-var UserCard$ReactTemplate = require("./UserCard.bs.js");
+var CandidateList$ReactTemplate = require("./CandidateList.bs.js");
 
-var component = ReasonReact.statelessComponent("UserSet");
+var component = ReasonReact.statelessComponent("PhaseView");
+
+function str(str_) {
+  return str_;
+}
 
 function make() {
   return /* record */[
@@ -20,13 +23,13 @@ function make() {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function () {
-              return React.createElement("div", undefined, React.createElement("div", {
-                              className: "divider-wrapper"
-                            }, Common$ReactTemplate.divider("CANDIDATES")), React.createElement("div", {
-                              className: "h10"
-                            }), React.createElement("div", {
-                              className: "user-set"
-                            }, ReasonReact.element(/* None */0, /* None */0, UserCard$ReactTemplate.make(/* array */[])), ReasonReact.element(/* None */0, /* None */0, UserCard$ReactTemplate.make(/* array */[])), ReasonReact.element(/* None */0, /* None */0, UserCard$ReactTemplate.make(/* array */[]))));
+              return React.createElement("div", undefined, React.createElement("article", {
+                              className: "message is-info"
+                            }, React.createElement("div", {
+                                  className: "message-header"
+                                }, React.createElement("p", undefined, "VIEW")), React.createElement("div", {
+                                  className: "message-body"
+                                }, "This ballot is in view phase.", React.createElement("br", undefined), "If you think there is a problem with the current phase please inform any of the", React.createElement("b", undefined, " admins"), " or the", React.createElement("b", undefined, " moderators"), ".", React.createElement("br", undefined), " For more information regarding phases please refer to the ", React.createElement("a", undefined, "documentation"), ".")), ReasonReact.element(/* None */0, /* None */0, CandidateList$ReactTemplate.make(/* array */[])));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
@@ -37,5 +40,6 @@ function make() {
 }
 
 exports.component = component;
+exports.str = str;
 exports.make = make;
 /* component Not a pure module */

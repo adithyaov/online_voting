@@ -6,6 +6,10 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 
 var component = ReasonReact.statelessComponent("ContentHeading");
 
+function str(str_) {
+  return str_;
+}
+
 function make() {
   return /* record */[
           /* debugName */component[/* debugName */0],
@@ -18,11 +22,17 @@ function make() {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function () {
-              return React.createElement("div", {
-                          className: "heading text-center"
+              return React.createElement("footer", {
+                          className: "footer"
                         }, React.createElement("div", {
-                              className: "text-bold"
-                            }, "BALLOT DETAILS", React.createElement("small", undefined, "GS2011")));
+                              className: "content has-text-centered"
+                            }, React.createElement("p", undefined, React.createElement("strong", undefined, "Bulma"), "by", React.createElement("a", {
+                                      href: "https://jgthms.com"
+                                    }, "Jeremy Thomas"), ". The source code is licensed", React.createElement("a", {
+                                      href: "http://opensource.org/licenses/mit-license.php"
+                                    }, "MIT"), ". The website content is licensed", React.createElement("a", {
+                                      href: "http://creativecommons.org/licenses/by-nc-sa/4.0/"
+                                    }, "CC BY NC SA 4.0"), ".")));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
@@ -33,5 +43,6 @@ function make() {
 }
 
 exports.component = component;
+exports.str = str;
 exports.make = make;
 /* component Not a pure module */

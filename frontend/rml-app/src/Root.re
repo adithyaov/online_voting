@@ -1,19 +1,28 @@
 let component = ReasonReact.statelessComponent("Root");
 
+let str = str_ => ReasonReact.string(str_);
+
 let make = _children => {
   ...component,
   render: _self =>
-    <div className="wrapper">
-      <div className="side-bar-wrapper"> <SideBar /> </div>
-      <div className="content-wrapper">
-        <div className="content">
-          <ContentHeading />
-          <BallotDetails />
-          <div className="h10" />
-          <UserSet />
+    <div>
+      <Nav />
+      <section className="section">
+        <div className="container">
+          <div className="tile is-ancestor">
+            <div className="tile is-parent">
+              <div className="tile is-child">
+                <BallotDetails />
+                <hr />
+                <PhaseView />
+              </div>
+            </div>
+            <div className="tile is-parent is-3">
+              <div className="tile is-child"> <BallotBar /> </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="ballot-bar-wrapper"> <BallotBar /> </div>
-      <div className="cmd-wrapper"> <Cmd /> </div>
+      </section>
+      <Footer />
     </div>,
 };

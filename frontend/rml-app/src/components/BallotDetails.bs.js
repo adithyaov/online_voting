@@ -3,16 +3,11 @@
 
 var React = require("react");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
-var Common$ReactTemplate = require("../Common.bs.js");
 
 var component = ReasonReact.statelessComponent("BallotDetails");
 
-function code(lang, child) {
-  return React.cloneElement(React.createElement("div", {
-                  className: "code"
-                }), {
-              "data-lang": lang
-            }, child);
+function str(str_) {
+  return str_;
 }
 
 function make() {
@@ -28,22 +23,16 @@ function make() {
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function () {
               return React.createElement("div", undefined, React.createElement("div", {
-                              className: "divider-wrapper"
-                            }, Common$ReactTemplate.divider("BALLOT INFO")), React.createElement("div", {
-                              className: "h10"
-                            }), React.createElement("div", {
-                              className: "ballot-details"
-                            }, code("NAME", React.createElement("code", undefined, React.createElement("b", undefined, "General Secratary Elections 2018"))), React.createElement("div", {
-                                  className: "h10"
-                                }), React.createElement("div", {
-                                  className: "columns"
-                                }, React.createElement("div", {
-                                      className: "column"
-                                    }, code("PUBLIC KEY", React.createElement("code", undefined, "67887"))), React.createElement("div", {
-                                      className: "column"
-                                    }, code("PHASE", React.createElement("code", undefined, "Create")))), React.createElement("div", {
-                                  className: "h10"
-                                }), code("GROUP MODULUS", React.createElement("code", undefined, "792730197018927098126318263182609128640912864981246019824601298461092846120984612098461209846120986219086476387560925723095809741086410284671826523987461798456182541287542168746152746124762154621"))));
+                              className: "title"
+                            }, "@ballot_details"), React.createElement("div", {
+                              className: "subtitle"
+                            }, "GS-2017", React.createElement("span", {
+                                  className: "tag is-primary is-pulled-right"
+                                }, "NOMINATION")), React.createElement("table", {
+                              className: "table is-hoverable is-bordered details-table"
+                            }, React.createElement("tbody", undefined, React.createElement("tr", undefined, React.createElement("th", undefined, "Name"), React.createElement("td", undefined, "General secratary elections 2014")), React.createElement("tr", undefined, React.createElement("th", undefined, "Public Key"), React.createElement("td", undefined, "23532423")), React.createElement("tr", {
+                                      className: "is-hidden-mobile"
+                                    }, React.createElement("th", undefined, "Group Modulus"), React.createElement("td", undefined, React.createElement("div", undefined, "9386498236498241092740937509341235938649823649824109274093750934123593864982364982410927409375093412359386498236498241092740937509341235938649823649824109274093750934123593864982364982410927409375093412359386498236498241092740937509341235938649823649824109274093750934123593864982364982410927409375093412359386498236498241092740937509341235"))))));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
@@ -54,6 +43,6 @@ function make() {
 }
 
 exports.component = component;
-exports.code = code;
+exports.str = str;
 exports.make = make;
 /* component Not a pure module */

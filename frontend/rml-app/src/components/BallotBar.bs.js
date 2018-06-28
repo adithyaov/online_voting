@@ -3,9 +3,12 @@
 
 var React = require("react");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
-var BallotCard$ReactTemplate = require("./BallotCard.bs.js");
 
 var component = ReasonReact.statelessComponent("BallotBar");
+
+function str(str_) {
+  return str_;
+}
 
 function make() {
   return /* record */[
@@ -19,9 +22,42 @@ function make() {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function () {
-              return React.createElement("div", {
-                          className: "ballot-bar"
-                        }, ReasonReact.element(/* None */0, /* None */0, BallotCard$ReactTemplate.make(/* array */[])), ReasonReact.element(/* None */0, /* None */0, BallotCard$ReactTemplate.make(/* array */[])), ReasonReact.element(/* None */0, /* None */0, BallotCard$ReactTemplate.make(/* array */[])));
+              return React.createElement("nav", {
+                          className: "panel"
+                        }, React.createElement("p", {
+                              className: "panel-heading"
+                            }, "Meine Ballots"), React.createElement("div", {
+                              className: "panel-block"
+                            }, React.createElement("p", {
+                                  className: "control has-icons-left"
+                                }, React.createElement("input", {
+                                      className: "input is-small",
+                                      placeholder: "search",
+                                      type: "text"
+                                    }), React.createElement("span", {
+                                      className: "icon is-small is-left"
+                                    }, React.createElement("i", {
+                                          "aria-hidden": true,
+                                          className: "fas fa-search"
+                                        })))), React.createElement("p", {
+                              className: "panel-tabs"
+                            }, React.createElement("a", {
+                                  className: "is-active"
+                                }, "all"), React.createElement("a", undefined, "view"), React.createElement("a", undefined, "nominate"), React.createElement("a", undefined, "register"), React.createElement("a", undefined, "vote")), React.createElement("a", {
+                              className: "panel-block is-active"
+                            }, React.createElement("span", {
+                                  className: "panel-icon"
+                                }, React.createElement("i", {
+                                      "aria-hidden": true,
+                                      className: "fas fa-book"
+                                    })), "bulma"), React.createElement("a", {
+                              className: "panel-block"
+                            }, React.createElement("span", {
+                                  className: "panel-icon"
+                                }, React.createElement("i", {
+                                      "aria-hidden": true,
+                                      className: "fas fa-book"
+                                    })), "marksheet"));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
@@ -32,5 +68,6 @@ function make() {
 }
 
 exports.component = component;
+exports.str = str;
 exports.make = make;
 /* component Not a pure module */
